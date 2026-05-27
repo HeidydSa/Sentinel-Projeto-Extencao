@@ -1,70 +1,101 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Projetos — Sentinel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../../style.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Projetos — Sentinel</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
-    rel="stylesheet" />
-  <link rel="stylesheet" href="../../../style.css" />
-</head>
+  <body class="page-app">
+    <a href="#main-content" class="skip-link"
+      >Pular para o conteúdo principal</a
+    >
 
-<body class="page-app">
-  <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
-
-  <aside class="sidebar" id="sidebar" aria-label="Menu lateral">
-    <a href="../../index.html" class="logo logo--sidebar" aria-label="Sentinel"><span class="logo-bar"
-        aria-hidden="true"></span>Sentinel</a>
-    <nav class="sidebar-nav" aria-label="Navegação do sistema">
-      <ul role="list">
-        <li><a href="../tarefas/tarefas.html" class="sidebar-link"><span class="sidebar-icon"
-              aria-hidden="true">⊞</span> Tarefas</a></li>
-        <li><a href="projetos.html" class="sidebar-link active" aria-current="page"><span class="sidebar-icon"
-              aria-hidden="true">◫</span> Projetos</a></li>
-        <li><a href="../estatisticas/estatisticas.html" class="sidebar-link"><span class="sidebar-icon"
-              aria-hidden="true">▦</span> Estatísticas</a></li>
-      </ul>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="user-info">
-        <div class="user-avatar" id="sb-avatar" aria-hidden="true">He</div>
-        <span class="user-name" id="sb-nome">Heidy de Sá</span>
-      </div>
-      <a href="../login/login.html" class="btn-sair" aria-label="Sair da conta">SAIR</a>
-    </div>
-  </aside>
-
-  <div class="topbar" role="banner">
-    <button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="sidebar"
-      onclick="toggleMenu(this)"><span aria-hidden="true">☰</span></button>
-    <span class="topbar-title">Sentinel</span>
-  </div>
-
-  <main id="main-content" class="app-main">
-    <header class="app-header">
-      <h1>Projetos</h1>
-      <nav aria-label="Navegação de contexto">
-        <ul role="list" class="app-nav">
-          <li><a href="../../index.html#sobre">Sobre</a></li>
-          <li><a href="../../index.html#contatos">Contatos</a></li>
+    <aside class="sidebar" id="sidebar" aria-label="Menu lateral">
+      <a
+        href="../../index.html"
+        class="logo logo--sidebar"
+        aria-label="Sentinel"
+        ><span class="logo-bar" aria-hidden="true"></span>Sentinel</a
+      >
+      <nav class="sidebar-nav" aria-label="Navegação do sistema">
+        <ul role="list">
+          <li>
+            <a href="../tarefas/tarefas.html" class="sidebar-link"
+              ><span class="sidebar-icon" aria-hidden="true">⊞</span> Tarefas</a
+            >
+          </li>
+          <li>
+            <a
+              href="projetos.html"
+              class="sidebar-link active"
+              aria-current="page"
+              ><span class="sidebar-icon" aria-hidden="true">◫</span>
+              Projetos</a
+            >
+          </li>
+          <li>
+            <a href="../estatisticas/estatisticas.html" class="sidebar-link"
+              ><span class="sidebar-icon" aria-hidden="true">▦</span>
+              Estatísticas</a
+            >
+          </li>
         </ul>
       </nav>
-    </header>
-
-    <section aria-labelledby="proj-lbl">
-      <h2 id="proj-lbl" class="section-title">PROJETOS ATIVOS</h2>
-      <div class="projetos-grid" id="projetos-grid" role="list">
-        <!-- renderizado via JS -->
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar" id="sb-avatar" aria-hidden="true">He</div>
+          <span class="user-name" id="sb-nome">Heidy de Sá</span>
+        </div>
+        <a
+          href="../login/login.html"
+          class="btn-sair"
+          aria-label="Sair da conta"
+          >SAIR</a
+        >
       </div>
-    </section>
-  </main>
+    </aside>
 
-  <script src="../../../state.js"></script>
-  <script src="projetos.js"></script>
-</body>
+    <div class="topbar" role="banner">
+      <button
+        class="menu-toggle"
+        aria-label="Abrir menu"
+        aria-expanded="false"
+        aria-controls="sidebar"
+        onclick="toggleMenu(this)"
+      >
+        <span aria-hidden="true">☰</span>
+      </button>
+      <span class="topbar-title">Sentinel</span>
+    </div>
 
+    <main id="main-content" class="app-main">
+      <header class="app-header">
+        <h1>Projetos</h1>
+        <nav aria-label="Navegação de contexto">
+          <ul role="list" class="app-nav">
+            <li><a href="../../index.html#sobre">Sobre</a></li>
+            <li><a href="../../index.html#contatos">Contatos</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <section aria-labelledby="proj-lbl">
+        <h2 id="proj-lbl" class="section-title">PROJETOS ATIVOS</h2>
+        <div class="projetos-grid" id="projetos-grid" role="list">
+          <!-- renderizado via JS -->
+        </div>
+      </section>
+    </main>
+
+    <script src="../../../state.js"></script>
+    <script src="projetos.js"></script>
+  </body>
 </html>
