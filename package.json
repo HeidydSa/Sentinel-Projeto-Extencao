@@ -1,0 +1,28 @@
+{
+  "name": "sentinel-projeto-extencao",
+  "version": "1.0.0",
+  "description": "",
+  "main": "state.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HeidydSa/Sentinel-Projeto-Extencao.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HeidydSa/Sentinel-Projeto-Extencao/issues"
+  },
+  "homepage": "https://github.com/HeidydSa/Sentinel-Projeto-Extencao#readme",
+  "dependencies": {
+    "eslint": "^10.4.0",
+    "prettier": "^3.8.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "globals": "^17.6.0"
+  }
+}

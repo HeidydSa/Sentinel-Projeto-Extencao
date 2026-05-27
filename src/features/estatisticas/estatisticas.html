@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estatísticas — Sentinel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+
+<body class="page-app">
+  <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
+
+  <aside class="sidebar" id="sidebar" aria-label="Menu lateral">
+    <a href="../../index.html" class="logo logo--sidebar" aria-label="Sentinel"><span class="logo-bar"
+        aria-hidden="true"></span>Sentinel</a>
+    <nav class="sidebar-nav" aria-label="Navegação do sistema">
+      <ul role="list">
+        <li><a href="../tarefas/tarefas.html" class="sidebar-link"><span class="sidebar-icon"
+              aria-hidden="true">⊞</span> Tarefas</a></li>
+        <li><a href="../projetos/projetos.html" class="sidebar-link"><span class="sidebar-icon"
+              aria-hidden="true">◫</span> Projetos</a></li>
+        <li><a href="estatisticas.html" class="sidebar-link active" aria-current="page"><span class="sidebar-icon"
+              aria-hidden="true">▦</span> Estatísticas</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="sb-avatar" aria-hidden="true">He</div>
+        <span class="user-name" id="sb-nome">Heidy de Sá</span>
+      </div>
+      <a href="../login/login.html" class="btn-sair" aria-label="Sair da conta">SAIR</a>
+    </div>
+  </aside>
+
+  <div class="topbar" role="banner">
+    <button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="sidebar"
+      onclick="toggleMenu(this)"><span aria-hidden="true">☰</span></button>
+    <span class="topbar-title">Sentinel</span>
+  </div>
+
+  <main id="main-content" class="app-main">
+    <header class="app-header">
+      <h1>Estatísticas</h1>
+      <nav aria-label="Navegação de contexto">
+        <ul role="list" class="app-nav">
+          <li><a href="../../index.html#sobre">Sobre</a></li>
+          <li><a href="../../index.html#contatos">Contatos</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Período -->
+    <div class="periodo-filter" role="group" aria-labelledby="periodo-lbl">
+      <span id="periodo-lbl" class="periodo-label-text">Período:</span>
+      <div class="periodo-options">
+        <button class="periodo-btn active" aria-pressed="true" onclick="setPeriodo(this)">Janeiro — Março</button>
+        <button class="periodo-btn" aria-pressed="false" onclick="setPeriodo(this)">Abril — Junho</button>
+        <button class="periodo-btn" aria-pressed="false" onclick="setPeriodo(this)">Julho — Setembro</button>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <section aria-labelledby="estat-kpis-lbl">
+      <h2 id="estat-kpis-lbl" class="sr-only">Indicadores</h2>
+      <div class="kpis kpis--3" role="list">
+        <article class="kpi-card" role="listitem">
+          <span class="kpi-label">Projetos ativos</span>
+          <span class="kpi-value" id="kpi-ativos">—</span>
+        </article>
+        <article class="kpi-card" role="listitem">
+          <span class="kpi-label">Projetos finalizados</span>
+          <span class="kpi-value" id="kpi-finalizados">—</span>
+        </article>
+        <article class="kpi-card" role="listitem">
+          <span class="kpi-label">Economia total</span>
+          <span class="kpi-value" id="kpi-economia">—</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- GRÁFICO -->
+    <section aria-labelledby="chart-lbl" class="chart-section">
+      <h2 id="chart-lbl">Economia por projeto</h2>
+      <div class="chart-wrap" id="chart-wrap" role="img" aria-label="Gráfico de barras com economia por projeto">
+        <!-- renderizado via JS -->
+      </div>
+    </section>
+  </main>
+
+  <script src="../../../state.js"></script>
+  <script src="estatisticas.js"></script>
+</body>
+
+</html>
