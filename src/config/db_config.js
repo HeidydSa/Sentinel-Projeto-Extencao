@@ -1,8 +1,7 @@
 // Import the functions you need from the SDKs you need
 
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js';
+import * as firebase from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js';
 const firebaseConfig = {
   apiKey: 'AIzaSyB3coiGzKFnQTFZYR5MKNF36zzzM4yQbRg',
   authDomain: 'sentinel-5d699.firebaseapp.com',
@@ -15,6 +14,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-const db = getFirestore(app);
+const db = firebase.getFirestore(app);
 
-export default db;
+export { db, firebase };

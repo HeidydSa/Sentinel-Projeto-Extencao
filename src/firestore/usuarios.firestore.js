@@ -1,4 +1,4 @@
-import db from '../config/db_config.js';
+import { db } from '../config/db_config.js';
 
 import { Usuario } from '../models/Usuario.model.js';
 

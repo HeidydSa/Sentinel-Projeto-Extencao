@@ -9,6 +9,9 @@ import {
   formatCurrency,
   formatDateDisplay,
 } from '../../state.js';
+import { projetosService } from '../../config/container.js';
+
+console.log(projetosService.getAll().then((res) => console.log(res)));
 
 const COLUNAS = [
   { id: 'afazer', label: 'A FAZER', cls: 'afazer' },

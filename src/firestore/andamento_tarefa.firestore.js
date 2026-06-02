@@ -1,4 +1,4 @@
-import db from '../config/db_config.js';
+import { db } from '../config/db_config.js';
 import { AndamentoTarefa } from '../models/AndamentoTarefa.model.js';
 
 export const ANDAMENTO_TAREFA = 'andamento_tarefas';

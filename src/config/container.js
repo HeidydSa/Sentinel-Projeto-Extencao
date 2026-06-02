@@ -1,5 +1,5 @@
 import { AndamentoTarefaFirestore } from '../firestore/andamento_tarefa.firestore.js';
-import * as firebase from 'firebase/firestore';
+import { firebase } from './db_config.js';
 import { AndamentoTarefaService } from '../services/andamento_tarefas.service.js';
 import { EquipeFirestore } from '../firestore/equipes.firestore.js';
 import { FuncaoFirestore } from '../firestore/funcoes.firestore.js';
@@ -16,7 +16,7 @@ import { EquipeService } from '../services/equipes.service.js';
 const andamentoTarefasFirestore = new AndamentoTarefaFirestore(firebase);
 const equipesFirestore = new EquipeFirestore(firebase);
 const funcoesFirestore = new FuncaoFirestore(firebase);
-// const membroEquipeFirestore = new MembroEquipeFirestore(firebase);
+// const membroEquipeFirestore = new MembroEquipeFirestore(firebase);'
 const projetosFirestore = new ProjetoFirestore(firebase);
 const tarefasFirestore = new TarefaFirestore(firebase);
 const usuariosFirestore = new UsuarioFirestore(firebase);
