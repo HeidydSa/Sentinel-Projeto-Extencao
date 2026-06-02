@@ -1,6 +1,6 @@
-import db from '../config/db_config';
+import db from '../config/db_config.js';
 
-import { Tarefa } from '../models/Tarefa.model';
+import { Tarefa } from '../models/Tarefa.model.js';
 
 export const TAREFA = 'tarefas';
 

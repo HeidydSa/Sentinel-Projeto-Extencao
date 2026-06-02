@@ -1,6 +1,14 @@
 /* eslint-disable no-unused-vars */
-/* global getState, projetosAtivos, tarefasFinalizadas, formatCurrency, economiaTotal, economiaPorProjeto */
 /* exported render, formatCurrencyShort, esc, setPeriodo, toggleMenu */
+
+import {
+  getState,
+  projetosAtivos,
+  tarefasFinalizadas,
+  formatCurrency,
+  economiaTotal,
+  economiaPorProjeto,
+} from '../../state.js';
 
 function render() {
   const s = getState();
@@ -93,3 +101,15 @@ function toggleMenu(btn) {
 }
 
 render();
+
+if (typeof window !== 'undefined') {
+  Object.assign(window, {
+    render,
+    formatCurrencyShort,
+    esc,
+    setPeriodo,
+    toggleMenu,
+  });
+}
+
+export { render, formatCurrencyShort, esc, setPeriodo, toggleMenu };

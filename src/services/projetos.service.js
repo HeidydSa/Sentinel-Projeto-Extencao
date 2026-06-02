@@ -1,5 +1,5 @@
-import { Projeto } from '../models/Projeto.model';
-import { isNonEmptyString } from '../utils/typeValidations';
+import { Projeto } from '../models/Projeto.model.js';
+import { isNonEmptyString } from '../utils/typeValidations.js';
 
 export class ProjetoService {
   constructor(repository) {

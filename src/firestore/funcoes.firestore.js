@@ -1,6 +1,6 @@
-import db from '../config/db_config';
+import db from '../config/db_config.js';
 
-import { Funcao } from '../models/Funcao.model';
+import { Funcao } from '../models/Funcao.model.js';
 
 export const FUNCAO = 'funcoes';
 

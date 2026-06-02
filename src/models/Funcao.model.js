@@ -1,4 +1,4 @@
-import { isDate, isNonEmptyString } from '../utils/typeValidations';
+import { isDate, isNonEmptyString } from '../utils/typeValidations.js';
 
 export class Funcao {
   constructor(id, nome, dataCriacao) {

@@ -1,5 +1,5 @@
-import { Equipe } from '../models/Equipe.model';
-import { isNonEmptyString } from '../utils/typeValidations';
+import { Equipe } from '../models/Equipe.model.js';
+import { isNonEmptyString } from '../utils/typeValidations.js';
 
 export class EquipeService {
   constructor(repository) {

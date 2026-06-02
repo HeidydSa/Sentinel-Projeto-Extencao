@@ -37,3 +37,9 @@ function handleLogin() {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') handleLogin();
 });
+
+if (typeof window !== 'undefined') {
+  Object.assign(window, { togglePw, handleLogin });
+}
+
+export { togglePw, handleLogin };

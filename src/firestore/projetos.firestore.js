@@ -1,6 +1,6 @@
-import db from '../config/db_config';
+import db from '../config/db_config.js';
 
-import { Projeto } from '../models/Projeto.model';
+import { Projeto } from '../models/Projeto.model.js';
 
 export const PROJETO = 'projetos';
 

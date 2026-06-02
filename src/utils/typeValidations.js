@@ -44,3 +44,17 @@ export const isValidPassword = (val) => {
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
   return typeof val === 'string' && passwordRegex.test(val);
 };
+
+export default {
+  isString,
+  isNumber,
+  isBoolean,
+  isObject,
+  isArray,
+  isDate,
+  isEmail,
+  isNonEmptyString,
+  isPositiveNumber,
+  isNonNegativeNumber,
+  isValidPassword,
+};

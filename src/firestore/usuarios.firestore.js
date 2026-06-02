@@ -1,6 +1,6 @@
-import db from '../config/db_config';
+import db from '../config/db_config.js';
 
-import { Usuario } from '../models/Usuario.model';
+import { Usuario } from '../models/Usuario.model.js';
 
 export const USUARIO = 'usuarios';
 

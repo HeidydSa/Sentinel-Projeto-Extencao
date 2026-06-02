@@ -1,4 +1,8 @@
-import { isEmail, isNonEmptyString, isString } from '../utils/typeValidations';
+import {
+  isEmail,
+  isNonEmptyString,
+  isString,
+} from '../utils/typeValidations.js';
 
 export class Usuario {
   constructor(id, nome, sobrenome, email, senha, funcaoId, dataCriacao) {

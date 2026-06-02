@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
-/* global setState */
 /* exported togglePw, handleCad */
+
+import { setState } from '../../state.js';
 
 function togglePw() {
   const inp = document.getElementById('senha'),
@@ -51,3 +52,9 @@ function handleCad() {
     location.href = '../tarefas/tarefas.html';
   }
 }
+
+if (typeof window !== 'undefined') {
+  Object.assign(window, { togglePw, handleCad });
+}
+
+export { togglePw, handleCad };

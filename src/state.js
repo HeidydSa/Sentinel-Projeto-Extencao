@@ -121,3 +121,35 @@ function uid() {
 function pidNew() {
   return 'p' + Date.now() + Math.random().toString(36).slice(2, 6);
 }
+
+if (typeof window !== 'undefined') {
+  Object.assign(window, {
+    getState,
+    setState,
+    projetosAtivos,
+    tarefasAtivas,
+    economiaTotal,
+    economiaPorProjeto,
+    tarefasFinalizadas,
+    formatCurrency,
+    formatDateDisplay,
+    uid,
+    pidNew,
+  });
+}
+
+export {
+  loadState,
+  saveState,
+  getState,
+  setState,
+  projetosAtivos,
+  tarefasAtivas,
+  economiaTotal,
+  economiaPorProjeto,
+  tarefasFinalizadas,
+  formatCurrency,
+  formatDateDisplay,
+  uid,
+  pidNew,
+};

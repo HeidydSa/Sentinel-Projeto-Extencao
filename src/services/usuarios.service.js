@@ -1,5 +1,5 @@
-import { Usuario } from '../models/Usuario.model';
-import { isNonEmptyString } from '../utils/typeValidations';
+import { Usuario } from '../models/Usuario.model.js';
+import { isNonEmptyString } from '../utils/typeValidations.js';
 
 export class UsuarioService {
   constructor(repository) {

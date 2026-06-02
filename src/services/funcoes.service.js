@@ -1,5 +1,5 @@
-import { Funcao } from '../models/Funcao.model';
-import { isNonEmptyString } from '../utils/typeValidations';
+import { Funcao } from '../models/Funcao.model.js';
+import { isNonEmptyString } from '../utils/typeValidations.js';
 
 export class FuncaoService {
   constructor(repository) {

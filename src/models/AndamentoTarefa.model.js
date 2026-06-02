@@ -2,7 +2,7 @@ import {
   isDate,
   isNonEmptyString,
   isPositiveNumber,
-} from '../utils/typeValidations';
+} from '../utils/typeValidations.js';
 
 export class AndamentoTarefa {
   constructor(id, titulo, ordem, dataCriacao) {

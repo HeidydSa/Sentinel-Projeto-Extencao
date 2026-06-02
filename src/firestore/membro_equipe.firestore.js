@@ -1,4 +1,4 @@
-import db from '../config/db_config';
+import db from '../config/db_config.js';
 export const MEMBRO_EQUIPE = 'membros';
 export const EQUIPE_MEMBROS_PATH = 'equipes';
 

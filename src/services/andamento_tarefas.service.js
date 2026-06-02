@@ -1,5 +1,5 @@
-import { AndamentoTarefa } from '../models/AndamentoTarefa.model';
-import { isNonEmptyString } from '../utils/typeValidations';
+import { AndamentoTarefa } from '../models/AndamentoTarefa.model.js';
+import { isNonEmptyString } from '../utils/typeValidations.js';
 
 export class AndamentoTarefaService {
   constructor(repository) {

@@ -1,5 +1,5 @@
-import db from '../config/db_config';
-import { AndamentoTarefa } from '../models/AndamentoTarefa.model';
+import db from '../config/db_config.js';
+import { AndamentoTarefa } from '../models/AndamentoTarefa.model.js';
 
 export const ANDAMENTO_TAREFA = 'andamento_tarefas';
 

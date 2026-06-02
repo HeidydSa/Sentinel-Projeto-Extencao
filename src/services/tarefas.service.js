@@ -1,5 +1,5 @@
-import { Tarefa } from '../models/Tarefa.model';
-import { isNonEmptyString } from '../utils/typeValidations';
+import { Tarefa } from '../models/Tarefa.model.js';
+import { isNonEmptyString } from '../utils/typeValidations.js';
 
 export class TarefaService {
   constructor(repository) {

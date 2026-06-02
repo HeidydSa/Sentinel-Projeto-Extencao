@@ -1,6 +1,14 @@
 /* eslint-disable no-unused-vars */
-/* global getState, setState, projetosAtivos, tarefasAtivas, formatCurrency, formatDateDisplay */
 /* exported render, renderCard, isLate, esc, toggleMoveMenu, moveCard, openEdit, closeModal, saveEdit, showToast, toggleMenu */
+
+import {
+  getState,
+  setState,
+  projetosAtivos,
+  tarefasAtivas,
+  formatCurrency,
+  formatDateDisplay,
+} from '../../state.js';
 
 const COLUNAS = [
   { id: 'afazer', label: 'A FAZER', cls: 'afazer' },
@@ -221,3 +229,33 @@ function toggleMenu(btn) {
 }
 
 render();
+
+if (typeof window !== 'undefined') {
+  Object.assign(window, {
+    render,
+    renderCard,
+    isLate,
+    esc,
+    toggleMoveMenu,
+    moveCard,
+    openEdit,
+    closeModal,
+    saveEdit,
+    showToast,
+    toggleMenu,
+  });
+}
+
+export {
+  render,
+  renderCard,
+  isLate,
+  esc,
+  toggleMoveMenu,
+  moveCard,
+  openEdit,
+  closeModal,
+  saveEdit,
+  showToast,
+  toggleMenu,
+};

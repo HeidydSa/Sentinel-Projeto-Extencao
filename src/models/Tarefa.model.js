@@ -1,4 +1,4 @@
-import { isNonEmptyString, isString } from '../utils/typeValidations';
+import { isNonEmptyString, isString } from '../utils/typeValidations.js';
 
 export class Tarefa {
   constructor(
