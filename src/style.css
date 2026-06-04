@@ -16,6 +16,7 @@
   --purple: #7b00ff;
   --purple-dark: #5500cc;
   --purple-dim: #6200cc;
+  --purple-light-alt: #bc7dff;
   --purple-light: #f3e8ff;
   --black: #0d0d0d;
   --white: #ffffff;
@@ -43,6 +44,7 @@
   --shadow-lg: 0 8px 32px rgba(123, 0, 255, 0.2);
 
   --transition: 0.18s ease;
+  --ease-in-transition: 0.2s ease-in;
 }
 
 html {
@@ -156,10 +158,10 @@ strong {
   cursor: pointer;
   text-decoration: none;
   transition:
-    background var(--transition),
-    color var(--transition),
-    transform var(--transition),
-    box-shadow var(--transition);
+    background var(--ease-in-transition),
+    color var(--ease-in-transition),
+    transform var(--ease-in-transition),
+    box-shadow var(--ease-in-transition);
   white-space: nowrap;
   min-height: 44px;
 }
@@ -180,6 +182,16 @@ strong {
 
 .btn-primary:hover {
   background: var(--purple-dark);
+  color: var(--white);
+}
+
+.btn-primary-alt {
+  background: var(--white);
+  color: var(--purple-dark);
+}
+
+.btn-primary-alt:hover {
+  background: var(--purple-light-alt);
   color: var(--white);
 }
 
@@ -408,6 +420,13 @@ strong {
 
 .sobre .container {
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sobre .details {
+  display: flex;
   flex-direction: column;
   gap: 1.2rem;
 }
@@ -420,6 +439,12 @@ strong {
 .sobre p {
   color: rgba(255, 255, 255, 0.88);
   max-width: 62ch;
+}
+
+.sobre .flying_rocket {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
 }
 
 .sobre strong {
@@ -532,8 +557,6 @@ strong {
   border-radius: var(--radius-pill);
   padding: 0.75rem 1.2rem;
   color: var(--white);
-  font-family: var(--font-body);
-  font-size: 1rem;
   transition:
     border-color var(--transition),
     background var(--transition);
@@ -621,17 +644,46 @@ strong {
   top: 0;
   left: 0;
   width: var(--sidebar-w);
-  height: 100vh;
+  height: 100%;
   background: var(--purple);
   display: flex;
   flex-direction: column;
   padding: 1.5rem 1.2rem;
   z-index: 200;
-  overflow-y: auto;
+  transition: 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+}
+
+.menu-toggle.close {
+  display: none;
+}
+
+.sidebar.minimized {
+  width: 82.4px;
+}
+
+.sidebar.minimized .logo--sidebar {
+  transform: translateX(200px);
+}
+
+.sidebar.minimized .sidebar-nav {
+  transform: translateX(-200px);
+  transition: 0.3s ease;
+}
+
+.sidebar.minimized .sidebar-footer {
+  transform: translateX(-200px);
+  transition: 0.3s ease;
 }
 
 .logo--sidebar {
   color: var(--white);
+  transition: 0.3s ease;
 }
 
 .logo--sidebar .logo-bar {
@@ -641,6 +693,7 @@ strong {
 .sidebar-nav {
   margin-top: 2.5rem;
   flex: 1;
+  transition: 0.3s ease;
 }
 
 .sidebar-nav ul {
@@ -689,6 +742,7 @@ strong {
   align-items: center;
   justify-content: space-between;
   gap: 0.6rem;
+  transition: 0.3s ease;
 }
 
 .user-info {
@@ -786,6 +840,11 @@ strong {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  transition: margin 0.4s ease;
+}
+
+.sidebar.minimized ~ .app-main {
+  margin-left: 82.4px;
 }
 
 .app-header {
@@ -860,6 +919,11 @@ strong {
 /* ── KANBAN ─────────────────────────────────────────────── */
 .kanban-wrap {
   overflow-x: auto;
+  height: 100%;
+}
+
+.kanban-section {
+  height: 100%;
 }
 
 .kanban {
@@ -868,12 +932,25 @@ strong {
   gap: 1rem;
   align-items: start;
   min-width: 700px;
+  height: 100%;
+
+  transition: var(--ease-in-transition);
 }
 
 .kanban-col {
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
+  height: 100%;
+  padding: 4px;
+  border: 2px dashed transparent;
+  transition: var(--ease-in-transition);
+}
+
+.kanban-col.drag-over {
+  background: var(--purple-light);
+  border: 2px dashed var(--purple);
+  transition: var(--ease-in-transition);
 }
 
 .col-header {
@@ -1456,6 +1533,7 @@ strong {
   }
 }
 
+/* Tablet */
 @media (max-width: 720px) {
   .hero {
     flex-direction: column;
@@ -1511,6 +1589,14 @@ strong {
     display: flex;
   }
 
+  .menu-toggle.minimize {
+    display: none;
+  }
+
+  .menu-toggle.close {
+    display: block;
+  }
+
   .app-main {
     margin-left: 0;
     padding-top: 4.5rem;
@@ -1522,8 +1608,14 @@ strong {
     flex-direction: column;
     align-items: flex-start;
   }
-}
 
+  .sobre .container {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.2rem;
+  }
+}
+/* Mobile */
 @media (max-width: 480px) {
   .projetos-grid {
     grid-template-columns: 1fr;
