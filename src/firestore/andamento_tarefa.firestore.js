@@ -54,6 +54,6 @@ export class AndamentoTarefaFirestore {
   }
 
   fromPersisted(id, data) {
-    return new AndamentoTarefa(id, data.titulo, data.ordem, data.dataCriacao);
+    return new AndamentoTarefa(id, data.titulo, data.ordem, data.data_criacao);
   }
 }

@@ -60,7 +60,8 @@ export class ProjetoFirestore {
       data.titulo,
       data.descricao,
       data.id_equipe,
-      data.data_criacao
+      data.data_criacao,
+      data.status
     );
   }
 }
