@@ -55,6 +55,6 @@ export class FuncaoFirestore {
   }
 
   fromPersisted(id, data) {
-    return new Funcao(id, data.nome, data.dataCriacao);
+    return new Funcao(id, data.tipo, data.dataCriacao);
   }
 }

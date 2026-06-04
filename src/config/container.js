@@ -18,8 +18,8 @@ const equipesFirestore = new EquipeFirestore(firebase);
 const funcoesFirestore = new FuncaoFirestore(firebase);
 // const membroEquipeFirestore = new MembroEquipeFirestore(firebase);'
 const projetosFirestore = new ProjetoFirestore(firebase);
-const tarefasFirestore = new TarefaFirestore(firebase);
 const usuariosFirestore = new UsuarioFirestore(firebase);
+const tarefasFirestore = new TarefaFirestore(firebase, usuariosFirestore);
 
 export const equipesService = new EquipeService(equipesFirestore);
 export const funcoesService = new FuncaoService(funcoesFirestore);

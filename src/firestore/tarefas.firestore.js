@@ -5,19 +5,24 @@ import { Tarefa } from '../models/Tarefa.model.js';
 export const TAREFA = 'tarefas';
 
 export class TarefaFirestore {
-  constructor(firebase) {
+  constructor(firebase, usuarioFirestore) {
     this.firebase = firebase;
+    this.usuarioFirestore = usuarioFirestore;
   }
 
   async getAll() {
     const querySnapshot = await this.firebase.getDocs(
       this.firebase.collection(db, TAREFA)
     );
-    const tarefas = [];
-    querySnapshot.forEach((s) => {
-      const data = s.data();
-      tarefas.push(this.fromPersisted(s.id, data));
-    });
+    const tarefas = await Promise.all(
+      querySnapshot.docs.map(async (s) => {
+        const data = s.data();
+        data.responsavel = await this.usuarioFirestore.getById(
+          data.id_responsavel
+        );
+        return this.fromPersisted(s.id, data);
+      })
+    );
     return tarefas;
   }
 
@@ -64,7 +69,8 @@ export class TarefaFirestore {
       data.id_criador,
       data.id_responsavel,
       data.id_andamento_tarefa,
-      data.status
+      data.status,
+      data.responsavel
     );
   }
 }

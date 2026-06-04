@@ -1,12 +1,12 @@
 /* exported render, renderCard, isLate, esc, toggleMoveMenu, moveCard, openEdit, closeModal, saveEdit, showToast, toggleMenu */
 
+import { tarefasService } from '../../config/container.js';
 import {
   getState,
   setState,
   projetosAtivos,
   tarefasAtivas,
   formatCurrency,
-  formatDateDisplay,
 } from '../../state.js';
 
 const COLUNAS = [
@@ -16,8 +16,14 @@ const COLUNAS = [
   { id: 'espera', label: 'EM ESPERA', cls: 'espera' },
 ];
 
-function render() {
-  const s = getState();
+let s;
+
+async function render(state = null) {
+  if (state) {
+    s = state;
+  } else {
+    s = await getState();
+  }
 
   document.getElementById('kpi-projetos').textContent =
     projetosAtivos(s).length;
@@ -30,7 +36,7 @@ function render() {
   board.innerHTML = '';
 
   COLUNAS.forEach((col) => {
-    const cards = s.tarefas.filter((t) => t.coluna === col.id);
+    const cards = s.tarefas.filter((t) => t.status === col.id);
     const colEl = document.createElement('div');
     colEl.className = 'kanban-col';
     colEl.setAttribute('role', 'listitem');
@@ -57,14 +63,14 @@ function render() {
 }
 
 function renderCard(t, s) {
-  const proj = s.projetos.find((p) => p.id === t.projetoId);
+  const proj = s.projetos.find((p) => p.id === t.idProjeto);
   const projNome = proj ? proj.nome : '—';
   const dataClass = isLate(t)
     ? 'task-date--late'
-    : t.coluna === 'finalizado'
+    : t.status === 'finalizado'
       ? 'task-date--done'
       : '';
-  const outrosCols = COLUNAS.filter((c) => c.id !== t.coluna);
+  const outrosCols = COLUNAS.filter((c) => c.id !== t.status);
 
   return `
     <article 
@@ -77,11 +83,11 @@ function renderCard(t, s) {
     >
     
       <h4 class="task-title">${esc(t.titulo)}</h4>
-      <time class="task-date ${dataClass}" datetime="${t.data}">${formatDateDisplay(t.data)}</time>
+      <time class="task-date ${dataClass}" datetime="${t.data}">${t.data.toLocaleDateString()}</time>
       <p class="task-economy">Economia: <strong>${formatCurrency(t.economia)}</strong></p>
       <div class="task-footer">
         <span class="task-project">${esc(projNome)}</span>
-        <span class="task-avatar" title="Responsável: ${esc(t.responsavel)}" aria-label="Responsável: ${esc(t.responsavel)}">${esc(t.responsavel)}</span>
+        <span class="task-avatar" title="Responsável: ${esc(t.responsavel?.getInitials() || 'Não definido')}" aria-label="Responsável: ${esc(t.responsavel?.getInitials())}">${esc(t.responsavel?.getInitials())}</span>
       </div>
       <div class="task-actions">
         <div class="move-dropdown">
@@ -106,7 +112,7 @@ function renderCard(t, s) {
 }
 
 function isLate(t) {
-  if (t.coluna === 'finalizado') return false;
+  if (t.status === 'finalizado') return false;
   return t.data && new Date(t.data) < new Date();
 }
 
@@ -146,18 +152,46 @@ document.addEventListener('click', () => {
     .forEach((b) => b.setAttribute('aria-expanded', 'false'));
 });
 
-function moveCard(tarefaId, novaColuna) {
-  setState((s) => {
-    const t = s.tarefas.find((x) => x.id === tarefaId);
-    if (t) t.coluna = novaColuna;
-  });
-  const col = COLUNAS.find((c) => c.id === novaColuna);
-  showToast(`Movida para ${col.label}`, 'success');
-  render();
+async function moveCard(tarefaId, novaColuna) {
+  const tarefa = getTarefaById(tarefaId);
+  if (!tarefa) return;
+  tarefa.status = novaColuna;
+  render(s);
+  try {
+    await tarefasService.update(tarefaId, tarefa);
+    const col = COLUNAS.find((c) => c.id === novaColuna);
+    showToast(`Movida para ${col.label}`, 'success');
+  } catch (error) {
+    console.error(error);
+    showToast('Erro ao mover tarefa', 'error');
+    render();
+  }
 }
 
-function openEdit(tarefaId) {
-  const s = getState();
+// async function moveCard(tarefaId, novaColuna) {
+//   try {
+//     const tarefa = getTarefaById(tarefaId);
+//     if (!tarefa) return;
+//     tarefa.status = novaColuna;
+//     await tarefasService.update(tarefaId, tarefa);
+//     const col = COLUNAS.find((c) => c.id === novaColuna);
+//     showToast(`Movida para ${col.label}`, 'success');
+//     render();
+//   } catch (error) {
+//     console.error(error);
+//     showToast('Erro ao mover tarefa', 'error');
+//     render();
+//   }
+// }
+
+function getTarefaById(id) {
+  if (s !== undefined) {
+    return s.tarefas.find((t) => t.id === id);
+  }
+}
+
+async function openEdit(tarefaId) {
+  const s = await getState();
   const t = s.tarefas.find((x) => x.id === tarefaId);
   if (!t) return;
 
@@ -165,13 +199,13 @@ function openEdit(tarefaId) {
   document.getElementById('edit-titulo').value = t.titulo;
   document.getElementById('edit-data').value = t.data;
   document.getElementById('edit-economia').value = t.economia;
-  document.getElementById('edit-responsavel').value = t.responsavel;
+  document.getElementById('edit-responsavel').value = t.responsavel.id;
 
   const sel = document.getElementById('edit-projeto');
   sel.innerHTML = s.projetos
     .map(
       (p) =>
-        `<option value="${p.id}" ${p.id === t.projetoId ? 'selected' : ''}>${esc(p.nome)}</option>`
+        `<option value="${p.id}" ${p.id === t.idProjeto ? 'selected' : ''}>${esc(p.descricao)}</option>`
     )
     .join('');
 
@@ -207,7 +241,7 @@ function saveEdit() {
       t.data = data;
       t.economia = econ;
       t.responsavel = resp;
-      t.projetoId = projId;
+      t.idProjeto = projId;
     }
   });
 
@@ -244,13 +278,13 @@ function minimizeMenu() {
   sb.classList.toggle('minimized');
 }
 
-function handleDrop(e, colId) {
+async function handleDrop(e, colId) {
   e.preventDefault();
   const data = e.dataTransfer.getData('text/plain');
   if (data) {
     console.log(data);
   }
-  moveCard(data, colId);
+  await moveCard(data, colId);
 }
 
 function handleDragOver(e) {

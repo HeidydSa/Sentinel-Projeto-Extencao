@@ -43,6 +43,10 @@ export class Usuario {
     }
   }
 
+  getInitials() {
+    return `${this.nome.charAt(0)}${this.sobrenome.charAt(0)}`.toUpperCase();
+  }
+
   toPersisted() {
     return {
       id: this.id,
@@ -50,8 +54,8 @@ export class Usuario {
       sobrenome: this.sobrenome,
       email: this.email,
       senha: this.senha,
-      funcaoId: this.funcaoId,
-      dataCriacao: this.dataCriacao.toISOString(),
+      funcao_id: this.funcaoId,
+      data_criacao: this.dataCriacao.toISOString(),
     };
   }
 }

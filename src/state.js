@@ -1,79 +1,115 @@
 // ============================================================
 // state.js — Estado global compartilhado entre todas as páginas
 // ============================================================
-/* eslint-disable no-unused-vars */
+
 /* exported getState, setState, projetosAtivos, tarefasAtivas, economiaTotal, economiaPorProjeto, tarefasFinalizadas, formatCurrency, formatDateDisplay, uid, pidNew */
 
+// const DEFAULT_STATE = {
+//   projetos: [
+//     { id: 'p1', nome: 'Projeto 01', status: 'em produção' },
+//     { id: 'p2', nome: 'Projeto 02', status: 'em produção' },
+//     { id: 'p3', nome: 'Projeto 03', status: 'não iniciado' },
+//   ],
+//   tarefas: [
+//     {
+//       id: 't1',
+//       titulo: 'Tarefa 01',
+//       data: '2026-05-05',
+//       economia: 100,
+//       projetoId: 'p1',
+//       responsavel: 'He',
+//       coluna: 'afazer',
+//     },
+//     {
+//       id: 't2',
+//       titulo: 'Tarefa 02',
+//       data: '2026-05-01',
+//       economia: 350,
+//       projetoId: 'p1',
+//       responsavel: 'Ad',
+//       coluna: 'finalizado',
+//     },
+//     {
+//       id: 't3',
+//       titulo: 'Tarefa 03',
+//       data: '2026-04-05',
+//       economia: 2000,
+//       projetoId: 'p2',
+//       responsavel: 'He',
+//       coluna: 'iniciado',
+//     },
+//     {
+//       id: 't4',
+//       titulo: 'Tarefa 04',
+//       data: '2026-05-10',
+//       economia: 1000,
+//       projetoId: 'p3',
+//       responsavel: 'Al',
+//       coluna: 'afazer',
+//     },
+//   ],
+//   usuario: { nome: 'Heidy de Sá', iniciais: 'He' },
+// };
+
+import {
+  projetosService,
+  equipesService,
+  funcoesService,
+  andamentoTarefasService,
+  usuariosService,
+  tarefasService,
+} from './config/container.js';
+
 const DEFAULT_STATE = {
-  projetos: [
-    { id: 'p1', nome: 'Projeto 01', status: 'em produção' },
-    { id: 'p2', nome: 'Projeto 02', status: 'em produção' },
-    { id: 'p3', nome: 'Projeto 03', status: 'não iniciado' },
-  ],
-  tarefas: [
-    {
-      id: 't1',
-      titulo: 'Tarefa 01',
-      data: '2026-05-05',
-      economia: 100,
-      projetoId: 'p1',
-      responsavel: 'He',
-      coluna: 'afazer',
-    },
-    {
-      id: 't2',
-      titulo: 'Tarefa 02',
-      data: '2026-05-01',
-      economia: 350,
-      projetoId: 'p1',
-      responsavel: 'Ad',
-      coluna: 'finalizado',
-    },
-    {
-      id: 't3',
-      titulo: 'Tarefa 03',
-      data: '2026-04-05',
-      economia: 2000,
-      projetoId: 'p2',
-      responsavel: 'He',
-      coluna: 'iniciado',
-    },
-    {
-      id: 't4',
-      titulo: 'Tarefa 04',
-      data: '2026-05-10',
-      economia: 1000,
-      projetoId: 'p3',
-      responsavel: 'Al',
-      coluna: 'afazer',
-    },
-  ],
+  projetos: [],
+  funcoes: [],
+  equipes: [],
+  andamentoTarefas: [],
+  tarefas: [],
+  usuarios: [],
   usuario: { nome: 'Heidy de Sá', iniciais: 'He' },
 };
 
 const STATE_KEY = 'upscale_state';
 
-function loadState() {
+async function loadState() {
   try {
-    const raw = localStorage.getItem(STATE_KEY);
-    return raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(DEFAULT_STATE));
-  } catch {
+    const [projetos, tarefas, equipes, funcoes, andamentoTarefas, usuarios] =
+      await Promise.all([
+        projetosService.getAll(),
+        tarefasService.getAll(),
+        equipesService.getAll(),
+        funcoesService.getAll(),
+        andamentoTarefasService.getAll(),
+        usuariosService.getAll(),
+      ]);
+    return {
+      projetos,
+      tarefas,
+      equipes,
+      funcoes,
+      andamentoTarefas,
+      usuarios,
+      usuario: { nome: 'Heidy de Sá', iniciais: 'He' },
+    };
+  } catch (error) {
+    console.error('Erro ao carregar o estado:', error.message);
     return JSON.parse(JSON.stringify(DEFAULT_STATE));
   }
 }
 
-function saveState(state) {
+async function saveState(state) {
   localStorage.setItem(STATE_KEY, JSON.stringify(state));
 }
 
-function getState() {
-  return loadState();
+async function getState() {
+  return await loadState();
 }
 
-function setState(updater) {
-  const s = loadState();
+async function setState(updater) {
+  const s = await loadState();
   updater(s);
-  saveState(s);
+  await saveState(s);
 }
 
 // ── DERIVAÇÕES ──────────────────────────────────────────────
@@ -85,7 +121,7 @@ function projetosAtivos(state) {
 }
 
 function tarefasAtivas(state) {
-  return state.tarefas.filter((t) => t.coluna !== 'finalizado');
+  return state.tarefas.filter((t) => t.status !== 'finalizado');
 }
 
 function economiaTotal(state) {
@@ -94,12 +130,12 @@ function economiaTotal(state) {
 
 function economiaPorProjeto(state, projetoId) {
   return state.tarefas
-    .filter((t) => t.projetoId === projetoId)
+    .filter((t) => t.idProjeto === projetoId)
     .reduce((sum, t) => sum + (t.economia || 0), 0);
 }
 
 function tarefasFinalizadas(state) {
-  return state.tarefas.filter((t) => t.coluna === 'finalizado');
+  return state.tarefas.filter((t) => t.status === 'finalizado');
 }
 
 function formatCurrency(val) {

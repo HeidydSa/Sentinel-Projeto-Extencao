@@ -7,8 +7,8 @@ import {
   formatCurrency,
 } from '../../state.js';
 
-function render() {
-  const s = getState();
+async function render() {
+  const s = await getState();
   document.getElementById('sb-avatar').textContent = s.usuario.iniciais;
   document.getElementById('sb-nome').textContent = s.usuario.nome;
 
@@ -24,7 +24,7 @@ function render() {
     .map((p) => {
       const econ = economiaPorProjeto(s, p.id);
       const tarefas = s.tarefas.filter(
-        (t) => t.projetoId === p.id && t.coluna !== 'finalizado'
+        (t) => t.idProjeto === p.id && t.status !== 'finalizado'
       ).length;
       const badgeCls =
         p.status === 'em produção'
@@ -35,7 +35,7 @@ function render() {
 
       return `
       <article class="projeto-card" role="listitem" tabindex="0" aria-labelledby="p-${p.id}">
-        <h3 id="p-${p.id}" class="projeto-nome">${esc(p.nome)}</h3>
+        <h3 id="p-${p.id}" class="projeto-nome">${esc(p.descricao)}</h3>
         <dl class="projeto-info">
           <div><dt>Status</dt><dd><span class="status-badge ${badgeCls}">${badgeTxt}</span></dd></div>
           <div><dt>Economia total</dt><dd>${formatCurrency(econ)}</dd></div>
