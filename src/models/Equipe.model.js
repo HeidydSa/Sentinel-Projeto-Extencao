@@ -28,8 +28,8 @@ export class Equipe {
     return {
       id: this.id,
       nome: this.nome,
-      idLider: this.idLider,
-      dataCriacao: this.dataCriacao.toISOString(),
+      id_lider: this.idLider,
+      data_criacao: this.dataCriacao.toISOString(),
     };
   }
 }

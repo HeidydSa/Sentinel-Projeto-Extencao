@@ -1,7 +1,7 @@
 import {
   isDate,
   isNonEmptyString,
-  isPositiveNumber,
+  isNonNegativeNumber,
 } from '../utils/typeValidations.js';
 
 export class AndamentoTarefa {
@@ -19,7 +19,7 @@ export class AndamentoTarefa {
       throw new TypeError('Título não pode ser uma string vazia');
     }
 
-    if (!isPositiveNumber(this.ordem)) {
+    if (!isNonNegativeNumber(this.ordem)) {
       throw new TypeError('Ordem deve ser um número não negativo');
     }
 
@@ -33,7 +33,7 @@ export class AndamentoTarefa {
       id: this.id,
       titulo: this.titulo,
       ordem: this.ordem,
-      dataCriacao: this.dataCriacao.toISOString(),
+      data_criacao: this.dataCriacao.toISOString(),
     };
   }
 }

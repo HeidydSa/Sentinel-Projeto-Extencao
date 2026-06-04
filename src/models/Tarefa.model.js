@@ -1,4 +1,5 @@
 import { isNonEmptyString, isString } from '../utils/typeValidations.js';
+import { Usuario } from './Usuario.model.js';
 
 export class Tarefa {
   constructor(
@@ -10,17 +11,19 @@ export class Tarefa {
     id_criador,
     id_responsavel,
     id_andamento_tarefa,
-    status
+    status,
+    responsavel = null
   ) {
     this.id = id ?? '';
     this.titulo = titulo;
     this.data = new Date(data);
     this.economia = economia;
-    this.id_projeto = id_projeto;
-    this.id_criador = id_criador;
-    this.id_responsavel = id_responsavel;
-    this.id_andamento_tarefa = id_andamento_tarefa;
+    this.idProjeto = id_projeto;
+    this.idCriador = id_criador;
+    this.idResponsavel = id_responsavel;
+    this.idAndamentoTarefa = id_andamento_tarefa;
     this.status = status;
+    this.responsavel = responsavel;
 
     this.validate();
   }
@@ -38,19 +41,19 @@ export class Tarefa {
       throw new TypeError('Economia deve ser um número não negativo');
     }
 
-    if (!isNonEmptyString(this.id_projeto)) {
+    if (!isNonEmptyString(this.idProjeto)) {
       throw new TypeError('ID do projeto não pode ser uma string vazia');
     }
 
-    if (!isNonEmptyString(this.id_criador)) {
+    if (!isNonEmptyString(this.idCriador)) {
       throw new TypeError('ID do criador não pode ser uma string vazia');
     }
 
-    if (!isString(this.id_responsavel)) {
+    if (!isString(this.idResponsavel)) {
       throw new TypeError('ID do responsável não pode ser uma string vazia');
     }
 
-    if (!isNonEmptyString(this.id_andamento_tarefa)) {
+    if (!isNonEmptyString(this.idAndamentoTarefa)) {
       throw new TypeError(
         'ID do andamento da tarefa não pode ser uma string vazia'
       );
@@ -58,6 +61,10 @@ export class Tarefa {
 
     if (!isNonEmptyString(this.status)) {
       throw new TypeError('Status não pode ser uma string vazia');
+    }
+
+    if (this.responsavel !== null && !(this.responsavel instanceof Usuario)) {
+      throw new TypeError('Responsável deve ser uma string ou null');
     }
   }
 
@@ -67,10 +74,10 @@ export class Tarefa {
       titulo: this.titulo,
       data: this.data.toISOString(),
       economia: this.economia,
-      id_projeto: this.id_projeto,
-      id_criador: this.id_criador,
-      id_responsavel: this.id_responsavel,
-      id_andamento_tarefa: this.id_andamento_tarefa,
+      id_projeto: this.idProjeto,
+      id_criador: this.idCriador,
+      id_responsavel: this.idResponsavel,
+      id_andamento_tarefa: this.idAndamentoTarefa,
       status: this.status,
     };
   }

@@ -5,12 +5,13 @@ import {
 } from '../utils/typeValidations.js';
 
 export class Projeto {
-  constructor(id, titulo, descricao, id_equipe, data_criacao) {
+  constructor(id, titulo, descricao, id_equipe, data_criacao, status) {
     this.id = id ?? '';
     this.titulo = titulo;
     this.descricao = descricao;
-    this.id_equipe = id_equipe;
-    this.data_criacao = new Date(data_criacao);
+    this.idEquipe = id_equipe;
+    this.dataCriacao = new Date(data_criacao);
+    this.status = status;
 
     this.validate();
   }
@@ -24,12 +25,16 @@ export class Projeto {
       throw new TypeError('Descrição não pode ser uma string vazia');
     }
 
-    if (!isString(this.id_equipe)) {
+    if (!isString(this.idEquipe)) {
       throw new TypeError('ID da equipe deve ser uma string');
     }
 
-    if (!isDate(this.data_criacao)) {
+    if (!isDate(this.dataCriacao)) {
       throw new TypeError('Data de criação deve ser um objeto Date');
+    }
+
+    if (!isNonEmptyString(this.status)) {
+      throw new TypeError('Status não pode ser uma string vazia');
     }
   }
 
@@ -38,8 +43,9 @@ export class Projeto {
       id: this.id,
       titulo: this.titulo,
       descricao: this.descricao,
-      id_equipe: this.id_equipe,
-      data_criacao: this.data_criacao.toISOString(),
+      id_equipe: this.idEquipe,
+      data_criacao: this.dataCriacao.toISOString(),
+      status: this.status,
     };
   }
 }
