@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* exported render, esc, toggleMenu */
 
 import {
@@ -58,13 +57,19 @@ function esc(str) {
 function toggleMenu(btn) {
   const exp = btn.getAttribute('aria-expanded') === 'true';
   btn.setAttribute('aria-expanded', !exp);
-  document.getElementById('sidebar').classList.toggle('sidebar--open');
+  const sb = document.getElementById('sidebar');
+  sb.classList.toggle('sidebar--open');
+}
+
+function minimizeMenu() {
+  const sb = document.getElementById('sidebar');
+  sb.classList.toggle('minimized');
 }
 
 render();
 
 if (typeof window !== 'undefined') {
-  Object.assign(window, { render, esc, toggleMenu });
+  Object.assign(window, { render, esc, toggleMenu, minimizeMenu });
 }
 
-export { render, esc, toggleMenu };
+export { render, esc, toggleMenu, minimizeMenu };

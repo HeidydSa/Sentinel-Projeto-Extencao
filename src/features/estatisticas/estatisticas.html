@@ -19,13 +19,35 @@
       >Pular para o conteúdo principal</a
     >
 
+    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar" aria-label="Menu lateral">
-      <a
-        href="../../index.html"
-        class="logo logo--sidebar"
-        aria-label="Sentinel"
-        ><span class="logo-bar" aria-hidden="true"></span>Sentinel</a
-      >
+      <div class="sidebar-header" role="banner">
+        <button
+          class="menu-toggle minimize"
+          aria-label="Minimizar menu"
+          aria-expanded="true"
+          aria-controls="sidebar"
+          onclick="minimizeMenu()"
+        >
+          <span aria-hidden="true">☰</span>
+        </button>
+        <button
+          class="menu-toggle close"
+          aria-label="Fechar menu"
+          aria-expanded="true"
+          aria-controls="sidebar"
+          onclick="toggleMenu(this)"
+        >
+          <span aria-hidden="true">X</span>
+        </button>
+        <a
+          href="../../index.html"
+          class="logo logo--sidebar"
+          aria-label="Sentinel"
+          >Sentinel</a
+        >
+      </div>
+
       <nav class="sidebar-nav" aria-label="Navegação do sistema">
         <ul role="list">
           <li>
