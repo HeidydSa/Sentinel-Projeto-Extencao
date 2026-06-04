@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* exported render, renderCard, isLate, esc, toggleMoveMenu, moveCard, openEdit, closeModal, saveEdit, showToast, toggleMenu */
 
 import {
@@ -9,9 +8,6 @@ import {
   formatCurrency,
   formatDateDisplay,
 } from '../../state.js';
-import { projetosService } from '../../config/container.js';
-
-console.log(projetosService.getAll().then((res) => console.log(res)));
 
 const COLUNAS = [
   { id: 'afazer', label: 'A FAZER', cls: 'afazer' },
@@ -39,6 +35,9 @@ function render() {
     colEl.className = 'kanban-col';
     colEl.setAttribute('role', 'listitem');
     colEl.setAttribute('aria-labelledby', `col-${col.id}`);
+    colEl.ondrop = (e) => handleDrop(e, col.id);
+    colEl.ondragover = (e) => handleDragOver(e);
+    colEl.ondragleave = (e) => handleDragLeave(e);
 
     colEl.innerHTML = `
       <div class="col-header">
@@ -68,7 +67,15 @@ function renderCard(t, s) {
   const outrosCols = COLUNAS.filter((c) => c.id !== t.coluna);
 
   return `
-    <article class="task-card" role="listitem" tabindex="0" aria-label="Tarefa: ${t.titulo}, ${projNome}">
+    <article 
+      class="task-card" 
+      role="listitem" 
+      tabindex="0" 
+      aria-label="Tarefa: ${t.titulo}, ${projNome}" 
+      draggable="true"
+      ondragstart="event.dataTransfer.setData('text/plain', '${t.id}')"
+    >
+    
       <h4 class="task-title">${esc(t.titulo)}</h4>
       <time class="task-date ${dataClass}" datetime="${t.data}">${formatDateDisplay(t.data)}</time>
       <p class="task-economy">Economia: <strong>${formatCurrency(t.economia)}</strong></p>
@@ -228,7 +235,34 @@ function showToast(msg, type = '') {
 function toggleMenu(btn) {
   const exp = btn.getAttribute('aria-expanded') === 'true';
   btn.setAttribute('aria-expanded', !exp);
-  document.getElementById('sidebar').classList.toggle('sidebar--open');
+  const sb = document.getElementById('sidebar');
+  sb.classList.toggle('sidebar--open');
+}
+
+function minimizeMenu() {
+  const sb = document.getElementById('sidebar');
+  sb.classList.toggle('minimized');
+}
+
+function handleDrop(e, colId) {
+  e.preventDefault();
+  const data = e.dataTransfer.getData('text/plain');
+  if (data) {
+    console.log(data);
+  }
+  moveCard(data, colId);
+}
+
+function handleDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+
+function handleDragLeave(e) {
+  e.preventDefault();
+  if (!e.currentTarget.contains(e.relatedTarget)) {
+    e.currentTarget.classList.remove('drag-over');
+  }
 }
 
 render();
@@ -246,6 +280,8 @@ if (typeof window !== 'undefined') {
     saveEdit,
     showToast,
     toggleMenu,
+    minimizeMenu,
+    handleDrop,
   });
 }
 
@@ -261,4 +297,5 @@ export {
   saveEdit,
   showToast,
   toggleMenu,
+  minimizeMenu,
 };
