@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* exported render, formatCurrencyShort, esc, setPeriodo, toggleMenu */
 
 import {
@@ -97,7 +96,13 @@ function setPeriodo(btn) {
 function toggleMenu(btn) {
   const exp = btn.getAttribute('aria-expanded') === 'true';
   btn.setAttribute('aria-expanded', !exp);
-  document.getElementById('sidebar').classList.toggle('sidebar--open');
+  const sb = document.getElementById('sidebar');
+  sb.classList.toggle('sidebar--open');
+}
+
+function minimizeMenu() {
+  const sb = document.getElementById('sidebar');
+  sb.classList.toggle('minimized');
 }
 
 render();
@@ -109,7 +114,15 @@ if (typeof window !== 'undefined') {
     esc,
     setPeriodo,
     toggleMenu,
+    minimizeMenu,
   });
 }
 
-export { render, formatCurrencyShort, esc, setPeriodo, toggleMenu };
+export {
+  render,
+  formatCurrencyShort,
+  esc,
+  setPeriodo,
+  toggleMenu,
+  minimizeMenu,
+};
