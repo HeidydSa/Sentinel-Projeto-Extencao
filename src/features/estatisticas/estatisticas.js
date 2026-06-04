@@ -9,8 +9,8 @@ import {
   economiaPorProjeto,
 } from '../../state.js';
 
-function render() {
-  const s = getState();
+async function render() {
+  const s = await getState();
   document.getElementById('sb-avatar').textContent = s.usuario.iniciais;
   document.getElementById('sb-nome').textContent = s.usuario.nome;
 
@@ -24,7 +24,7 @@ function render() {
   const wrap = document.getElementById('chart-wrap');
   const projComEcon = s.projetos
     .map((p) => ({
-      nome: p.nome,
+      nome: p.descricao,
       econ: economiaPorProjeto(s, p.id),
     }))
     .filter((p) => p.econ > 0);
@@ -38,7 +38,7 @@ function render() {
   const maxVal = Math.max(...projComEcon.map((p) => p.econ), 1);
 
   const descricao = projComEcon
-    .map((p) => `${p.nome}: ${formatCurrency(p.econ)}`)
+    .map((p) => `${p.descricao}: ${formatCurrency(p.econ)}`)
     .join('; ');
   wrap.setAttribute('aria-label', `Economia por projeto — ${descricao}`);
 
@@ -50,9 +50,9 @@ function render() {
           const cls = i % 3 === 1 ? 'bar--2' : i % 3 === 2 ? 'bar--3' : '';
           return `
           <div class="bar-group">
-            <div class="bar-group-title">${esc(p.nome)}</div>
+            <div class="bar-group-title">${esc(p.descricao)}</div>
             <div class="bars" style="justify-content:center">
-              <div class="bar ${cls}" style="--h:${pct}%;max-width:40px;flex:none;width:40px" title="${esc(p.nome)}: ${formatCurrency(p.econ)}">
+              <div class="bar ${cls}" style="--h:${pct}%;max-width:40px;flex:none;width:40px" title="${esc(p.descricao)}: ${formatCurrency(p.econ)}">
                 <span class="bar-val">${formatCurrencyShort(p.econ)}</span>
               </div>
             </div>
@@ -65,7 +65,7 @@ function render() {
         .map((p, i) => {
           const cls =
             i % 3 === 1 ? 'legend-dot--2' : i % 3 === 2 ? 'legend-dot--3' : '';
-          return `<span class="legend-item"><span class="legend-dot ${cls}"></span>${esc(p.nome)}</span>`;
+          return `<span class="legend-item"><span class="legend-dot ${cls}"></span>${esc(p.descricao)}</span>`;
         })
         .join('')}
     </div>`;
