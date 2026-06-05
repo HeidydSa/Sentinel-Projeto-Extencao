@@ -1,5 +1,8 @@
-/* eslint-disable no-unused-vars */
 /* exported togglePw, handleLogin */
+
+import { projetosService } from '../../config/container.js';
+
+console.log(projetosService.getAll().then((p) => console.log(p)));
 
 function togglePw() {
   const inp = document.getElementById('senha'),
@@ -30,7 +33,12 @@ function handleLogin() {
     if (ok) document.getElementById('senha').focus();
     ok = false;
   }
-
+  if (senha.length < 8) {
+    document.getElementById('senha-error').textContent =
+      'A senha deve conter no mínimo 8 digitos.';
+    if (ok) document.getElementById('senha').focus();
+    ok = false;
+  }
   if (ok) location.href = '../tarefas/tarefas.html';
 }
 
