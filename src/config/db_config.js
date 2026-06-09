@@ -2,6 +2,19 @@
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js';
 import * as firebase from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js';
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
+  updateProfile,
+  deleteUser,
+  sendPasswordResetEmail,
+} from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js';
+
 const firebaseConfig = {
   apiKey: 'AIzaSyB3coiGzKFnQTFZYR5MKNF36zzzM4yQbRg',
   authDomain: 'sentinel-5d699.firebaseapp.com',
@@ -14,6 +27,23 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+const auth = getAuth(app);
+
+const googleProvider = new GoogleAuthProvider();
+
 const db = firebase.getFirestore(app);
 
-export { db, firebase };
+export {
+  db,
+  firebase,
+  auth,
+  googleProvider,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  updateProfile,
+  deleteUser,
+  sendPasswordResetEmail,
+};

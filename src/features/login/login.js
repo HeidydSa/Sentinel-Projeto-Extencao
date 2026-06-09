@@ -1,6 +1,13 @@
 /* exported togglePw, handleLogin */
 
 import { projetosService } from '../../config/container.js';
+import {
+  auth,
+  signInWithEmailAndPassword,
+  googleProvider,
+  signInWithPopup,
+  sendPasswordResetEmail,
+} from '../../config/db_config.js';
 
 console.log(projetosService.getAll().then((p) => console.log(p)));
 
@@ -13,7 +20,7 @@ function togglePw() {
   btn.setAttribute('aria-pressed', hide);
 }
 
-function handleLogin() {
+async function handleLogin() {
   const email = document.getElementById('email').value.trim();
   const senha = document.getElementById('senha').value;
 
@@ -33,13 +40,51 @@ function handleLogin() {
     if (ok) document.getElementById('senha').focus();
     ok = false;
   }
-  if (senha.length < 8) {
+  if (!ok) return;
+
+  try {
+    await signInWithEmailAndPassword(auth, email, senha);
+
+    location.href = '../tarefas/tarefas.html';
+  } catch (error) {
+    console.error(error);
+
     document.getElementById('senha-error').textContent =
-      'A senha deve conter no mínimo 8 digitos.';
-    if (ok) document.getElementById('senha').focus();
-    ok = false;
+      'E-mail ou senha inválidos.';
   }
-  if (ok) location.href = '../tarefas/tarefas.html';
+}
+
+async function loginGoogle() {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+
+    console.log('Usuário:', result.user);
+
+    location.href = '../tarefas/tarefas.html';
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function resetSenha() {
+  const email = document.getElementById('email').value.trim();
+
+  if (!email) {
+    document.getElementById('email-error').textContent =
+      'Informe seu e-mail primeiro';
+    return;
+  }
+
+  try {
+    await sendPasswordResetEmail(auth, email);
+
+    alert('E-mail de redefinição enviado');
+  } catch (error) {
+    console.error(error);
+
+    document.getElementById('email-error').textContent =
+      'Não foi possível enviar o e-mail';
+  }
 }
 
 document.addEventListener('keydown', (e) => {
@@ -47,7 +92,12 @@ document.addEventListener('keydown', (e) => {
 });
 
 if (typeof window !== 'undefined') {
-  Object.assign(window, { togglePw, handleLogin });
+  Object.assign(window, {
+    togglePw,
+    handleLogin,
+    loginGoogle,
+    resetSenha,
+  });
 }
 
-export { togglePw, handleLogin };
+export { togglePw, handleLogin, loginGoogle };

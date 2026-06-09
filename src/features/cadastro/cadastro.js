@@ -2,6 +2,13 @@
 /* exported togglePw, handleCad */
 
 import { setState } from '../../state.js';
+import {
+  auth,
+  db,
+  createUserWithEmailAndPassword,
+} from '../../config/db_config.js';
+
+import { updateProfile } from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js';
 
 function togglePw() {
   const inp = document.getElementById('senha'),
@@ -12,7 +19,7 @@ function togglePw() {
   btn.setAttribute('aria-pressed', hide);
 }
 
-function handleCad() {
+async function handleCad() {
   const nome = document.getElementById('nome').value.trim();
   const email = document.getElementById('email').value.trim();
   const senha = document.getElementById('senha').value;
@@ -39,7 +46,7 @@ function handleCad() {
     ok = false;
   }
 
-  if (ok) {
+  /*if (ok) {
     setState((s) => {
       const partes = nome.trim().split(' ');
       s.usuario = {
@@ -50,6 +57,29 @@ function handleCad() {
       };
     });
     location.href = '../tarefas/tarefas.html';
+  }*/
+  if (!ok) return;
+
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      senha
+    );
+
+    await updateProfile(userCredential.user, { displayName: nome });
+
+    location.href = '../tarefas/tarefas.html';
+  } catch (error) {
+    console.error(error);
+
+    if (error.code === 'auth/email-already-in-use') {
+      document.getElementById('email-error').textContent =
+        'Este e-mail já está cadastrado.';
+    } else {
+      document.getElementById('email-error').textContent =
+        'Erro ao criar usuário.';
+    }
   }
 }
 

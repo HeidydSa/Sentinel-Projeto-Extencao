@@ -71,16 +71,21 @@
           </li>
         </ul>
       </nav>
-      <div class="sidebar-footer">
+      <div class="user-dados sidebar-footer">
         <div class="user-info">
-          <div class="user-avatar" id="sb-avatar" aria-hidden="true">He</div>
-          <span class="user-name" id="sb-nome">Heidy de Sá</span>
+          <div class="user-avatar" id="sb-avatar" aria-hidden="true">-</div>
+          <span class="user-name" id="sb-nome"></span>
         </div>
         <a
           href="../login/login.html"
           class="btn-sair"
           aria-label="Sair da conta"
           >SAIR</a
+        >
+      </div>
+      <div class="sidebar-footer">
+        <a href="#" class="btn-excluir-conta" onclick="deleteAccount()"
+          >EXCLUIR CONTA</a
         >
       </div>
     </aside>
@@ -184,10 +189,18 @@
           </div>
         </div>
         <div class="modal-actions">
-          <button type="button" class="btn btn-ghost" onclick="closeModal()">
+          <button
+            type="button"
+            class="btn btn-primary-alt btn-primary"
+            onclick="closeModal()"
+          >
             Cancelar
           </button>
-          <button type="button" class="btn btn-primary" onclick="saveEdit()">
+          <button
+            type="button"
+            class="btn btn-primary-alt btn-primary"
+            onclick="saveEdit()"
+          >
             Salvar
           </button>
         </div>

@@ -8,11 +8,24 @@ import {
   economiaTotal,
   economiaPorProjeto,
 } from '../../state.js';
+import { auth, deleteUser } from '../../config/db_config.js';
 
 async function render() {
   const s = await getState();
-  document.getElementById('sb-avatar').textContent = s.usuario.iniciais;
-  document.getElementById('sb-nome').textContent = s.usuario.nome;
+  //document.getElementById('sb-avatar').textContent = s.usuario.iniciais;
+  //document.getElementById('sb-nome').textContent = s.usuario.nome;
+
+  const user = auth.currentUser;
+
+  if (user) {
+    const nome = user.displayName || user.email;
+
+    document.getElementById('sb-nome').textContent = nome;
+
+    const iniciais = nome.slice(0, 2).toUpperCase();
+
+    document.getElementById('sb-avatar').textContent = iniciais;
+  }
 
   document.getElementById('kpi-ativos').textContent = projetosAtivos(s).length;
   document.getElementById('kpi-finalizados').textContent =
@@ -71,6 +84,26 @@ async function render() {
     </div>`;
 }
 
+async function deleteAccount() {
+  const confirmDelete = confirm(
+    'Tem certeza que deseja excluir sua conta? Esta ação não poderá ser desfeita.'
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    await deleteUser(auth.currentUser);
+
+    alert('Conta excluida com sucesso.');
+
+    location.href = '../login/login.html';
+  } catch (error) {
+    console.error(error);
+
+    alert('Não foi possível excluir a conta.');
+  }
+}
+
 function formatCurrencyShort(v) {
   if (v >= 1000) return 'R$' + (v / 1000).toFixed(1) + 'k';
   return 'R$' + v;
@@ -125,4 +158,5 @@ export {
   setPeriodo,
   toggleMenu,
   minimizeMenu,
+  deleteAccount,
 };

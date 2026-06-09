@@ -194,7 +194,6 @@ strong {
   background: var(--purple-light-alt);
   color: var(--white);
 }
-
 .btn-dark {
   background: var(--black);
   color: var(--white);
@@ -234,6 +233,26 @@ strong {
 .btn-danger:hover {
   background: #c62828;
   color: var(--white);
+}
+
+.google-text {
+  margin-left: 6px;
+}
+
+.g-blue {
+  color: #4285f4;
+}
+
+.g-red {
+  color: #ea4335;
+}
+
+.g-yellow {
+  color: #fbbc05;
+}
+
+.g-green {
+  color: #34a853;
 }
 
 /* ── HEADER LANDING ─────────────────────────────────────── */
@@ -565,7 +584,7 @@ strong {
 }
 
 .field input::placeholder {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.674);
 }
 
 .field input:focus,
@@ -735,14 +754,9 @@ strong {
 }
 
 .sidebar-footer {
-  margin-top: auto;
-  padding-top: 1.2rem;
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
   border-top: 1px solid rgba(255, 255, 255, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.6rem;
-  transition: 0.3s ease;
 }
 
 .user-info {
@@ -757,6 +771,7 @@ strong {
   background: var(--purple-dark);
   border-radius: 50%;
   display: flex;
+  text-align: center;
   align-items: center;
   justify-content: center;
   font-family: var(--font-head);
@@ -789,7 +804,59 @@ strong {
   align-items: center;
 }
 
+.user-dados {
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: 0.3s ease;
+}
+
 .btn-sair:hover {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.btn-excluir-conta {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius-sm);
+  transition:
+    color var(--transition),
+    background var(--transition);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.8rem;
+}
+
+.btn-excluir-conta:hover {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.btn-esqueci-senha {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.829);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition:
+    color var(--transition),
+    background var(--transition);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-esqueci-senha:hover {
   color: var(--white);
   background: rgba(255, 255, 255, 0.12);
 }

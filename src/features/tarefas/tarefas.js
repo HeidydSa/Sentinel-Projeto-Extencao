@@ -8,6 +8,7 @@ import {
   tarefasAtivas,
   formatCurrency,
 } from '../../state.js';
+import { auth, deleteUser } from '../../config/db_config.js';
 
 const COLUNAS = [
   { id: 'afazer', label: 'A FAZER', cls: 'afazer' },
@@ -29,8 +30,20 @@ async function render(state = null) {
     projetosAtivos(s).length;
   document.getElementById('kpi-tarefas').textContent = tarefasAtivas(s).length;
 
-  document.getElementById('sb-avatar').textContent = s.usuario.iniciais;
-  document.getElementById('sb-nome').textContent = s.usuario.nome;
+  //document.getElementById('sb-avatar').textContent = s.usuario.iniciais;
+  //document.getElementById('sb-nome').textContent = s.usuario.nome;
+
+  const user = auth.currentUser;
+
+  if (user) {
+    const nome = user.displayName || user.email;
+
+    document.getElementById('sb-nome').textContent = nome;
+
+    const iniciais = nome.slice(0, 2).toUpperCase();
+
+    document.getElementById('sb-avatar').textContent = iniciais;
+  }
 
   const board = document.getElementById('kanban-board');
   board.innerHTML = '';
@@ -60,6 +73,26 @@ async function render(state = null) {
   document
     .querySelectorAll('.move-menu.open')
     .forEach((m) => m.classList.remove('open'));
+}
+
+async function deleteAccount() {
+  const confirmDelete = confirm(
+    'Tem certeza que deseja excluir sua conta? Esta ação não poderá ser desfeita.'
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    await deleteUser(auth.currentUser);
+
+    alert('Conta excluida com sucesso.');
+
+    location.href = '../login/login.html';
+  } catch (error) {
+    console.error(error);
+
+    alert('Não foi possível excluir a conta.');
+  }
 }
 
 function renderCard(t, s) {
@@ -316,6 +349,7 @@ if (typeof window !== 'undefined') {
     toggleMenu,
     minimizeMenu,
     handleDrop,
+    deleteAccount,
   });
 }
 

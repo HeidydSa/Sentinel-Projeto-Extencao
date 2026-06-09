@@ -6,14 +6,28 @@ import {
   economiaPorProjeto,
   formatCurrency,
 } from '../../state.js';
+import { auth, deleteUser } from '../../config/db_config.js';
 
 async function render() {
   const s = await getState();
-  document.getElementById('sb-avatar').textContent = s.usuario.iniciais;
-  document.getElementById('sb-nome').textContent = s.usuario.nome;
+
+  //document.getElementById('sb-avatar').textContent = s.usuario.iniciais;
+  //document.getElementById('sb-nome').textContent = s.usuario.nome;
 
   const grid = document.getElementById('projetos-grid');
   const ativos = projetosAtivos(s);
+
+  const user = auth.currentUser;
+
+  if (user) {
+    const nome = user.displayName || user.email;
+
+    document.getElementById('sb-nome').textContent = nome;
+
+    const iniciais = nome.slice(0, 2).toUpperCase();
+
+    document.getElementById('sb-avatar').textContent = iniciais;
+  }
 
   if (ativos.length === 0) {
     grid.innerHTML = '<p class="empty-state">Nenhum projeto ativo.</p>';
@@ -46,6 +60,26 @@ async function render() {
     .join('');
 }
 
+async function deleteAccount() {
+  const confirmDelete = confirm(
+    'Tem certeza que deseja excluir sua conta? Esta ação não poderá ser desfeita.'
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    await deleteUser(auth.currentUser);
+
+    alert('Conta excluida com sucesso.');
+
+    location.href = '../login/login.html';
+  } catch (error) {
+    console.error(error);
+
+    alert('Não foi possível excluir a conta.');
+  }
+}
+
 function esc(str) {
   return String(str || '')
     .replace(/&/g, '&amp;')
@@ -72,4 +106,4 @@ if (typeof window !== 'undefined') {
   Object.assign(window, { render, esc, toggleMenu, minimizeMenu });
 }
 
-export { render, esc, toggleMenu, minimizeMenu };
+export { render, esc, toggleMenu, minimizeMenu, deleteAccount };
