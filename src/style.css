@@ -1600,7 +1600,8 @@ strong {
 /* ── RESPONSIVO ─────────────────────────────────────────── */
 @media (max-width: 900px) {
   .kanban {
-    grid-template-columns: repeat(2, minmax(200px, 1fr));
+    grid-template-columns: 1fr;
+    min-width: unset;
   }
 }
 
