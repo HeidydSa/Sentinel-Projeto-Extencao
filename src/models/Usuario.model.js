@@ -1,17 +1,11 @@
-import {
-  isEmail,
-  isNonEmptyString,
-  isString,
-} from '../utils/typeValidations.js';
+import { isEmail, isNonEmptyString } from '../utils/typeValidations.js';
 
 export class Usuario {
-  constructor(id, nome, sobrenome, email, senha, funcaoId, dataCriacao) {
+  constructor(id, nome, sobrenome, email, dataCriacao) {
     this.id = id ?? '';
     this.nome = nome;
     this.sobrenome = sobrenome;
     this.email = email;
-    this.senha = senha;
-    this.funcaoId = funcaoId;
     this.dataCriacao = new Date(dataCriacao);
 
     this.validate();
@@ -28,14 +22,6 @@ export class Usuario {
 
     if (!isEmail(this.email)) {
       throw new TypeError('Email não pode ser uma string vazia');
-    }
-
-    if (!isNonEmptyString(this.senha)) {
-      throw new TypeError('Senha não pode ser uma string vazia');
-    }
-
-    if (!isString(this.funcaoId)) {
-      throw new TypeError('Função ID não pode ser uma string vazia');
     }
 
     if (!(this.dataCriacao instanceof Date)) {

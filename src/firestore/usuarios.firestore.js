@@ -60,8 +60,7 @@ export class UsuarioFirestore {
       data.nome,
       data.sobrenome,
       data.email,
-      data.senha,
-      data.funcao_id,
+      // data.funcao_id,
       data.data_criacao
     );
   }
