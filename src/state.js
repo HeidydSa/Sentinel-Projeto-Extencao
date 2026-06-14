@@ -70,7 +70,7 @@ const DEFAULT_STATE = {
   usuario: { nome: 'Heidy de Sá', iniciais: 'He' },
 };
 
-const STATE_KEY = 'upscale_state';
+let state = null;
 
 async function loadState() {
   try {
@@ -98,18 +98,18 @@ async function loadState() {
   }
 }
 
-async function saveState(state) {
-  localStorage.setItem(STATE_KEY, JSON.stringify(state));
-}
-
 async function getState() {
-  return await loadState();
+  state = await loadState();
+  return state;
 }
 
-async function setState(updater) {
-  const s = await loadState();
-  updater(s);
-  await saveState(s);
+function getLocalState() {
+  return state;
+}
+
+function setState(updater) {
+  updater(state);
+  return state;
 }
 
 // ── DERIVAÇÕES ──────────────────────────────────────────────
@@ -161,6 +161,7 @@ function pidNew() {
 if (typeof window !== 'undefined') {
   Object.assign(window, {
     getState,
+    getLocalState,
     setState,
     projetosAtivos,
     tarefasAtivas,
@@ -176,8 +177,8 @@ if (typeof window !== 'undefined') {
 
 export {
   loadState,
-  saveState,
   getState,
+  getLocalState,
   setState,
   projetosAtivos,
   tarefasAtivas,
