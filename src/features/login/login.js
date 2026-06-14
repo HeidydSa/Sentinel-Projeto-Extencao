@@ -1,8 +1,9 @@
 /* exported togglePw, handleLogin */
 
-import { projetosService } from '../../config/container.js';
+import { projetosService, usuariosService } from '../../config/container.js';
 import {
   auth,
+  signOut,
   signInWithEmailAndPassword,
   googleProvider,
   signInWithPopup,
@@ -11,6 +12,7 @@ import {
 
 console.log(projetosService.getAll().then((p) => console.log(p)));
 
+// Ver a senha
 function togglePw() {
   const inp = document.getElementById('senha'),
     btn = document.querySelector('.toggle-pw');
@@ -54,11 +56,26 @@ async function handleLogin() {
   }
 }
 
+// Login com o google sem cadastro, precisa das informações do Firestore para funcionar.
 async function loginGoogle() {
   try {
+    googleProvider.setCustomParameters({
+      prompt: 'select_account',
+    });
+
     const result = await signInWithPopup(auth, googleProvider);
 
-    console.log('Usuário:', result.user);
+    const emailGoogle = result.user.email;
+
+    const usuarios = await usuariosService.getAll();
+
+    const usuarioExiste = usuarios.some((u) => u.email === emailGoogle);
+
+    if (!usuarioExiste) {
+      await signOut(auth);
+      alert('Usuário não cadastrado.');
+      return;
+    }
 
     location.href = '../tarefas/tarefas.html';
   } catch (error) {
@@ -66,6 +83,9 @@ async function loginGoogle() {
   }
 }
 
+window.loginGoogle = loginGoogle;
+
+// Botão esqueci a senha
 async function resetSenha() {
   const email = document.getElementById('email').value.trim();
 
@@ -78,7 +98,7 @@ async function resetSenha() {
   try {
     await sendPasswordResetEmail(auth, email);
 
-    alert('E-mail de redefinição enviado');
+    alert('E-mail de redefinição enviado. \nVerifique a caixa de Span!');
   } catch (error) {
     console.error(error);
 
