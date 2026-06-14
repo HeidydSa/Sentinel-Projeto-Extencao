@@ -29,7 +29,7 @@
             <li><a href="../../index.html#contatos">Contatos</a></li>
           </ul>
         </nav>
-        <a href="../login/login.html" class="btn btn-dark">Entrar</a>
+        <a href="../tarefas/tarefas.html" class="btn btn-dark">Entrar</a>
       </div>
     </header>
     <main id="main-content" class="auth-main">
@@ -37,7 +37,7 @@
         <h1 id="cad-title">Criar conta</h1>
         <div class="auth-form">
           <div class="field">
-            <label for="nome">Nome completo</label>
+            <label for="nome">Nome *</label>
             <input
               type="text"
               id="nome"
@@ -53,7 +53,7 @@
             ></span>
           </div>
           <div class="field">
-            <label for="email">E-mail</label>
+            <label for="email">E-mail *</label>
             <input
               type="email"
               id="email"
@@ -69,7 +69,7 @@
             ></span>
           </div>
           <div class="field">
-            <label for="senha">Senha</label>
+            <label for="senha">Senha *</label>
             <div class="input-wrapper">
               <input
                 type="password"
@@ -97,6 +97,43 @@
               aria-live="polite"
             ></span>
           </div>
+          <div class="field">
+            <label for="funcao">Função *</label>
+            <div class="btn-funcao">
+              <button
+                type="button"
+                class="btn btn-primary-alt btn-full"
+                id="lider"
+                onclick="funcao(this)"
+              >
+                Líder
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary-alt btn-full"
+                id="dev"
+                onclick="funcao(this)"
+              >
+                Dev
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary-alt btn-full"
+                id="analista"
+                onclick="funcao(this)"
+              >
+                Analista
+              </button>
+            </div>
+            <span
+              class="field-error"
+              id="atributo-error"
+              role="alert"
+              aria-live="polite"
+            ></span>
+          </div>
+        </div>
+        <div class="auth-alt">
           <button
             type="button"
             class="btn btn-primary-alt btn-full"
@@ -104,9 +141,11 @@
           >
             Criar conta
           </button>
-          <p class="auth-alt">
-            Já tem conta? <a href="../login/login.html">Entrar</a>
-          </p>
+        </div>
+        <div class="auth-alt">
+          <a class="btn btn-funcao-alt btn-full" href="../tarefas/tarefas.html"
+            >Voltar</a
+          >
         </div>
       </div>
     </main>

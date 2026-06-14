@@ -19,10 +19,25 @@ function togglePw() {
   btn.setAttribute('aria-pressed', hide);
 }
 
+let tipoFuncao = '';
+
+window.funcao = function (btn) {
+  document.querySelectorAll('.btn-funcao .btn').forEach((b) => {
+    b.classList.remove('btn-selected');
+  });
+  btn.classList.add('btn-selected');
+
+  tipoFuncao = btn.textContent.trim();
+};
+
+const EMAIL_ADMIN = 'heidy.g.sa@gmail.com';
+const SENHA_ADMIN = 'admin123';
+
 async function handleCad() {
   const nome = document.getElementById('nome').value.trim();
   const email = document.getElementById('email').value.trim();
   const senha = document.getElementById('senha').value;
+  const senha_adm = document.getElementById('senha_adm').value;
 
   ['nome', 'email', 'senha'].forEach(
     (id) => (document.getElementById(id + '-error').textContent = '')
@@ -45,22 +60,27 @@ async function handleCad() {
     if (ok) document.getElementById('senha').focus();
     ok = false;
   }
-
-  /*if (ok) {
-    setState((s) => {
-      const partes = nome.trim().split(' ');
-      s.usuario = {
-        nome,
-        iniciais: (
-          partes[0][0] + (partes[1] ? partes[1][0] : partes[0][1] || '')
-        ).toUpperCase(),
-      };
-    });
-    location.href = '../tarefas/tarefas.html';
-  }*/
+  if (senha_adm !== SENHA_ADMIN) {
+    document.getElementById('email_adm-error').textContent =
+      'Senha administrador inválida.';
+    return;
+  }
+  if (!tipoFuncao) {
+    document.getElementById('atributo-error').textContent =
+      'Selecione uma função';
+    ok = false;
+  }
   if (!ok) return;
 
   try {
+    const usuariosService = {
+      nome,
+      email,
+      funcao: tipoFuncao,
+    };
+
+    console.log(usuariosService);
+
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
