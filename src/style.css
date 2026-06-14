@@ -1620,6 +1620,7 @@ strong {
   display: grid;
   grid-template-columns: 2fr 1fr;
   max-height: 600px;
+  max-width: 800px;
   margin: auto;
   gap: 0.8rem;
   overflow-y: auto;
