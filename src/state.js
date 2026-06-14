@@ -1,56 +1,3 @@
-// ============================================================
-// state.js — Estado global compartilhado entre todas as páginas
-// ============================================================
-
-/* exported getState, setState, projetosAtivos, tarefasAtivas, economiaTotal, economiaPorProjeto, tarefasFinalizadas, formatCurrency, formatDateDisplay, uid, pidNew */
-
-// const DEFAULT_STATE = {
-//   projetos: [
-//     { id: 'p1', nome: 'Projeto 01', status: 'em produção' },
-//     { id: 'p2', nome: 'Projeto 02', status: 'em produção' },
-//     { id: 'p3', nome: 'Projeto 03', status: 'não iniciado' },
-//   ],
-//   tarefas: [
-//     {
-//       id: 't1',
-//       titulo: 'Tarefa 01',
-//       data: '2026-05-05',
-//       economia: 100,
-//       projetoId: 'p1',
-//       responsavel: 'He',
-//       coluna: 'afazer',
-//     },
-//     {
-//       id: 't2',
-//       titulo: 'Tarefa 02',
-//       data: '2026-05-01',
-//       economia: 350,
-//       projetoId: 'p1',
-//       responsavel: 'Ad',
-//       coluna: 'finalizado',
-//     },
-//     {
-//       id: 't3',
-//       titulo: 'Tarefa 03',
-//       data: '2026-04-05',
-//       economia: 2000,
-//       projetoId: 'p2',
-//       responsavel: 'He',
-//       coluna: 'iniciado',
-//     },
-//     {
-//       id: 't4',
-//       titulo: 'Tarefa 04',
-//       data: '2026-05-10',
-//       economia: 1000,
-//       projetoId: 'p3',
-//       responsavel: 'Al',
-//       coluna: 'afazer',
-//     },
-//   ],
-//   usuario: { nome: 'Heidy de Sá', iniciais: 'He' },
-// };
-
 import {
   projetosService,
   equipesService,
@@ -60,6 +7,7 @@ import {
   tarefasService,
 } from './config/container.js';
 import { EnumStatusProjeto } from './utils/enums.js';
+import { auth } from './config/db_config.js';
 
 const DEFAULT_STATE = {
   projetos: [],
@@ -114,6 +62,19 @@ function setState(updater) {
 }
 
 // ── DERIVAÇÕES ──────────────────────────────────────────────
+
+//Configuração do botao de entrar
+const btnEntrar = document.getElementById('btnEntrar');
+
+if (btnEntrar) {
+  btnEntrar.onclick = () => {
+    if (auth.currentUser) {
+      location.href = './features/tarefas/tarefas.html';
+    } else {
+      location.href = './features/login/login.html';
+    }
+  };
+}
 
 function projetosAtivos(state) {
   return state.projetos.filter(
