@@ -11,6 +11,7 @@ import {
 } from '../../state.js';
 import { auth, deleteUser } from '../../config/db_config.js';
 import { Tarefa } from '../../models/Tarefa.model.js';
+import { showToast } from '../../utils/toast.js';
 
 const COLUNAS = [
   { id: 'afazer', label: 'A FAZER', cls: 'afazer' },
@@ -20,6 +21,18 @@ const COLUNAS = [
 ];
 
 let s;
+
+document.addEventListener('click', () => {
+  document
+    .querySelectorAll('.move-menu.open')
+    .forEach((m) => m.classList.remove('open'));
+  document
+    .querySelectorAll('.btn-move')
+    .forEach((b) => b.setAttribute('aria-expanded', 'false'));
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') handleEsc();
+});
 
 async function render(state = null) {
   if (state) {
@@ -179,15 +192,6 @@ function toggleMoveMenu(e, menuId) {
   }
 }
 
-document.addEventListener('click', () => {
-  document
-    .querySelectorAll('.move-menu.open')
-    .forEach((m) => m.classList.remove('open'));
-  document
-    .querySelectorAll('.btn-move')
-    .forEach((b) => b.setAttribute('aria-expanded', 'false'));
-});
-
 async function moveCard(tarefaId, novaColuna) {
   try {
     let tarefa = null;
@@ -218,7 +222,9 @@ async function openEdit(tarefaId) {
 
   document.getElementById('edit-id').value = t.id;
   document.getElementById('edit-titulo').value = t.titulo;
-  document.getElementById('edit-data').value = t.data;
+  document.getElementById('edit-data').value = t.data
+    .toISOString()
+    .split('T')[0];
   document.getElementById('edit-economia').value = t.economia;
 
   const sel = document.getElementById('edit-projeto');
@@ -236,6 +242,9 @@ async function openEdit(tarefaId) {
     )
     .join('');
   const modalEditTask = document.getElementById('modal-edit-task');
+  modalEditTask.onclick = (e) => {
+    if (e.target === e.currentTarget) closeModalEditTask();
+  };
   modalEditTask.classList.add('open');
   modalEditTask.setAttribute('aria-hidden', 'false');
   document.getElementById('edit-titulo').focus();
@@ -249,6 +258,9 @@ function closeModalEditTask() {
 
 function openDeleteTask(tarefaId) {
   const modalDeleteTask = document.getElementById('modal-delete-task');
+  modalDeleteTask.onclick = (e) => {
+    if (e.target === e.currentTarget) closeModalDeleteTask();
+  };
   modalDeleteTask.classList.add('open');
   modalDeleteTask.setAttribute('aria-hidden', 'false');
 
@@ -296,15 +308,17 @@ async function saveEdit(e) {
   const idProjeto = formData.get('idProjeto').trim();
   const id = formData.get('id');
 
+  let tarefa;
+
   try {
     const state = setState((s) => {
-      const t = s.tarefas.find((x) => x.id === id);
-      if (t) {
-        t.titulo = titulo;
-        t.data = data;
-        t.economia = economia;
-        t.responsavel = idResponsavel;
-        t.idProjeto = idProjeto;
+      tarefa = s.tarefas.find((x) => x.id === id);
+      if (tarefa) {
+        tarefa.titulo = titulo;
+        tarefa.data = data;
+        tarefa.economia = economia;
+        tarefa.idResponsavel = idResponsavel;
+        tarefa.idProjeto = idProjeto;
       } else {
         throw new Error('Tarefa não encontrada no estado');
       }
@@ -312,28 +326,15 @@ async function saveEdit(e) {
 
     render(state);
 
-    await tarefasService.update(id, {
-      titulo,
-      data,
-      economia,
-      idResponsavel,
-      idProjeto,
-    });
+    await tarefasService.update(id, tarefa);
     showToast(`Tarefa atualizada com sucesso`, 'success');
+    closeModalEditTask();
   } catch (error) {
     console.error(error);
     showToast('Erro ao atualizar tarefa', 'error');
     render();
   }
-
-  closeModalEditTask();
-  showToast('Tarefa atualizada!', 'success');
-  render();
 }
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') handleEsc();
-});
 
 function handleEsc() {
   if (document.getElementById('modal-edit-task').classList.contains('open')) {
@@ -349,10 +350,6 @@ function handleEsc() {
   closeModalCreateTask();
   closeModalDeleteTask();
 }
-
-document.getElementById('modal-edit-task').addEventListener('click', (e) => {
-  if (e.target === e.currentTarget) closeModalEditTask();
-});
 
 async function openCreateTask() {
   const projetoSelect = document.getElementById('create-projeto');
@@ -372,6 +369,9 @@ async function openCreateTask() {
   ].join('');
 
   const modalCreateTask = document.getElementById('modal-create-task');
+  modalCreateTask.onclick = (e) => {
+    if (e.target === e.currentTarget) closeModalCreateTask();
+  };
   modalCreateTask.classList.add('open');
   modalCreateTask.setAttribute('aria-hidden', 'false');
   document.getElementById('create-titulo').focus();
@@ -403,11 +403,6 @@ async function saveCreateTask(e) {
     idCriador: user ? user.uid : 'unknown',
   });
 
-  const state = getState((s) => {
-    s.tarefas.push(tarefa);
-  });
-
-  render(state);
   try {
     await tarefasService.create(tarefa);
     showToast(`Tarefa criada com sucesso`, 'success');
@@ -420,31 +415,6 @@ async function saveCreateTask(e) {
   closeModalCreateTask();
   showToast('Tarefa criada!', 'success');
   render();
-}
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeModalCreateTask();
-});
-
-function showToast(msg, type = '') {
-  const toastContainer = document.getElementById('toast-container');
-
-  const newToast = document.createElement('div');
-  newToast.className = 'toast' + (type ? ' ' + type : '');
-  newToast.textContent = msg;
-  newToast.ariaRoleDescription = 'status';
-  newToast.ariaLive = 'polite';
-
-  toastContainer.appendChild(newToast);
-
-  setTimeout(() => {
-    newToast.classList.add('show');
-  }, 100);
-
-  setTimeout(() => {
-    newToast.classList.remove('show');
-    setTimeout(() => toastContainer.removeChild(newToast), 300);
-  }, 2500);
 }
 
 function toggleMenu(btn) {
@@ -498,7 +468,6 @@ if (typeof window !== 'undefined') {
     openDeleteTask,
     closeModalDeleteTask,
     saveEdit,
-    showToast,
     toggleMenu,
     minimizeMenu,
     handleDrop,
