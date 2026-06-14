@@ -424,9 +424,11 @@ function handleEsc() {
   if (document.getElementById('modal-delete-task').classList.contains('open')) {
     closeModalDeleteTask();
   }
-  closeModalEditTask();
-  closeModalCreateTask();
-  closeModalDeleteTask();
+  if (
+    document.getElementById('modal-details-task').classList.contains('open')
+  ) {
+    closeDetailsModal();
+  }
 }
 
 async function openCreateTask() {
@@ -565,12 +567,17 @@ function openDetailsModal(tarefaId) {
     `${formatCurrency(t.economia)}`;
 
   modal.onclick = (e) => {
-    if (e.target === e.currentTarget) modal.classList.remove('open');
+    if (e.target === e.currentTarget) closeDetailsModal();
   };
 
   modal.classList.add('open');
 
   renderComments(t);
+}
+
+function closeDetailsModal() {
+  const modal = document.getElementById('modal-details-task');
+  modal.classList.remove('open');
 }
 
 function renderComments(tarefa) {
@@ -712,6 +719,7 @@ if (typeof window !== 'undefined') {
     minimizeMenu,
     handleDrop,
     deleteAccount,
+    closeDetailsModal,
     filtrarTarefa,
     openDetailsModal,
   });

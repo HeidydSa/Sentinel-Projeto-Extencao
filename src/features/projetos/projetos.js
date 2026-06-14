@@ -14,6 +14,10 @@ import { projetosService, usuariosService } from '../../config/container.js';
 import { Projeto } from '../../models/Projeto.model.js';
 import { showToast } from '../tarefas/tarefas.js';
 
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') handleEsc();
+});
+
 async function render(s) {
   let state;
   if (s) {
@@ -330,6 +334,29 @@ function filtrarProjeto() {
   });
 
   render({ ...state, projetos: projetosFiltrados });
+}
+
+function handleEsc() {
+  if (
+    document.getElementById('modal-edit-project').classList.contains('open')
+  ) {
+    closeEditModal();
+  }
+  if (
+    document.getElementById('modal-create-project').classList.contains('open')
+  ) {
+    closeCreateModal();
+  }
+  if (
+    document.getElementById('modal-delete-project').classList.contains('open')
+  ) {
+    closeDeleteModal();
+  }
+  if (
+    document.getElementById('modal-details-project').classList.contains('open')
+  ) {
+    closeDetailsModal();
+  }
 }
 
 render();
