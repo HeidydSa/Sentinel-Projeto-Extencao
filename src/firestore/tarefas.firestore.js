@@ -1,18 +1,18 @@
-import { db } from '../config/db_config.js';
-
 import { Tarefa } from '../models/Tarefa.model.js';
 
 export const TAREFA = 'tarefas';
 
 export class TarefaFirestore {
-  constructor(firebase, usuarioFirestore) {
+  constructor({ firebase, db, usuarioFirestore, comentarioFirestore }) {
     this.firebase = firebase;
+    this.db = db;
     this.usuarioFirestore = usuarioFirestore;
+    this.comentarioFirestore = comentarioFirestore;
   }
 
   async getAll() {
     const querySnapshot = await this.firebase.getDocs(
-      this.firebase.collection(db, TAREFA)
+      this.firebase.collection(this.db, TAREFA)
     );
     const tarefas = await Promise.all(
       querySnapshot.docs.map(async (s) => {
@@ -20,6 +20,7 @@ export class TarefaFirestore {
         const responsavel = await this.usuarioFirestore.getById(
           data.id_responsavel
         );
+        data.comentarios = await this.comentarioFirestore.getAll(s.id);
 
         if (responsavel) {
           data.responsavel = responsavel;
@@ -35,13 +36,14 @@ export class TarefaFirestore {
   }
 
   async getById(id) {
-    const docRef = this.firebase.doc(db, TAREFA, id);
+    const docRef = this.firebase.doc(this.db, TAREFA, id);
     const docSnap = await this.firebase.getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
       const responsavel = await this.usuarioFirestore.getById(
         data.id_responsavel
       );
+      data.comentarios = await this.comentarioFirestore.getAll(docSnap.id);
 
       if (responsavel) {
         data.responsavel = responsavel;
@@ -58,7 +60,7 @@ export class TarefaFirestore {
   async create(data) {
     const persisted = data.toPersisted();
     const docRef = await this.firebase.addDoc(
-      this.firebase.collection(db, TAREFA),
+      this.firebase.collection(this.db, TAREFA),
       {
         ...persisted,
       }
@@ -69,12 +71,12 @@ export class TarefaFirestore {
 
   async update(id, updateData) {
     const persisted = updateData.toPersisted();
-    const docRef = this.firebase.doc(db, TAREFA, id);
+    const docRef = this.firebase.doc(this.db, TAREFA, id);
     await this.firebase.updateDoc(docRef, { ...persisted });
   }
 
   async delete(id) {
-    const docRef = this.firebase.doc(db, TAREFA, id);
+    const docRef = this.firebase.doc(this.db, TAREFA, id);
     await this.firebase.deleteDoc(docRef);
   }
 
@@ -89,6 +91,8 @@ export class TarefaFirestore {
       idResponsavel: data.id_responsavel,
       status: data.status,
       responsavel: data.responsavel,
+      descricao: data.descricao,
+      comentarios: data.comentarios,
     });
   }
 }

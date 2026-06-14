@@ -1241,6 +1241,12 @@ strong {
   color: var(--purple);
 }
 
+.task-card .btn-details {
+  width: 80%;
+  max-width: 250px;
+  margin: auto;
+}
+
 .task-actions {
   display: flex;
   flex-wrap: wrap;
@@ -1392,6 +1398,10 @@ strong {
   transform: translateY(20px);
   transition: transform var(--transition);
   color: var(--white);
+}
+
+.modal.fullwidth {
+  max-width: none;
 }
 
 .modal-edit.open .modal {
@@ -1605,6 +1615,92 @@ strong {
   transform: translateY(0);
 }
 
+/* MODAL DETALHES TAREFA */
+#modal-details-task .modal {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  max-height: 600px;
+  margin: auto;
+  gap: 0.8rem;
+  overflow-y: auto;
+}
+
+aside.informacoes {
+  grid-column: 2/3;
+  grid-row: 1/-1;
+}
+
+#modal-details-task.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+#comentario-section {
+  margin-top: 1rem;
+}
+
+.comentario {
+  position: relative;
+  background: var(--grey-100);
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-md);
+  padding: 0.8rem;
+  margin-bottom: 0.6rem;
+  max-width: 60ch;
+}
+
+.comentario-autor {
+  font-weight: bold;
+  color: var(--black);
+}
+
+.comentario-detalhe {
+  margin-top: 0.3rem;
+  color: var(--grey-700);
+}
+
+.comentario-data {
+  font-size: 0.75rem;
+  color: var(--grey-700);
+  margin-top: 0.4rem;
+  text-align: right;
+}
+
+.comentario-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  max-width: 60ch;
+}
+
+.comentario-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-delete-comentario {
+  position: absolute;
+  right: 0.8rem;
+  background-color: rgba(250, 114, 114, 0.589);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(250, 114, 114, 0.589);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  box-shadow: 1px 1px 3px rgba(255, 0, 0, 0.5);
+  cursor: pointer;
+  transition: 0.1s ease;
+}
+
+.btn-delete-comentario:hover {
+  background-color: rgba(250, 114, 114, 0.8);
+  border-color: rgba(250, 114, 114, 0.8);
+}
 /* ── PROJETOS ───────────────────────────────────────────── */
 .section-title {
   font-family: var(--font-head);
@@ -1636,6 +1732,12 @@ strong {
   transition:
     box-shadow var(--transition),
     transform var(--transition);
+}
+
+.projeto-card .btn-details {
+  width: 80%;
+  max-width: 250px;
+  margin: auto;
 }
 
 .projeto-card:hover {

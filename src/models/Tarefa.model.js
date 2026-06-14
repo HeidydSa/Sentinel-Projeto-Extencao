@@ -12,6 +12,8 @@ export class Tarefa {
     idResponsavel,
     status,
     responsavel,
+    descricao,
+    comentarios,
   }) {
     this.id = id ?? '-1';
     this.titulo = titulo;
@@ -22,6 +24,8 @@ export class Tarefa {
     this.idResponsavel = idResponsavel ?? '';
     this.status = status ?? 'afazer';
     this.responsavel = responsavel;
+    this.descricao = descricao ?? '';
+    this.comentarios = comentarios ?? [];
 
     this.validate();
   }
@@ -51,6 +55,10 @@ export class Tarefa {
       throw new TypeError('ID do responsável não pode ser uma string vazia');
     }
 
+    if (!isString(this.descricao)) {
+      throw new TypeError('Descrição não pode ser uma string vazia');
+    }
+
     if (!isNonEmptyString(this.status)) {
       throw new TypeError('Status não pode ser uma string vazia');
     }
@@ -61,6 +69,10 @@ export class Tarefa {
       !(this.responsavel instanceof Usuario)
     ) {
       throw new TypeError('Responsável deve ser uma string ou null');
+    }
+
+    if (!Array.isArray(this.comentarios)) {
+      throw new TypeError('Comentários deve ser um array');
     }
   }
 
@@ -73,6 +85,7 @@ export class Tarefa {
       id_projeto: this.idProjeto,
       id_criador: this.idCriador,
       id_responsavel: this.idResponsavel,
+      descricao: this.descricao,
       status: this.status,
     };
   }

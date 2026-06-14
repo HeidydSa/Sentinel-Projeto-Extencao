@@ -79,13 +79,14 @@
           </button>
         </div>
 
-        <buton
+        <button
           href="#"
           class="btn-user"
           aria-label="Sair da conta"
           onclick="logout()"
-          >SAIR</buton
         >
+          SAIR
+        </button>
       </div>
     </aside>
 
@@ -144,7 +145,7 @@
           <div class="filter-field">
             <label
               for="filtro-busca"
-              aria-labelledby="Filtrar tarefas por título, projeto ou responsável"
+              aria-label="Filtrar tarefas por título, projeto ou responsável"
               >Buscar</label
             >
             <input
@@ -174,7 +175,7 @@
       aria-hidden="true"
     >
       <div class="modal">
-        <h2 id="modal-title">Editar tarefa</h2>
+        <h2 id="modal-edit-title">Editar tarefa</h2>
         <form onsubmit="saveEdit(event)">
           <div class="auth-form">
             <input type="hidden" id="edit-id" name="id" />
@@ -203,6 +204,15 @@
                 name="economia"
                 required
               />
+            </div>
+            <div class="field">
+              <textarea
+                id="edit-descricao"
+                name="descricao"
+                rows="6"
+                placeholder="Breve descrição da tarefa"
+                maxlength="225"
+              ></textarea>
             </div>
             <div class="field">
               <label for="edit-responsavel">Nome do responsável</label>
@@ -239,11 +249,11 @@
       id="modal-create-task"
       role="dialog"
       aria-modal="true"
-      aria-labelledby="modal-title"
+      aria-labelledby="modal-create-title"
       aria-hidden="true"
     >
       <div class="modal">
-        <h2 id="modal-title">Criar tarefa</h2>
+        <h2 id="modal-create-title">Criar tarefa</h2>
         <form onsubmit="saveCreateTask(event)">
           <div class="auth-form">
             <input type="hidden" id="create-id" />
@@ -272,6 +282,16 @@
                 placeholder="0,00"
                 required
               />
+            </div>
+            <div class="field">
+              <textarea
+                id="create-descricao"
+                name="descricao"
+                rows="6"
+                placeholder="Breve descrição da tarefa"
+                maxlength="225"
+                required
+              ></textarea>
             </div>
             <div class="field">
               <label for="create-responsavel">Nome do responsável</label>
@@ -334,6 +354,78 @@
             Excluir
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- MODAL DETALHES TAREFA -->
+    <div
+      class="modal-details"
+      id="modal-details-task"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-details-title"
+      aria-hidden="true"
+    >
+      <div class="modal fullwidth">
+        <article>
+          <h2 id="details-titulo"></h2>
+          <div id="details-content">
+            <div>
+              <h2>Descrição</h2>
+              <p id="details-descricao"></p>
+            </div>
+          </div>
+        </article>
+        <aside class="informacoes">
+          <div>
+            <h2>Informações</h2>
+            <p>
+              <strong>Status:</strong>
+              <span id="details-status"> </span>
+            </p>
+            <p>
+              <strong>Responsavel:</strong>
+              <span id="details-responsavel"> </span>
+            </p>
+            <p>
+              <strong>Data de entrega:</strong>
+              <span id="details-data"></span>
+            </p>
+            <p>
+              <strong>Economia:</strong>
+              <span id="details-economia"> </span>
+            </p>
+            <p>
+              <strong>Projeto:</strong>
+              <span id="details-projeto"> </span>
+            </p>
+            <p>
+              <strong>Criado por:</strong>
+              <span id="details-criador"> </span>
+            </p>
+          </div>
+        </aside>
+        <section id="comentario-section">
+          <h2>Comentários</h2>
+          <form id="comentario-form" class="comentario-form">
+            <div class="field">
+              <label for="comentario-input" class="sr-only"
+                >Adicionar comentário</label
+              >
+              <textarea
+                id="comentario-input"
+                placeholder="Adicionar comentário"
+                required
+              ></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary-alt btn-primary">
+              Enviar
+            </button>
+          </form>
+          <div id="comentarios-list" class="comentarios-list">
+            <!-- Comentários renderizados via JS -->
+          </div>
+        </section>
       </div>
     </div>
 

@@ -1,6 +1,6 @@
 /* exported render, renderCard, isLate, esc, toggleMoveMenu, moveCard, openEdit, closeModal, saveEdit, showToast, toggleMenu */
 
-import { tarefasService } from '../../config/container.js';
+import { comentarioService, tarefasService } from '../../config/container.js';
 import {
   getState,
   setState,
@@ -15,6 +15,7 @@ import {
   updateProfile,
   signOut,
 } from '../../config/db_config.js';
+import { Comentario } from '../../models/Comentario.model.js';
 import { Tarefa } from '../../models/Tarefa.model.js';
 import { showToast } from '../../utils/toast.js';
 
@@ -180,7 +181,7 @@ async function deleteAccount() {
 
 function renderCard(t, s) {
   const proj = s.projetos.find((p) => p.id === t.idProjeto);
-  const projNome = proj ? proj.nome : '—';
+  const projNome = proj ? proj.titulo : '—';
   const dataClass = isLate(t)
     ? 'task-date--late'
     : t.status === 'finalizado'
@@ -201,10 +202,14 @@ function renderCard(t, s) {
       <h4 class="task-title">${esc(t.titulo)}</h4>
       <time class="task-date ${dataClass}" datetime="${t.data}">${t.data.toLocaleDateString('pt-BR')}</time>
       <p class="task-economy">Economia: <strong>${formatCurrency(t.economia)}</strong></p>
+
       <div class="task-footer">
         <span class="task-project">${esc(projNome)}</span>
-        <span class="task-avatar" title="Responsável: ${esc(t.responsavel?.getInitials() || 'Não definido')}" aria-label="Responsável: ${esc(t.responsavel?.getInitials())}">${esc(t.responsavel?.getInitials())}</span>
+        <span class="task-avatar" title="Responsável: ${esc(t.responsavel?.getInitials() || 'Não definido')}" 
+        aria-label="Responsável: ${esc(t.responsavel?.getInitials())}">${esc(t.responsavel?.getInitials())}</span>
+
       </div>
+        <button class="btn btn-primary btn-details" onclick="openDetailsModal('${t.id}')">Detalhes</button>
       <div class="task-actions">
         <div class="move-dropdown">
           <button class="btn-move" aria-haspopup="true" aria-expanded="false"
@@ -294,6 +299,7 @@ async function openEdit(tarefaId) {
     .toISOString()
     .split('T')[0];
   document.getElementById('edit-economia').value = t.economia;
+  document.getElementById('edit-descricao').value = t.descricao;
 
   const sel = document.getElementById('edit-projeto');
   sel.innerHTML = s.projetos
@@ -374,6 +380,7 @@ async function saveEdit(e) {
   const data = new Date(formData.get('data') + 'T00:00');
   const economia = parseFloat(formData.get('economia')) || 0;
   const idResponsavel = formData.get('idResponsavel').trim();
+  const descricao = formData.get('descricao').trim();
   const idProjeto = formData.get('idProjeto').trim();
   const id = formData.get('id');
 
@@ -388,6 +395,7 @@ async function saveEdit(e) {
         tarefa.economia = economia;
         tarefa.idResponsavel = idResponsavel;
         tarefa.idProjeto = idProjeto;
+        tarefa.descricao = descricao;
       } else {
         throw new Error('Tarefa não encontrada no estado');
       }
@@ -462,6 +470,7 @@ async function saveCreateTask(e) {
   const data = new Date(formData.get('data') + 'T00:00');
   const economia = parseFloat(formData.get('economia')) || 0;
   const idResponsavel = formData.get('idResponsavel').trim();
+  const descricao = formData.get('descricao').trim();
   const idProjeto = formData.get('idProjeto').trim();
   const user = auth.currentUser;
   const tarefa = new Tarefa({
@@ -470,6 +479,7 @@ async function saveCreateTask(e) {
     economia,
     idResponsavel,
     idProjeto,
+    descricao,
     idCriador: user ? user.uid : 'unknown',
   });
 
@@ -518,6 +528,146 @@ function handleDragLeave(e) {
   }
 }
 
+function openDetailsModal(tarefaId) {
+  const s = getLocalState();
+  const t = s.tarefas.find((x) => x.id === tarefaId);
+  if (!t) return;
+  const criador = s.usuarios.find((u) => u.id === t.idCriador);
+
+  document.getElementById('comentario-form').onsubmit = (event) =>
+    addComentario(event, t.id);
+
+  const projeto = s.projetos.find((p) => p.id === t.idProjeto);
+  const responsavel = s.usuarios.find((u) => u.id === t.idResponsavel);
+
+  const modal = document.getElementById('modal-details-task');
+
+  document.getElementById('details-titulo').textContent = t.titulo;
+
+  document.getElementById('details-descricao').textContent = t.descricao;
+
+  document.getElementById('details-projeto').textContent =
+    `${projeto ? projeto.titulo : '—'}`;
+
+  document.getElementById('details-responsavel').textContent =
+    `${responsavel ? `${responsavel.nome} ${responsavel.sobrenome}` : '—'}`;
+
+  document.getElementById('details-status').textContent =
+    `${t.status.toUpperCase()}`;
+
+  document.getElementById('details-criador').textContent =
+    `${[criador?.nome, criador?.sobrenome].join(' ') || '—'}`;
+
+  document.getElementById('details-data').textContent =
+    `${t.data.toLocaleDateString('pt-BR')}`;
+
+  document.getElementById('details-economia').textContent =
+    `${formatCurrency(t.economia)}`;
+
+  modal.onclick = (e) => {
+    if (e.target === e.currentTarget) modal.classList.remove('open');
+  };
+
+  modal.classList.add('open');
+
+  renderComments(t);
+}
+
+function renderComments(tarefa) {
+  tarefa.comentarios.sort(
+    (a, b) => new Date(b.dataCriacao) - new Date(a.dataCriacao)
+  );
+
+  const container = document.getElementById('comentarios-list');
+  const state = getLocalState() || { usuarios: [] };
+
+  container.innerHTML = tarefa.comentarios
+    .map((c) => {
+      const autor =
+        c.autor ||
+        state.usuarios.find((u) => u.id === c.idUsuario)?.nome ||
+        'Desconhecido';
+
+      return `
+      <div class="comentario">
+        <button class="btn-delete-comentario" onclick="deleteComentario('${c.id}', '${tarefa.id}')">×</button>
+
+        <p class="comentario-autor">${autor}</p>
+        <p class="comentario-detalhe">
+          ${c.detalhe}
+        </p>
+        <div class="comentario-footer">
+          <p class="comentario-data">${new Date(c.dataCriacao).toLocaleString('pt-BR')}</p>
+        </div>
+      </div>
+      `;
+    })
+    .join('');
+}
+
+async function addComentario(e, id) {
+  try {
+    e.preventDefault();
+    const detalhe = document.getElementById('comentario-input').value.trim();
+
+    let tarefa;
+    let comentario;
+
+    setState((s) => {
+      tarefa = s.tarefas.find((t) => t.id === id);
+      if (tarefa) {
+        const user = auth.currentUser;
+        comentario = new Comentario({
+          id: `c${Date.now()}`,
+          idUsuario: user ? user.uid : 'unknown',
+          detalhe,
+          dataCriacao: new Date(),
+        });
+        comentario.autor = user
+          ? `${user.displayName || user.email}`
+          : 'Desconhecido';
+        tarefa.comentarios.push(comentario);
+      } else {
+        throw new Error('Tarefa não encontrada no estado');
+      }
+    });
+
+    const comentarioId = await comentarioService.create(tarefa.id, comentario);
+    comentario.id = comentarioId;
+    renderComments(tarefa);
+    document.getElementById('comentario-input').value = '';
+  } catch (error) {
+    console.error(error);
+    showToast('Erro ao comentar', 'error');
+    const tarefa = await tarefasService.getById(id);
+    renderComments(tarefa);
+  }
+}
+
+async function deleteComentario(comentarioId, tarefaId) {
+  let tarefa;
+  setState((s) => {
+    s.tarefas.forEach((t) => {
+      if (t.id === tarefaId) {
+        tarefa = t;
+        t.comentarios = t.comentarios.filter((c) => c.id !== comentarioId);
+      }
+    });
+  });
+
+  renderComments(tarefa);
+  try {
+    await comentarioService.delete(tarefaId, comentarioId);
+    await tarefasService.getById(tarefaId);
+    showToast('Comentário excluído', 'success');
+  } catch (error) {
+    console.error(error);
+    showToast('Erro ao excluir comentário', 'error');
+    const tarefa = await tarefasService.getById(tarefaId);
+    renderComments(tarefa);
+  }
+}
+
 function filtrarTarefa() {
   const filtro = document.getElementById('filtro-busca').value.toLowerCase();
 
@@ -555,6 +705,7 @@ if (typeof window !== 'undefined') {
     closeModalCreateTask,
     saveCreateTask,
     openDeleteTask,
+    deleteComentario,
     closeModalDeleteTask,
     saveEdit,
     toggleMenu,
@@ -562,6 +713,7 @@ if (typeof window !== 'undefined') {
     handleDrop,
     deleteAccount,
     filtrarTarefa,
+    openDetailsModal,
   });
 }
 

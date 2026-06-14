@@ -12,20 +12,30 @@ import { ProjetoService } from '../services/projetos.service.js';
 import { TarefaService } from '../services/tarefas.service.js';
 import { UsuarioService } from '../services/usuarios.service.js';
 import { EquipeService } from '../services/equipes.service.js';
+import { db } from '../config/db_config.js';
+import { ComentarioFirestore } from '../firestore/comentario.firestore.js';
+import { ComentarioService } from '../services/comentario.service.js';
 
-const andamentoTarefasFirestore = new AndamentoTarefaFirestore(firebase);
-const equipesFirestore = new EquipeFirestore(firebase);
-const funcoesFirestore = new FuncaoFirestore(firebase);
+const andamentoTarefaFirestore = new AndamentoTarefaFirestore(firebase);
+const equipeFirestore = new EquipeFirestore(firebase);
+const funcaoFirestore = new FuncaoFirestore(firebase);
 // const membroEquipeFirestore = new MembroEquipeFirestore(firebase);'
-const projetosFirestore = new ProjetoFirestore(firebase);
-const usuariosFirestore = new UsuarioFirestore(firebase);
-const tarefasFirestore = new TarefaFirestore(firebase, usuariosFirestore);
+const projetoFirestore = new ProjetoFirestore(firebase);
+const usuarioFirestore = new UsuarioFirestore(firebase);
+const comentarioFirestore = new ComentarioFirestore({ firebase, db });
+const tarefaFirestore = new TarefaFirestore({
+  firebase,
+  db,
+  usuarioFirestore,
+  comentarioFirestore,
+});
 
-export const equipesService = new EquipeService(equipesFirestore);
-export const funcoesService = new FuncaoService(funcoesFirestore);
-export const projetosService = new ProjetoService(projetosFirestore);
-export const tarefasService = new TarefaService(tarefasFirestore);
-export const usuariosService = new UsuarioService(usuariosFirestore);
+export const comentarioService = new ComentarioService(comentarioFirestore);
+export const equipesService = new EquipeService(equipeFirestore);
+export const funcoesService = new FuncaoService(funcaoFirestore);
+export const projetosService = new ProjetoService(projetoFirestore);
+export const tarefasService = new TarefaService(tarefaFirestore);
+export const usuariosService = new UsuarioService(usuarioFirestore);
 export const andamentoTarefasService = new AndamentoTarefaService(
-  andamentoTarefasFirestore
+  andamentoTarefaFirestore
 );
