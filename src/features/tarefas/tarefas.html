@@ -132,6 +132,15 @@
       <!-- KANBAN -->
       <section aria-labelledby="kanban-lbl" class="kanban-section">
         <h2 id="kanban-lbl" class="sr-only">Quadro de tarefas</h2>
+        <div id="kanban-create-task-container">
+          <button
+            id="create-task-btn"
+            class="btn btn-primary"
+            onclick="openCreateTask()"
+          >
+            CRIAR TAREFA
+          </button>
+        </div>
         <div class="kanban-wrap">
           <div class="kanban" id="kanban-board" role="list">
             <!-- renderizado via JS -->
@@ -142,8 +151,8 @@
 
     <!-- MODAL EDITAR TAREFA -->
     <div
-      class="modal-overlay"
-      id="modal-overlay"
+      class="modal-edit-task"
+      id="modal-edit-task"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
@@ -151,65 +160,171 @@
     >
       <div class="modal">
         <h2 id="modal-title">Editar tarefa</h2>
-        <div class="auth-form">
-          <input type="hidden" id="edit-id" />
-          <div class="field">
-            <label for="edit-titulo">Título</label>
-            <input type="text" id="edit-titulo" placeholder="Nome da tarefa" />
+        <form onsubmit="saveEdit(event)">
+          <div class="auth-form">
+            <input type="hidden" id="edit-id" name="id" />
+            <div class="field">
+              <label for="edit-titulo">Título</label>
+              <input
+                type="text"
+                id="edit-titulo"
+                placeholder="Nome da tarefa"
+                name="titulo"
+                pattern="/[a-zA-Z]{1,}/"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="edit-data">Data</label>
+              <input type="date" id="edit-data" name="data" />
+            </div>
+            <div class="field">
+              <label for="edit-economia">Economia (R$)</label>
+              <input
+                type="number"
+                id="edit-economia"
+                min="0"
+                step="0.01"
+                placeholder="0,00"
+                name="economia"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="edit-responsavel">Nome do responsável</label>
+              <select
+                id="edit-responsavel"
+                required
+                name="idResponsavel"
+              ></select>
+            </div>
+            <div class="field">
+              <label for="edit-projeto">Projeto</label>
+              <select id="edit-projeto" name="idProjeto"></select>
+            </div>
           </div>
-          <div class="field">
-            <label for="edit-data">Data</label>
-            <input type="date" id="edit-data" />
-          </div>
-          <div class="field">
-            <label for="edit-economia">Economia (R$)</label>
-            <input
-              type="number"
-              id="edit-economia"
-              min="0"
-              step="0.01"
-              placeholder="0,00"
-            />
-          </div>
-          <div class="field">
-            <label for="edit-responsavel">Iniciais do responsável</label>
-            <input
-              type="text"
-              id="edit-responsavel"
-              maxlength="3"
-              placeholder="Ex: He"
-            />
-            <span class="field-hint"
-              >Duas iniciais do nome do usuário que criou a tarefa</span
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn btn-primary-alt btn-primary"
+              onclick="closeModalEditTask()"
             >
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary-alt btn-primary">
+              Salvar
+            </button>
           </div>
-          <div class="field">
-            <label for="edit-projeto">Projeto</label>
-            <select id="edit-projeto"></select>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal de criar tarefa -->
+    <div
+      class="modal-create-task"
+      id="modal-create-task"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      aria-hidden="true"
+    >
+      <div class="modal">
+        <h2 id="modal-title">Criar tarefa</h2>
+        <form onsubmit="saveCreateTask(event)">
+          <div class="auth-form">
+            <input type="hidden" id="create-id" />
+            <div class="field">
+              <label for="create-titulo">Título</label>
+              <input
+                type="text"
+                id="create-titulo"
+                name="titulo"
+                placeholder="Nome da tarefa"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="create-data">Data de entrega</label>
+              <input type="date" id="create-data" name="data" required />
+            </div>
+            <div class="field">
+              <label for="create-economia">Economia (R$)</label>
+              <input
+                type="number"
+                id="create-economia"
+                name="economia"
+                min="0"
+                step="0.01"
+                placeholder="0,00"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="create-responsavel">Nome do responsável</label>
+              <select id="create-responsavel" required name="idResponsavel">
+                <option selected disabled></option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="create-projeto">Projeto</label>
+              <select id="create-projeto" required name="idProjeto">
+                <option selected disabled></option>
+              </select>
+            </div>
           </div>
-        </div>
+          <div class="modal-actions">
+            <button
+              id="closeTaskBtn"
+              type="button"
+              class="btn btn-primary-alt btn-primary"
+              onclick="closeModalCreateTask()"
+            >
+              Cancelar
+            </button>
+            <button
+              id="saveTaskBtn"
+              type="submit"
+              class="btn btn-primary-alt btn-primary"
+            >
+              Salvar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal de exclusão de tarefa -->
+    <div
+      class="modal-delete-task"
+      id="modal-delete-task"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      aria-hidden="true"
+    >
+      <div class="modal">
+        <h2 id="delete-modal-title">Confirmar exclusão</h2>
+        <p id="delete-modal-message">
+          Tem certeza que deseja excluir esta tarefa?
+        </p>
         <div class="modal-actions">
           <button
             type="button"
             class="btn btn-primary-alt btn-primary"
-            onclick="closeModal()"
+            id="close-delete-btn"
+            onclick="closeModalDeleteTask()"
           >
             Cancelar
           </button>
-          <button
-            type="button"
-            class="btn btn-primary-alt btn-primary"
-            onclick="saveEdit()"
-          >
-            Salvar
+          <button type="button" class="btn btn-danger" id="confirm-delete-btn">
+            Excluir
           </button>
         </div>
       </div>
     </div>
 
     <!-- TOAST -->
-    <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
+    <div id="toast-container" role="status"></div>
     <script type="module" src="tarefas.js"></script>
   </body>
 </html>

@@ -235,6 +235,15 @@ strong {
   color: var(--white);
 }
 
+.btn:disabled {
+  background: var(--grey-200);
+  color: var(--grey-400);
+  cursor: not-allowed;
+  border-color: var(--grey-200);
+  box-shadow: none;
+  transform: none;
+}
+
 .google-text {
   margin-left: 6px;
 }
@@ -1149,10 +1158,12 @@ strong {
 
 .task-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.4rem;
   margin-top: 0.5rem;
   padding-top: 0.5rem;
   border-top: 1px solid var(--grey-200);
+  transition: 0.3s ease;
 }
 
 /* Botão mover */
@@ -1199,6 +1210,30 @@ strong {
 }
 
 .btn-edit:hover {
+  border-color: var(--purple);
+  color: var(--purple);
+  background: var(--purple-light);
+}
+
+.btn-delete {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--grey-200);
+  background: var(--grey-100);
+  color: var(--grey-700);
+  cursor: pointer;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.btn-delete:hover {
   border-color: var(--purple);
   color: var(--purple);
   background: var(--purple-light);
@@ -1262,7 +1297,7 @@ strong {
 }
 
 /* ── MODAL EDIÇÃO ───────────────────────────────────────── */
-.modal-overlay {
+.modal-edit-task {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
@@ -1276,7 +1311,7 @@ strong {
   transition: opacity var(--transition);
 }
 
-.modal-overlay.open {
+.modal-edit-task.open {
   opacity: 1;
   pointer-events: all;
 }
@@ -1292,7 +1327,114 @@ strong {
   transition: transform var(--transition);
 }
 
-.modal-overlay.open .modal {
+.modal-edit-task.open .modal {
+  transform: translateY(0);
+}
+
+.modal h2 {
+  color: var(--white);
+  margin-bottom: 1.4rem;
+  font-size: 1.2rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+}
+
+.modal-actions .btn {
+  flex: 1;
+}
+/* ── MODAL CRIAÇÃO ───────────────────────────────────────── */
+.modal-create-task {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+
+.modal-create-task.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal {
+  background: var(--purple);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.8rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(20px);
+  transition: transform var(--transition);
+}
+
+.modal-create-task.open .modal {
+  transform: translateY(0);
+}
+
+.modal h2 {
+  color: var(--white);
+  margin-bottom: 1.4rem;
+  font-size: 1.2rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+}
+
+.modal-actions .btn {
+  flex: 1;
+}
+
+/* ── MODAL DELETE  ───────────────────────────────────────── */
+.modal-delete-task {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+
+.modal-delete-task p {
+  color: var(--white);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.modal-delete-task.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal {
+  background: var(--purple);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.8rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(20px);
+  transition: transform var(--transition);
+}
+
+.modal-delete-task.open .modal {
   transform: translateY(0);
 }
 
@@ -1567,10 +1709,18 @@ strong {
 }
 
 /* ── TOAST ──────────────────────────────────────────────── */
-.toast {
+#toast-container {
   position: fixed;
   bottom: 1.5rem;
   right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: auto;
+  width: auto;
+}
+
+.toast {
   z-index: 600;
   background: var(--black);
   color: var(--white);
@@ -1580,13 +1730,13 @@ strong {
   padding: 0.7rem 1.2rem;
   border-radius: var(--radius-pill);
   box-shadow: var(--shadow-md);
-  transform: translateY(100px);
+  transform: translateX(200px);
   transition: transform 0.3s ease;
   pointer-events: none;
 }
 
 .toast.show {
-  transform: translateY(0);
+  transform: translateX(0);
 }
 
 .toast.success {
