@@ -9,7 +9,12 @@ import {
   formatCurrency,
   getLocalState,
 } from '../../state.js';
-import { auth, deleteUser } from '../../config/db_config.js';
+import {
+  auth,
+  deleteUser,
+  updateProfile,
+  signOut,
+} from '../../config/db_config.js';
 import { Tarefa } from '../../models/Tarefa.model.js';
 import { showToast } from '../../utils/toast.js';
 
@@ -45,19 +50,19 @@ async function render(state = null) {
     projetosAtivos(s).length;
   document.getElementById('kpi-tarefas').textContent = tarefasAtivas(s).length;
 
-  //document.getElementById('sb-avatar').textContent = s.usuario.iniciais;
-  //document.getElementById('sb-nome').textContent = s.usuario.nome;
-
+  /*Essa parte utiliza o nome do usuário
+  para formar o avatar com as iniciais*/
   const user = auth.currentUser;
 
   if (user) {
     const nome = user.displayName || user.email;
-
-    document.getElementById('sb-nome').textContent = nome;
-
     const iniciais = nome.slice(0, 2).toUpperCase();
 
+    document.getElementById('sb-nome').textContent = nome;
     document.getElementById('sb-avatar').textContent = iniciais;
+
+    document.getElementById('perfil-nome').textContent = nome;
+    document.getElementById('perfil-avatar').textContent = iniciais;
   }
 
   const board = document.getElementById('kanban-board');
@@ -90,6 +95,69 @@ async function render(state = null) {
     .forEach((m) => m.classList.remove('open'));
 }
 
+/* Essa parte faz a alteração do nome dentro do modal do perfil e
+salva na variavel novoNome transformando em iniciais, isso tem que
+ser passado para o banco para ser utilizado nas outras abas e tarefas*/
+window.salvarPerfil = async function () {
+  const novoNome = document.getElementById('alterar-perfil-nome').value.trim();
+
+  if (novoNome.length < 4) {
+    alert('O nome deve ter pelo menos 4 caracteres.');
+    return;
+  }
+
+  try {
+    await updateProfile(auth.currentUser, {
+      displayName: novoNome,
+    });
+
+    document.getElementById('sb-nome').textContent = novoNome;
+
+    const iniciais = novoNome.slice(0, 2).toUpperCase();
+
+    document.getElementById('sb-avatar').textContent = iniciais;
+
+    window.fecharPerfil();
+
+    alert('Perfil atualizado com sucesso.');
+  } catch (error) {
+    console.error(error);
+    alert('Erro ao atualizar perfil.');
+  }
+};
+
+window.abrirPerfil = function () {
+  document.getElementById('perfilModal').classList.add('open');
+};
+
+window.fecharPerfil = function () {
+  document.getElementById('perfilModal').classList.remove('open');
+};
+
+window.addEventListener('DOMContentLoaded', () => {
+  const modal = document.getElementById('perfilModal');
+
+  if (modal) {
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) {
+        window.fecharPerfil();
+      }
+    });
+  }
+});
+
+window.logout = async function () {
+  try {
+    await signOut(auth);
+
+    location.href = '../login/login.html';
+  } catch (error) {
+    console.error(error);
+    alert('Erro ao sair da conta.');
+  }
+};
+
+// Excluir conta logada
 async function deleteAccount() {
   const confirmDelete = confirm(
     'Tem certeza que deseja excluir sua conta? Esta ação não poderá ser desfeita.'

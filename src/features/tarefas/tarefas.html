@@ -72,20 +72,19 @@
         </ul>
       </nav>
       <div class="user-dados sidebar-footer">
-        <div class="user-info">
-          <div class="user-avatar" id="sb-avatar" aria-hidden="true">-</div>
-          <span class="user-name" id="sb-nome"></span>
+        <div class="user-info" onclick="abrirPerfil()">
+          <button class="btn-user">
+            <div class="user-avatar" id="sb-avatar" aria-hidden="true">-</div>
+            <span class="user-name" id="sb-nome"></span>
+          </button>
         </div>
-        <a
-          href="../login/login.html"
-          class="btn-sair"
+
+        <buton
+          href="#"
+          class="btn-user"
           aria-label="Sair da conta"
-          >SAIR</a
-        >
-      </div>
-      <div class="sidebar-footer">
-        <a href="#" class="btn-excluir-conta" onclick="deleteAccount()"
-          >EXCLUIR CONTA</a
+          onclick="logout()"
+          >SAIR</buton
         >
       </div>
     </aside>
@@ -334,6 +333,52 @@
           <button type="button" class="btn btn-danger" id="confirm-delete-btn">
             Excluir
           </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal editar perfil -->
+    <div class="overlay" id="perfilModal">
+      <div class="modal-perfil">
+        <div class="modal-header">
+          <h2>Editar Perfil</h2>
+          <button type="button" class="btn-user" onclick="fecharPerfil()">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="avatar-container">
+            <div class="perfil-avatar-container">
+              <div class="avatar-grande" id="perfil-avatar" aria-hidden="true">
+                -
+              </div>
+              <div class="user-name-perfil" id="perfil-nome"></div>
+            </div>
+          </div>
+
+          <input
+            type="text"
+            id="alterar-perfil-nome"
+            placeholder="Nome do usuário"
+          />
+
+          <button
+            class="btn btn-primary"
+            onclick="location.href = '../cadastro/cadastro.html'"
+          >
+            Cadastrar
+          </button>
+          <a href="#" class="btn btn-danger" onclick="deleteAccount()"
+            >Excluir Conta</a
+          >
+          <div class="user-info">
+            <button class="btn btn-primary-alt" onclick="fecharPerfil()">
+              Cancelar
+            </button>
+            <button class="btn btn-primary" onclick="salvarPerfil()">
+              Salvar Alterações
+            </button>
+          </div>
         </div>
       </div>
     </div>
