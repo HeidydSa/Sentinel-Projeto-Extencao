@@ -1297,7 +1297,7 @@ strong {
 }
 
 /* ── MODAL EDIÇÃO ───────────────────────────────────────── */
-.modal-edit-task {
+.modal-edit {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
@@ -1311,7 +1311,7 @@ strong {
   transition: opacity var(--transition);
 }
 
-.modal-edit-task.open {
+.modal-edit.open {
   opacity: 1;
   pointer-events: all;
 }
@@ -1327,7 +1327,7 @@ strong {
   transition: transform var(--transition);
 }
 
-.modal-edit-task.open .modal {
+.modal-edit.open .modal {
   transform: translateY(0);
 }
 
@@ -1347,7 +1347,7 @@ strong {
   flex: 1;
 }
 /* ── MODAL CRIAÇÃO ───────────────────────────────────────── */
-.modal-create-task {
+.modal-create {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
@@ -1361,7 +1361,7 @@ strong {
   transition: opacity var(--transition);
 }
 
-.modal-create-task.open {
+.modal-create.open {
   opacity: 1;
   pointer-events: all;
 }
@@ -1377,7 +1377,7 @@ strong {
   transition: transform var(--transition);
 }
 
-.modal-create-task.open .modal {
+.modal-create.open .modal {
   transform: translateY(0);
 }
 
@@ -1398,7 +1398,7 @@ strong {
 }
 
 /* ── MODAL DELETE  ───────────────────────────────────────── */
-.modal-delete-task {
+.modal-delete {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
@@ -1412,13 +1412,13 @@ strong {
   transition: opacity var(--transition);
 }
 
-.modal-delete-task p {
+.modal-delete p {
   color: var(--white);
   font-size: 1rem;
   line-height: 1.4;
 }
 
-.modal-delete-task.open {
+.modal-delete.open {
   opacity: 1;
   pointer-events: all;
 }
@@ -1434,7 +1434,7 @@ strong {
   transition: transform var(--transition);
 }
 
-.modal-delete-task.open .modal {
+.modal-delete.open .modal {
   transform: translateY(0);
 }
 
@@ -1464,6 +1464,10 @@ strong {
   margin-bottom: 1rem;
 }
 
+#create-project-btn {
+  margin-bottom: 1rem;
+}
+
 .projetos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -1475,8 +1479,8 @@ strong {
   border: 1px solid var(--grey-200);
   border-radius: var(--radius-md);
   padding: 1.4rem;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 64px 1fr auto;
   gap: 0.9rem;
   transition:
     box-shadow var(--transition),
@@ -1493,6 +1497,7 @@ strong {
   font-size: 1.1rem;
   font-family: var(--font-head);
   font-weight: 700;
+  overflow: hidden;
 }
 
 .projeto-info {
@@ -1546,6 +1551,16 @@ strong {
   background: #fff8e8;
   color: var(--orange);
   border-color: #f5dfa0;
+}
+
+.projeto-card .projeto-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--grey-200);
+  transition: 0.3s ease;
 }
 
 /* ── ESTATÍSTICAS ───────────────────────────────────────── */
