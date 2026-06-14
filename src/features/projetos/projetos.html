@@ -88,6 +88,7 @@
         <a class="btn-excluir-conta">EXCLUIR CONTA</a>
       </div>
     </aside>
+
     <div class="topbar" role="banner">
       <button
         class="menu-toggle"
@@ -112,13 +113,217 @@
         </nav>
       </header>
 
-      <section aria-labelledby="proj-lbl">
+      <section aria-labelledby="proj-lbl" class="kanban-section">
         <h2 id="proj-lbl" class="section-title">PROJETOS ATIVOS</h2>
+        <div id="kanban-create-project-container">
+          <button
+            id="create-project-btn"
+            class="btn btn-primary"
+            onclick="openCreateModal()"
+          >
+            CRIAR PROJETO
+          </button>
+        </div>
         <div class="projetos-grid" id="projetos-grid" role="list">
           <!-- renderizado via JS -->
         </div>
       </section>
     </main>
+
+    <!-- MODAL DETALHES PROJETO -->
+    <div
+      class="modal-details"
+      id="modal-details-project"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      aria-hidden="true"
+    >
+      <div class="modal">
+        <h2 id="details-title">Detalhes do projeto</h2>
+        <div id="details-content">
+          <h3 id="details-titulo">Projeto 01</h3>
+          <p id="details-status">Em Produção</p>
+
+          <div>
+            <h2>Informações</h2>
+            <p>
+              <strong>Data de entrega:</strong> <span id="details-data"></span>
+            </p>
+            <p>
+              <strong>Economia total:</strong>
+              <span id="details-economia"> </span>
+            </p>
+            <p>
+              <strong>Tarefas ativas:</strong>
+              <span id="details-tarefas_ativas"> </span>
+            </p>
+          </div>
+
+          <div>
+            <h2>Descrição</h2>
+            <p id="details-descricao">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+              venenatis, dolor in finibus malesuada, lectus ipsum porta nunc, at
+              iaculis arcu nisi sed mauris. Nulla fermentum vestibulum ex, eget
+              tristique tortor pretium ut. Curabitur elit justo, consequat id
+              condimentum ac, volutpat ornare.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL EDITAR PROJETO -->
+    <div
+      class="modal-edit"
+      id="modal-edit-project"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      aria-hidden="true"
+    >
+      <div class="modal">
+        <h2 id="modal-title">Editar projeto</h2>
+        <form onsubmit="onUpdate(event)">
+          <div class="auth-form">
+            <input type="hidden" id="edit-id" name="id" />
+            <div class="field">
+              <label for="edit-titulo">Título</label>
+              <input
+                type="text"
+                id="edit-titulo"
+                name="titulo"
+                placeholder="Nome da projeto"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="edit-status">Status</label>
+              <select id="edit-status" required name="status">
+                <option selected disabled></option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="edit-descricao">Descrição</label>
+              <textarea
+                id="edit-descricao"
+                name="descricao"
+                rows="6"
+                placeholder="Breve descrição do projeto"
+                maxlength="225"
+              ></textarea>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn btn-primary-alt btn-primary"
+              onclick="closeEditModal()"
+            >
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary-alt btn-primary">
+              Salvar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal de criar projeto -->
+    <div
+      class="modal-create"
+      id="modal-create-project"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      aria-hidden="true"
+    >
+      <div class="modal">
+        <h2 id="modal-title">Criar projeto</h2>
+        <form onsubmit="onCreate(event)">
+          <div class="auth-form">
+            <div class="field">
+              <label for="create-titulo">Título</label>
+              <input
+                type="text"
+                id="create-titulo"
+                name="titulo"
+                placeholder="Nome da projeto"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="create-status">Status</label>
+              <select id="create-status" required name="status">
+                <option selected disabled></option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="create-descricao">Descrição</label>
+              <textarea
+                id="create-descricao"
+                name="descricao"
+                rows="6"
+                placeholder="Breve descrição do projeto"
+                maxlength="225"
+              ></textarea>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button
+              id="closeprojectBtn"
+              type="button"
+              class="btn btn-primary-alt btn-primary"
+              onclick="closeCreateModal()"
+            >
+              Cancelar
+            </button>
+            <button
+              id="saveprojectBtn"
+              type="submit"
+              class="btn btn-primary-alt btn-primary"
+            >
+              Salvar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal de exclusão de projeto -->
+    <div
+      class="modal-delete"
+      id="modal-delete-project"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      aria-hidden="true"
+    >
+      <div class="modal">
+        <h2 id="delete-modal-title">Confirmar exclusão</h2>
+        <p id="delete-modal-message">
+          Tem certeza que deseja excluir esta projeto?
+        </p>
+        <div class="modal-actions">
+          <button
+            type="button"
+            class="btn btn-primary-alt btn-primary"
+            id="close-delete-btn"
+            onclick="closeDeleteModal()"
+          >
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-danger" id="confirm-delete-btn">
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast-container" role="status"></div>
 
     <script type="module" src="projetos.js"></script>
   </body>

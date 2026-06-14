@@ -55,13 +55,13 @@ export class ProjetoFirestore {
   }
 
   fromPersisted(id, data) {
-    return new Projeto(
+    return new Projeto({
       id,
-      data.titulo,
-      data.descricao,
-      data.id_equipe,
-      data.data_criacao,
-      data.status
-    );
+      titulo: data.titulo,
+      descricao: data.descricao,
+      id_equipe: data.id_equipe,
+      data_criacao: data.data_criacao,
+      status: data.status,
+    });
   }
 }

@@ -59,6 +59,7 @@ import {
   usuariosService,
   tarefasService,
 } from './config/container.js';
+import { EnumStatusProjeto } from './utils/enums.js';
 
 const DEFAULT_STATE = {
   projetos: [],
@@ -116,7 +117,9 @@ function setState(updater) {
 
 function projetosAtivos(state) {
   return state.projetos.filter(
-    (p) => p.status === 'em produção' || p.status === 'não iniciado'
+    (p) =>
+      p.status === EnumStatusProjeto.EM_PRODUCAO ||
+      p.status === EnumStatusProjeto.NAO_INICIADO
   );
 }
 
