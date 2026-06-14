@@ -10,15 +10,20 @@ import {
 } from '../../state.js';
 import { auth, deleteUser } from '../../config/db_config.js';
 import { EnumStatusProjeto } from '../../utils/enums.js';
-import { projetosService } from '../../config/container.js';
+import { projetosService, usuariosService } from '../../config/container.js';
 import { Projeto } from '../../models/Projeto.model.js';
 import { showToast } from '../tarefas/tarefas.js';
 
-async function render() {
-  const s = await getState();
+async function render(s) {
+  let state;
+  if (s) {
+    state = s;
+  } else {
+    state = await getState();
+  }
 
   const grid = document.getElementById('projetos-grid');
-  const ativos = projetosAtivos(s);
+  const ativos = projetosAtivos(state);
 
   const user = auth.currentUser;
 
@@ -39,8 +44,8 @@ async function render() {
 
   grid.innerHTML = ativos
     .map((p) => {
-      const econ = economiaPorProjeto(s, p.id);
-      const tarefas = s.tarefas.filter(
+      const econ = economiaPorProjeto(state, p.id);
+      const tarefas = state.tarefas.filter(
         (t) => t.idProjeto === p.id && t.status !== EnumStatusProjeto.FINALIZADO
       ).length;
       const badgeCls = EnumStatusProjeto.getCSSClass(p.status);
@@ -280,6 +285,7 @@ async function deleteAccount() {
 
   try {
     await deleteUser(auth.currentUser);
+    await usuariosService.delete(auth.currentUser.uid);
 
     alert('Conta excluida com sucesso.');
 
@@ -311,6 +317,21 @@ function minimizeMenu() {
   sb.classList.toggle('minimized');
 }
 
+function filtrarProjeto() {
+  const filtro = document.getElementById('filtro-busca').value.toLowerCase();
+
+  const state = getLocalState();
+
+  const projetosFiltrados = state.projetos.filter((p) => {
+    return (
+      p.titulo.toLowerCase().includes(filtro) ||
+      p.descricao.toLowerCase().includes(filtro)
+    );
+  });
+
+  render({ ...state, projetos: projetosFiltrados });
+}
+
 render();
 
 if (typeof window !== 'undefined') {
@@ -327,6 +348,7 @@ if (typeof window !== 'undefined') {
     closeDeleteModal,
     openEditModal,
     closeEditModal,
+    filtrarProjeto,
     onCreate,
     onUpdate,
     onDelete,

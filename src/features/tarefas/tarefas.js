@@ -450,6 +450,27 @@ function handleDragLeave(e) {
   }
 }
 
+function filtrarTarefa() {
+  const filtro = document.getElementById('filtro-busca').value.toLowerCase();
+
+  const state = getLocalState();
+
+  const tarefasFiltradas = state.tarefas.filter((t) => {
+    const projeto = state.projetos.find((p) => p.id === t.idProjeto);
+    const responsavel = state.usuarios.find((u) => u.id === t.idResponsavel);
+    return (
+      t.titulo.toLowerCase().includes(filtro) ||
+      (projeto && projeto.titulo.toLowerCase().includes(filtro)) ||
+      (responsavel &&
+        `${responsavel.nome} ${responsavel.sobrenome}`
+          .toLowerCase()
+          .includes(filtro))
+    );
+  });
+
+  render({ ...state, tarefas: tarefasFiltradas });
+}
+
 render();
 
 if (typeof window !== 'undefined') {
@@ -472,6 +493,7 @@ if (typeof window !== 'undefined') {
     minimizeMenu,
     handleDrop,
     deleteAccount,
+    filtrarTarefa,
   });
 }
 

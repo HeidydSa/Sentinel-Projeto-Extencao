@@ -124,6 +124,22 @@
             CRIAR PROJETO
           </button>
         </div>
+        <div class="filters">
+          <div class="filter-field">
+            <label
+              for="filtro-busca"
+              aria-labelledby="Filtrar projetos por título ou descrição"
+              >Buscar</label
+            >
+            <input
+              type="text"
+              id="filtro-busca"
+              placeholder="Filtrar projetos por título ou descrição"
+              oninput="filtrarProjeto()"
+            />
+          </div>
+        </div>
+
         <div class="projetos-grid" id="projetos-grid" role="list">
           <!-- renderizado via JS -->
         </div>

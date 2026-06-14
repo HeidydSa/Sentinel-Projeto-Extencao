@@ -141,6 +141,22 @@
             CRIAR TAREFA
           </button>
         </div>
+        <div class="filters">
+          <div class="filter-field">
+            <label
+              for="filtro-busca"
+              aria-labelledby="Filtrar tarefas por título, projeto ou responsável"
+              >Buscar</label
+            >
+            <input
+              type="text"
+              id="filtro-busca"
+              placeholder="Filtrar tarefas por título, projeto ou responsável"
+              oninput="filtrarTarefa()"
+            />
+          </div>
+        </div>
+
         <div class="kanban-wrap">
           <div class="kanban" id="kanban-board" role="list">
             <!-- renderizado via JS -->
