@@ -406,15 +406,12 @@ async function saveCreateTask(e) {
   try {
     await tarefasService.create(tarefa);
     showToast(`Tarefa criada com sucesso`, 'success');
+    closeModalCreateTask();
   } catch (error) {
     console.error(error);
     showToast('Erro ao criar tarefa', 'error');
     render();
   }
-
-  closeModalCreateTask();
-  showToast('Tarefa criada!', 'success');
-  render();
 }
 
 function toggleMenu(btn) {
