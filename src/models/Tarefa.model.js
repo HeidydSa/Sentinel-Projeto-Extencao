@@ -2,27 +2,25 @@ import { isNonEmptyString, isString } from '../utils/typeValidations.js';
 import { Usuario } from './Usuario.model.js';
 
 export class Tarefa {
-  constructor(
+  constructor({
     id,
     titulo,
     data,
     economia,
-    id_projeto,
-    id_criador,
-    id_responsavel,
-    id_andamento_tarefa,
+    idProjeto,
+    idCriador,
+    idResponsavel,
     status,
-    responsavel = null
-  ) {
-    this.id = id ?? '';
+    responsavel,
+  }) {
+    this.id = id ?? '-1';
     this.titulo = titulo;
     this.data = new Date(data);
     this.economia = economia;
-    this.idProjeto = id_projeto;
-    this.idCriador = id_criador;
-    this.idResponsavel = id_responsavel;
-    this.idAndamentoTarefa = id_andamento_tarefa;
-    this.status = status;
+    this.idProjeto = idProjeto;
+    this.idCriador = idCriador;
+    this.idResponsavel = idResponsavel;
+    this.status = status ?? 'afazer';
     this.responsavel = responsavel;
 
     this.validate();
@@ -53,17 +51,15 @@ export class Tarefa {
       throw new TypeError('ID do responsável não pode ser uma string vazia');
     }
 
-    if (!isNonEmptyString(this.idAndamentoTarefa)) {
-      throw new TypeError(
-        'ID do andamento da tarefa não pode ser uma string vazia'
-      );
-    }
-
     if (!isNonEmptyString(this.status)) {
       throw new TypeError('Status não pode ser uma string vazia');
     }
 
-    if (this.responsavel !== null && !(this.responsavel instanceof Usuario)) {
+    if (
+      this.responsavel !== null &&
+      this.responsavel !== undefined &&
+      !(this.responsavel instanceof Usuario)
+    ) {
       throw new TypeError('Responsável deve ser uma string ou null');
     }
   }
@@ -77,7 +73,6 @@ export class Tarefa {
       id_projeto: this.idProjeto,
       id_criador: this.idCriador,
       id_responsavel: this.idResponsavel,
-      id_andamento_tarefa: this.idAndamentoTarefa,
       status: this.status,
     };
   }

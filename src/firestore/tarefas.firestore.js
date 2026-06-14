@@ -60,17 +60,16 @@ export class TarefaFirestore {
   }
 
   fromPersisted(id, data) {
-    return new Tarefa(
-      id,
-      data.titulo,
-      data.data,
-      data.economia,
-      data.id_projeto,
-      data.id_criador,
-      data.id_responsavel,
-      data.id_andamento_tarefa,
-      data.status,
-      data.responsavel
-    );
+    return new Tarefa({
+      id: id,
+      titulo: data.titulo,
+      data: data.data,
+      economia: data.economia,
+      idProjeto: data.id_projeto,
+      idCriador: data.id_criador,
+      idResponsavel: data.id_responsavel,
+      status: data.status,
+      responsavel: data.responsavel,
+    });
   }
 }
