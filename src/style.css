@@ -2147,6 +2147,15 @@ MODAL DE DETALHES DO PROJETO
     text-align: center;
     gap: 1.2rem;
   }
+
+  #modal-details-task .modal {
+    display: flex;
+    flex-direction: column;
+    max-height: 600px;
+    margin: auto;
+    gap: 0.8rem;
+    overflow-y: auto;
+  }
 }
 /* Mobile */
 @media (max-width: 480px) {
