@@ -17,9 +17,17 @@ export class TarefaFirestore {
     const tarefas = await Promise.all(
       querySnapshot.docs.map(async (s) => {
         const data = s.data();
-        data.responsavel = await this.usuarioFirestore.getById(
+        const responsavel = await this.usuarioFirestore.getById(
           data.id_responsavel
         );
+
+        if (responsavel) {
+          data.responsavel = responsavel;
+        } else {
+          data.responsavel = null;
+          data.id_responsavel = '';
+        }
+
         return this.fromPersisted(s.id, data);
       })
     );
@@ -31,6 +39,17 @@ export class TarefaFirestore {
     const docSnap = await this.firebase.getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
+      const responsavel = await this.usuarioFirestore.getById(
+        data.id_responsavel
+      );
+
+      if (responsavel) {
+        data.responsavel = responsavel;
+      } else {
+        data.responsavel = null;
+        data.id_responsavel = '';
+      }
+
       return this.fromPersisted(docSnap.id, data);
     }
     return null;

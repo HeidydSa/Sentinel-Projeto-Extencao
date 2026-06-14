@@ -19,7 +19,7 @@ export class Tarefa {
     this.economia = economia;
     this.idProjeto = idProjeto;
     this.idCriador = idCriador;
-    this.idResponsavel = idResponsavel;
+    this.idResponsavel = idResponsavel ?? '';
     this.status = status ?? 'afazer';
     this.responsavel = responsavel;
 
