@@ -412,27 +412,6 @@ async function onCreate(e) {
   }
 }
 
-async function deleteAccount() {
-  const confirmDelete = confirm(
-    'Tem certeza que deseja excluir sua conta? Esta ação não poderá ser desfeita.'
-  );
-
-  if (!confirmDelete) return;
-
-  try {
-    await deleteUser(auth.currentUser);
-    await usuariosService.delete(auth.currentUser.uid);
-
-    alert('Conta excluida com sucesso.');
-
-    location.href = '../login/login.html';
-  } catch (error) {
-    console.error(error);
-
-    alert('Não foi possível excluir a conta.');
-  }
-}
-
 function esc(str) {
   return String(str || '')
     .replace(/&/g, '&amp;')
