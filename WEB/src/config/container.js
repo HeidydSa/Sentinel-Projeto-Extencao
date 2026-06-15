@@ -12,7 +12,7 @@ import { ProjetoService } from '../services/projetos.service.js';
 import { TarefaService } from '../services/tarefas.service.js';
 import { UsuarioService } from '../services/usuarios.service.js';
 import { EquipeService } from '../services/equipes.service.js';
-import { db } from '../config/db_config.js';
+import { db } from './db_config.js';
 import { ComentarioFirestore } from '../firestore/comentario.firestore.js';
 import { ComentarioService } from '../services/comentario.service.js';
 
