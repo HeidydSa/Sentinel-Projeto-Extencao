@@ -1,3 +1,7 @@
 node_modules/
-sentinel-firebase.json
+.husky/
+.firebase/
+dist/
+build/
 .env
+sentinel-firebase.json
