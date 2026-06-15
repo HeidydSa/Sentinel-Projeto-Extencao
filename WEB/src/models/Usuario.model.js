@@ -1,12 +1,14 @@
 import { isEmail, isNonEmptyString } from '../utils/typeValidations.js';
 
 export class Usuario {
-  constructor(id, nome, sobrenome, email, dataCriacao) {
+  constructor(id, nome, sobrenome, email, dataCriacao, funcaoId) {
     this.id = id ?? '';
     this.nome = nome;
     this.sobrenome = sobrenome;
     this.email = email;
+    //this.dataCriacao = dataCriacao?.toDate? dataCriacao.toDate(): new Date(dataCriacao);
     this.dataCriacao = new Date(dataCriacao);
+    this.funcaoId = funcaoId;
 
     this.validate();
   }
@@ -39,7 +41,7 @@ export class Usuario {
       nome: this.nome,
       sobrenome: this.sobrenome,
       email: this.email,
-      senha: this.senha,
+      //senha: this.senha, (nao precisa guardar senha, busca ela pelo reauthenticateWithCredential)
       funcao_id: this.funcaoId,
       data_criacao: this.dataCriacao.toISOString(),
     };

@@ -1702,6 +1702,7 @@ aside.informacoes {
   background-color: rgba(250, 114, 114, 0.8);
   border-color: rgba(250, 114, 114, 0.8);
 }
+
 /* ── PROJETOS ───────────────────────────────────────────── */
 .section-title {
   font-family: var(--font-head);
@@ -1824,6 +1825,7 @@ aside.informacoes {
   border-top: 1px solid var(--grey-200);
   transition: 0.3s ease;
 }
+
 /*
 MODAL DE DETALHES DO PROJETO
 */
@@ -2158,6 +2160,7 @@ MODAL DE DETALHES DO PROJETO
     overflow-y: auto;
   }
 }
+
 /* Mobile */
 @media (max-width: 480px) {
   .projetos-grid {

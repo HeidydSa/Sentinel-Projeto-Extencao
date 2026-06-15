@@ -73,19 +73,20 @@
         </ul>
       </nav>
       <div class="user-dados sidebar-footer">
-        <div class="user-info">
-          <div class="user-avatar" id="sb-avatar" aria-hidden="true">-</div>
-          <span class="user-name" id="sb-nome"></span>
+        <div class="user-info" onclick="abrirPerfil()">
+          <button class="btn-user">
+            <div class="user-avatar" id="sb-avatar" aria-hidden="true">-</div>
+            <span class="user-name" id="sb-nome"></span>
+          </button>
         </div>
-        <a
-          href="../login/login.html"
-          class="btn-sair"
+        <button
+          href="#"
+          class="btn-user"
           aria-label="Sair da conta"
-          >SAIR</a
+          onclick="logout()"
         >
-      </div>
-      <div class="sidebar-footer">
-        <a class="btn-excluir-conta">EXCLUIR CONTA</a>
+          SAIR
+        </button>
       </div>
     </aside>
 
@@ -340,6 +341,66 @@
 
     <!-- TOAST -->
     <div id="toast-container" role="status"></div>
+
+    <!-- MODAL EDITAR PERFIL -->
+    <div class="overlay" id="perfilModal">
+      <div class="modal-perfil">
+        <div class="modal-header">
+          <h2>Editar Perfil</h2>
+          <button type="button" class="btn-user" onclick="fecharPerfil()">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="avatar-container">
+            <div class="perfil-avatar-container">
+              <div class="avatar-grande" id="perfil-avatar" aria-hidden="true">
+                -
+              </div>
+              <div class="user-name-perfil" id="perfil-nome"></div>
+            </div>
+          </div>
+
+          <input
+            type="text"
+            id="alterar-perfil-nome"
+            placeholder="Nome do usuário"
+          />
+
+          <button
+            id="btnCadastro"
+            class="btn btn-primary"
+            onclick="location.href = '../cadastro/cadastro.html'"
+            style="display: none"
+          >
+            Cadastrar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary btn-full btn-dark"
+            onclick="vincularGoogle()"
+          >
+            Vincular conta com
+            <span class="google-text">
+              <span class="g-blue">G</span><span class="g-red">o</span
+              ><span class="g-yellow">o</span><span class="g-blue">g</span
+              ><span class="g-green">l</span><span class="g-red">e</span>
+            </span>
+          </button>
+          <a href="#" class="btn btn-danger" onclick="deleteAccount()"
+            >Excluir Conta</a
+          >
+          <div class="user-info">
+            <button class="btn btn-primary-alt" onclick="fecharPerfil()">
+              Cancelar
+            </button>
+            <button class="btn btn-primary" onclick="salvarPerfil()">
+              Salvar Alterações
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script type="module" src="projetos.js"></script>
   </body>

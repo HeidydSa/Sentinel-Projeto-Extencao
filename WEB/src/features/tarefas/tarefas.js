@@ -1,6 +1,10 @@
 /* exported render, renderCard, isLate, esc, toggleMoveMenu, moveCard, openEdit, closeModal, saveEdit, showToast, toggleMenu */
 
-import { comentarioService, tarefasService } from '../../config/container.js';
+import {
+  comentarioService,
+  tarefasService,
+  usuariosService,
+} from '../../config/container.js';
 import {
   getState,
   setState,
@@ -9,12 +13,14 @@ import {
   formatCurrency,
   getLocalState,
 } from '../../state.js';
+import { auth, googleProvider } from '../../config/db_config.js';
 import {
-  auth,
   deleteUser,
   updateProfile,
   signOut,
-} from '../../config/db_config.js';
+  onAuthStateChanged,
+  linkWithPopup,
+} from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js';
 import { Comentario } from '../../models/Comentario.model.js';
 import { Tarefa } from '../../models/Tarefa.model.js';
 import { showToast } from '../../utils/toast.js';
@@ -151,12 +157,53 @@ window.logout = async function () {
   try {
     await signOut(auth);
 
-    location.href = '../login/login.html';
+    location.href = '../../index.html';
   } catch (error) {
     console.error(error);
     alert('Erro ao sair da conta.');
   }
 };
+
+// Exibição do botao cadastro
+onAuthStateChanged(auth, async (user) => {
+  const btn = document.getElementById('btnCadastro');
+  if (!btn) return;
+
+  // sempre começa escondido
+  btn.style.display = 'none';
+
+  if (!user) return;
+
+  try {
+    const usuarios = await usuariosService.getAll();
+    const usuario = usuarios.find((u) => u.email === user.email);
+
+    const isAdmin = usuario && usuario.funcaoId === 'admin';
+
+    btn.style.display = isAdmin ? 'block' : 'none';
+  } catch (e) {
+    console.error(e);
+    btn.style.display = 'none';
+  }
+});
+
+//Vincular conta Google
+async function vincularGoogle() {
+  try {
+    await linkWithPopup(auth.currentUser, googleProvider);
+
+    alert('Conta Google vinculada com sucesso.');
+  } catch (erro) {
+    if (erro.code === 'auth/provider-already-linked') {
+      alert('Google já vinculado.');
+      return;
+    }
+
+    alert(erro.message);
+  }
+}
+
+window.vincularGoogle = vincularGoogle;
 
 // Excluir conta logada
 async function deleteAccount() {

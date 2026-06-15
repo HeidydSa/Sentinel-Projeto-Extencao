@@ -53,6 +53,23 @@
             ></span>
           </div>
           <div class="field">
+            <label for="sobrenome">Sobrenome *</label>
+            <input
+              type="text"
+              id="sobrenome"
+              autocomplete="family-name"
+              placeholder="Seu sobrenome"
+              aria-required="true"
+            />
+            <span
+              class="field-error"
+              id="sobrenome-error"
+              role="alert"
+              aria-live="polite"
+            ></span>
+          </div>
+
+          <div class="field">
             <label for="email">E-mail *</label>
             <input
               type="email"
@@ -84,7 +101,7 @@
                 class="toggle-pw"
                 aria-label="Mostrar senha"
                 aria-pressed="false"
-                onclick="togglePw()"
+                onclick="togglePw('senha', this)"
               >
                 <span aria-hidden="true">👁</span>
               </button>
@@ -103,6 +120,7 @@
               <button
                 type="button"
                 class="btn btn-primary-alt btn-full"
+                data-role="lider"
                 id="lider"
                 onclick="funcao(this)"
               >
@@ -111,6 +129,7 @@
               <button
                 type="button"
                 class="btn btn-primary-alt btn-full"
+                data-role="dev"
                 id="dev"
                 onclick="funcao(this)"
               >
@@ -119,10 +138,21 @@
               <button
                 type="button"
                 class="btn btn-primary-alt btn-full"
+                data-role="analista"
                 id="analista"
                 onclick="funcao(this)"
               >
-                Analista
+                Finan
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary-alt btn-full"
+                data-role="admin"
+                id="admin"
+                style="display: none"
+                onclick="funcao(this)"
+              >
+                Admin
               </button>
             </div>
             <span
@@ -131,6 +161,23 @@
               role="alert"
               aria-live="polite"
             ></span>
+          </div>
+        </div>
+        <!-- SENHA ADMIN -->
+        <div class="field">
+          <label for="senha_adm">Senha do admin*</label>
+          <div class="input-wrapper">
+            <input type="password" id="senha_adm" />
+            <span id="senha_adm-error" class="field-error"></span>
+            <button
+              type="button"
+              class="toggle-pw"
+              aria-label="Mostrar senha"
+              aria-pressed="false"
+              onclick="togglePw('senha_adm', this)"
+            >
+              <span aria-hidden="true">👁</span>
+            </button>
           </div>
         </div>
         <div class="auth-alt">

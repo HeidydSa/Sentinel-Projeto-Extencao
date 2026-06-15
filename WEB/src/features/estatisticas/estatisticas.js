@@ -1,5 +1,6 @@
 /* exported render, formatCurrencyShort, esc, setPeriodo, toggleMenu */
 
+import { usuariosService } from '../../config/container.js';
 import {
   getState,
   projetosAtivos,
@@ -8,23 +9,31 @@ import {
   economiaTotal,
   economiaPorProjeto,
 } from '../../state.js';
-import { auth, deleteUser } from '../../config/db_config.js';
+import { auth, googleProvider } from '../../config/db_config.js';
+import {
+  deleteUser,
+  updateProfile,
+  signOut,
+  onAuthStateChanged,
+  linkWithPopup,
+} from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js';
 
 async function render() {
   const s = await getState();
-  //document.getElementById('sb-avatar').textContent = s.usuario.iniciais;
-  //document.getElementById('sb-nome').textContent = s.usuario.nome;
 
+  /*Essa parte utiliza o nome do usuário
+  para formar o avatar com as iniciais*/
   const user = auth.currentUser;
 
   if (user) {
     const nome = user.displayName || user.email;
-
-    document.getElementById('sb-nome').textContent = nome;
-
     const iniciais = nome.slice(0, 2).toUpperCase();
 
+    document.getElementById('sb-nome').textContent = nome;
     document.getElementById('sb-avatar').textContent = iniciais;
+
+    document.getElementById('perfil-nome').textContent = nome;
+    document.getElementById('perfil-avatar').textContent = iniciais;
   }
 
   document.getElementById('kpi-ativos').textContent = projetosAtivos(s).length;
@@ -84,6 +93,110 @@ async function render() {
     </div>`;
 }
 
+/* Essa parte faz a alteração do nome dentro do modal do perfil e
+salva na variavel novoNome transformando em iniciais, isso tem que
+ser passado para o banco para ser utilizado nas outras abas e tarefas*/
+window.salvarPerfil = async function () {
+  const novoNome = document.getElementById('alterar-perfil-nome').value.trim();
+
+  if (novoNome.length < 4) {
+    alert('O nome deve ter pelo menos 4 caracteres.');
+    return;
+  }
+
+  try {
+    await updateProfile(auth.currentUser, {
+      displayName: novoNome,
+    });
+
+    document.getElementById('sb-nome').textContent = novoNome;
+
+    const iniciais = novoNome.slice(0, 2).toUpperCase();
+
+    document.getElementById('sb-avatar').textContent = iniciais;
+
+    window.fecharPerfil();
+
+    alert('Perfil atualizado com sucesso.');
+  } catch (error) {
+    console.error(error);
+    alert('Erro ao atualizar perfil.');
+  }
+};
+
+window.abrirPerfil = function () {
+  document.getElementById('perfilModal').classList.add('open');
+};
+
+window.fecharPerfil = function () {
+  document.getElementById('perfilModal').classList.remove('open');
+};
+
+window.addEventListener('DOMContentLoaded', () => {
+  const modal = document.getElementById('perfilModal');
+
+  if (modal) {
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) {
+        window.fecharPerfil();
+      }
+    });
+  }
+});
+
+window.logout = async function () {
+  try {
+    await signOut(auth);
+
+    location.href = '../../index.html';
+  } catch (error) {
+    console.error(error);
+    alert('Erro ao sair da conta.');
+  }
+};
+
+// Exibição do botao cadastro
+onAuthStateChanged(auth, async (user) => {
+  const btn = document.getElementById('btnCadastro');
+  if (!btn) return;
+
+  // sempre começa escondido
+  btn.style.display = 'none';
+
+  if (!user) return;
+
+  try {
+    const usuarios = await usuariosService.getAll();
+    const usuario = usuarios.find((u) => u.email === user.email);
+
+    const isAdmin = usuario && usuario.funcaoId === 'admin';
+
+    btn.style.display = isAdmin ? 'block' : 'none';
+  } catch (e) {
+    console.error(e);
+    btn.style.display = 'none';
+  }
+});
+
+//Vincular conta Google
+async function vincularGoogle() {
+  try {
+    await linkWithPopup(auth.currentUser, googleProvider);
+
+    alert('Conta Google vinculada com sucesso.');
+  } catch (erro) {
+    if (erro.code === 'auth/provider-already-linked') {
+      alert('Google já vinculado.');
+      return;
+    }
+
+    alert(erro.message);
+  }
+}
+
+window.vincularGoogle = vincularGoogle;
+
+// Excluir conta logada
 async function deleteAccount() {
   const confirmDelete = confirm(
     'Tem certeza que deseja excluir sua conta? Esta ação não poderá ser desfeita.'
@@ -148,6 +261,7 @@ if (typeof window !== 'undefined') {
     setPeriodo,
     toggleMenu,
     minimizeMenu,
+    deleteAccount,
   });
 }
 
@@ -158,5 +272,4 @@ export {
   setPeriodo,
   toggleMenu,
   minimizeMenu,
-  deleteAccount,
 };

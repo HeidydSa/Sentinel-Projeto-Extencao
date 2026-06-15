@@ -4,15 +4,8 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.14.0/fireba
 import * as firebase from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js';
 import {
   getAuth,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
   GoogleAuthProvider,
-  signInWithPopup,
-  updateProfile,
-  deleteUser,
-  sendPasswordResetEmail,
+  onAuthStateChanged,
 } from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js';
 
 const firebaseConfig = {
@@ -33,17 +26,4 @@ const googleProvider = new GoogleAuthProvider();
 
 const db = firebase.getFirestore(app);
 
-export {
-  db,
-  firebase,
-  auth,
-  googleProvider,
-  signInWithPopup,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  updateProfile,
-  deleteUser,
-  sendPasswordResetEmail,
-};
+export { db, firebase, auth, googleProvider, onAuthStateChanged };
