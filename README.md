@@ -12,6 +12,21 @@ A aplicação está disponível em:
 
 https://sentinel-5d699.web.app
 
+## Para iniciar o projeto localmente
+Acesse a pasta `WEB/`:
+```bash
+cd WEB/
+npm install
+```
+
+Depois, navegue até o arquivo:
+**WEB/src/index.html**
+
+E utilize a extensão Live Preview da Microsoft:
+https://marketplace.visualstudio.com/items?itemName=ms-vscode.live-server
+
+**Importante**: abrir o index.html no navegador diretamente quebra os imports, utilize uma extensão
+
 ## Sobre o Projeto
 
 O Sentinel é uma aplicação web desenvolvida para auxiliar no gerenciamento de projetos e tarefas por equipes. O sistema utiliza o método Kanban para organização das atividades, permitindo acompanhar o andamento das tarefas de forma visual e intuitiva.
