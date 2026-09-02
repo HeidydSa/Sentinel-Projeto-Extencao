@@ -248,7 +248,7 @@ function renderCard(t, s) {
     
       <h4 class="task-title">${esc(t.titulo)}</h4>
       <time class="task-date ${dataClass}" datetime="${t.data}">${t.data.toLocaleDateString('pt-BR')}</time>
-      <p class="task-economy">Economia: <strong>${formatCurrency(t.economia)}</strong></p>
+      <p class="task-economy">Custo: <strong>${formatCurrency(t.economia)}</strong></p>
 
       <div class="task-footer">
         <span class="task-project">${esc(projNome)}</span>

@@ -53,15 +53,15 @@ async function handleCad() {
   const sobrenome = document.getElementById('sobrenome').value.trim() || 'N/A';
   const email = document.getElementById('email').value.trim();
   const senha = document.getElementById('senha').value;
-  const senhaAdm = document.getElementById('senha_adm').value;
+  //const senhaAdm = document.getElementById('senha_adm').value;
 
   let ok = true;
 
-  if (!senhaAdm) {
+  /*if (!senhaAdm) {
     document.getElementById('senha_adm-error').textContent =
       'Informe a senha do admin';
     ok = false;
-  }
+  }*/
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     document.getElementById('email-error').textContent =
       'Informe um e-mail válido.';
@@ -82,15 +82,7 @@ async function handleCad() {
   if (!ok) return;
 
   try {
-    // 1. pega admin logado
-    const admin = auth.currentUser;
-    const adminEmail = auth.currentUser.email;
-
-    // 2. reautentica admin
-    const credential = EmailAuthProvider.credential(admin.email, senhaAdm);
-    await reauthenticateWithCredential(admin, credential);
-
-    // 3. cria usuário novo
+    // 1. cria usuário novo
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
@@ -101,7 +93,7 @@ async function handleCad() {
       displayName: nome,
     });
 
-    // 4. salva no Firestore (com função)
+    // 2. salva no Firestore (com função)
     const usuario = new Usuario(
       userCredential.user.uid,
       nome,
@@ -113,33 +105,33 @@ async function handleCad() {
 
     await usuariosService.create(usuario);
 
-    await signOut(auth);
-    await signInWithEmailAndPassword(auth, adminEmail, senhaAdm);
+    await signInWithEmailAndPassword(auth);
 
     location.href = '../tarefas/tarefas.html';
   } catch (error) {
     console.error(error);
-
+    /*
     document.getElementById('senha_adm-error').textContent =
       'Senha do admin incorreta ou erro de autenticação';
+  */
   }
 }
 
 /* CONTROLE DO BOTÃO ADMIN */
-
+/*
 onAuthStateChanged(auth, (user) => {
   const btn = document.getElementById('admin');
   if (!btn) return;
 
   btn.style.display = 'none';
 
-  if (user && user.email === 'adm@gmail.com') {
+  if (user && user.email == 'adm@gmail.com') {
     btn.style.display = 'block';
   }
 });
 
 if (typeof window !== 'undefined') {
   Object.assign(window, { togglePw, handleCad });
-}
+}*/
 
 export { togglePw, handleCad };
