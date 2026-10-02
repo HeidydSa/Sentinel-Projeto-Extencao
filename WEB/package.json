@@ -9,8 +9,7 @@
     "lint": "eslint .",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
-    "ci": "npm run lint && npm run format:check",
-    "prepare": "husky"
+    "ci": "npm run lint && npm run format:check"
   },
   "repository": {
     "type": "git",

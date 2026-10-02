@@ -8,11 +8,11 @@ import { TarefasClient } from '../client/tarefas.client.js';
 import { FuncaoService } from '../services/funcoes.service.js';
 import { ProjetoService } from '../services/projetos.service.js';
 import { TarefaService } from '../services/tarefas.service.js';
-import { UsuarioService } from '../services/usuarios.service.js';
 import { EquipeService } from '../services/equipes.service.js';
 import { ComentariosClient } from '../client/comentarios.client.js';
 import { ComentarioService } from '../services/comentario.service.js';
 import { AuthClient } from '../client/auth.client.js';
+import { AuthService } from '../services/auth_service.js';
 
 const andamentoTarefasClient = new AndamentoTarefasClient();
 const equipesClient = new EquipesClient();

@@ -1,7 +1,7 @@
 import { Usuario } from '../models/Usuario.model.js';
 import { isNonEmptyString } from '../utils/typeValidations.js';
 
-export class UsuarioService {
+export class AuthService {
   constructor(client) {
     this.client = client;
   }
