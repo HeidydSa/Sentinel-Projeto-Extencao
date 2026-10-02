@@ -8,6 +8,12 @@ export class AuthController {
 
   async register(req, res) {
     try {
+      if (
+        process.env.AUTH_KEY != undefined &&
+        req.headers['x-api-key'] != process.env.AUTH_KEY
+      ) {
+        return res.status(403).json({ error: 'Sem autorização' });
+      }
       const usuario = await this.service.register(req.body);
       return res.status(201).json(usuario);
     } catch (error) {
@@ -21,6 +27,12 @@ export class AuthController {
 
   async login(req, res) {
     try {
+      if (
+        process.env.AUTH_KEY != undefined &&
+        req.headers['x-api-key'] != process.env.AUTH_KEY
+      ) {
+        return res.status(403).json({ error: 'Sem autorização' });
+      }
       const { email, senha } = req.body;
       const resultado = await this.service.login(email, senha);
       return res.json(resultado);

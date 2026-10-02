@@ -17,7 +17,7 @@ import cors from 'cors';
 
 const app = express();
 app.use(express.json());
-app.use(helmet);
+app.use(helmet());
 app.use(
   cors({
     origin: process.env?.['WHITELIST']?.split(',') || '*',

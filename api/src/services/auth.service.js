@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { InvalidCredentialsError } from '../errors/invalid_credentials.error.js';
 import { ValidationError } from '../errors/validation.error.js';
