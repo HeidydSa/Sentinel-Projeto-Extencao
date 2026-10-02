@@ -23,6 +23,18 @@ export class Usuario {
     this.validate();
   }
 
+  toJSON() {
+    return {
+      id: this.id,
+      nome: this.nome,
+      sobrenome: this.sobrenome,
+      email: this.email,
+      funcaoId: this.funcaoId,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
+    };
+  }
+
   validate() {
     if (!isNonEmptyString(this.nome)) {
       throw new TypeError('Nome não pode ser uma string vazia');

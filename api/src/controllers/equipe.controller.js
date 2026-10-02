@@ -8,7 +8,7 @@ export class EquipeController {
   async create(req, res) {
     try {
       const equipe = await this.service.create(req.body);
-      return res.status(201).json(equipe);
+      return res.status(201).json(equipe.toJSON());
     } catch (error) {
       if (error instanceof ValidationError) {
         return res.status(400).json({ error: error.message });
@@ -30,7 +30,7 @@ export class EquipeController {
         return res.status(404).json({ error: 'Equipe não encontrada' });
       }
 
-      return res.json(equipe);
+      return res.json(equipe.toJSON());
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Erro interno do servidor' });
@@ -40,7 +40,7 @@ export class EquipeController {
   async getAll(req, res) {
     try {
       const equipes = await this.service.getAll();
-      return res.json(equipes);
+      return res.json(equipes.map((equipe) => equipe.toJSON()));
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Erro interno do servidor' });
@@ -59,7 +59,7 @@ export class EquipeController {
         return res.status(404).json({ error: 'Equipe não encontrada' });
       }
 
-      return res.json(equipe);
+      return res.json(equipe.toJSON());
     } catch (error) {
       if (error instanceof ValidationError) {
         return res.status(400).json({ error: error.message });

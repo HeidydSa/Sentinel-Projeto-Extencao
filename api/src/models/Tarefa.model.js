@@ -39,6 +39,34 @@ export class Tarefa {
     this.validate();
   }
 
+  toJSON() {
+    return {
+      id: this.id,
+      titulo: this.titulo,
+      data: this.data ? this.data.toISOString() : null,
+      economia: this.economia,
+      descricao: this.descricao,
+      status: this.status,
+      idProjeto: this.idProjeto,
+      idCriador: this.idCriador,
+      idResponsavel: this.idResponsavel,
+      idAndamento: this.idAndamento,
+      responsavel:
+        this.responsavel && typeof this.responsavel.toJSON === 'function'
+          ? this.responsavel.toJSON()
+          : this.responsavel,
+      comentarios: Array.isArray(this.comentarios)
+        ? this.comentarios.map((comentario) =>
+            comentario && typeof comentario.toJSON === 'function'
+              ? comentario.toJSON()
+              : comentario
+          )
+        : this.comentarios,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
+    };
+  }
+
   validate() {
     if (!isNonEmptyString(this.titulo)) {
       throw new TypeError('Título não pode ser uma string vazia');

@@ -10,6 +10,15 @@ export class MembroEquipe {
     this.validate();
   }
 
+  toJSON() {
+    return {
+      equipeId: this.equipeId,
+      usuarioId: this.usuarioId,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
+    };
+  }
+
   validate() {
     if (!isPositiveNumber(this.equipeId)) {
       throw new TypeError('EquipeId deve ser um número positivo');

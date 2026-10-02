@@ -15,6 +15,16 @@ export class AndamentoTarefa {
     this.validate();
   }
 
+  toJSON() {
+    return {
+      id: this.id,
+      titulo: this.titulo,
+      ordem: this.ordem,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
+    };
+  }
+
   validate() {
     if (!isNonEmptyString(this.titulo)) {
       throw new TypeError('Título não pode ser uma string vazia');

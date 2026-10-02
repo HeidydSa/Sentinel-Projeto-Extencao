@@ -11,6 +11,16 @@ export class Equipe {
     this.validate();
   }
 
+  toJSON() {
+    return {
+      id: this.id,
+      nome: this.nome,
+      idLider: this.idLider,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
+    };
+  }
+
   validate() {
     if (!isNonEmptyString(this.nome)) {
       throw new TypeError('Nome não pode ser uma string vazia');

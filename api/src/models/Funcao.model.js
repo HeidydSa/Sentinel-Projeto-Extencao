@@ -10,6 +10,15 @@ export class Funcao {
     this.validate();
   }
 
+  toJSON() {
+    return {
+      id: this.id,
+      tipo: this.tipo,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
+    };
+  }
+
   validate() {
     if (!isNonEmptyString(this.tipo)) {
       throw new TypeError('Tipo não pode ser uma string vazia');

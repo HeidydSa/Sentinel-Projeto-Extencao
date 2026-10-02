@@ -41,7 +41,7 @@ export class ComentarioController {
         return res.status(404).json({ error: 'Comentário não encontrado' });
       }
 
-      return res.json(comentario);
+      return res.json(comentario.toJSON());
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Erro interno do servidor' });
@@ -57,7 +57,7 @@ export class ComentarioController {
           .send({ message: 'tarefaId deve ser um número inteiro' });
       }
       const comentarios = await this.service.getAll(Number(tarefaId));
-      return res.json(comentarios);
+      return res.json(comentarios.map((c) => c.toJSON()));
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Erro interno do servidor' });

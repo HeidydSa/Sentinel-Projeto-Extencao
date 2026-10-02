@@ -8,7 +8,7 @@ export class UsuarioController {
   async create(req, res) {
     try {
       const usuario = await this.service.create(req.body);
-      return res.status(201).json(usuario);
+      return res.status(201).json(usuario.toJSON());
     } catch (error) {
       if (error instanceof ValidationError) {
         return res.status(400).json({ error: error.message });
@@ -32,7 +32,7 @@ export class UsuarioController {
         return res.status(404).json({ error: 'Usuário não encontrado' });
       }
 
-      return res.json(usuario);
+      return res.json(usuario.toJSON());
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Erro interno do servidor' });
@@ -42,7 +42,7 @@ export class UsuarioController {
   async getAll(req, res) {
     try {
       const usuarios = await this.service.getAll();
-      return res.json(usuarios);
+      return res.json(usuarios.map((usuario) => usuario.toJSON()));
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Erro interno do servidor' });
@@ -63,7 +63,7 @@ export class UsuarioController {
         return res.status(404).json({ error: 'Usuário não encontrado' });
       }
 
-      return res.json(usuario);
+      return res.json(usuario.toJSON());
     } catch (error) {
       if (error instanceof ValidationError) {
         return res.status(400).json({ error: error.message });

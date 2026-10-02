@@ -15,6 +15,16 @@ export class Comentario {
     this.validate();
   }
 
+  toJSON() {
+    return {
+      id: this.id,
+      idUsuario: this.idUsuario,
+      detalhe: this.detalhe,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
+    };
+  }
+
   validate() {
     if (!isPositiveNumber(this.idUsuario)) {
       throw new TypeError('IdUsuario deve ser um número positivo');

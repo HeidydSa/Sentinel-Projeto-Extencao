@@ -21,6 +21,18 @@ export class Projeto {
     this.validate();
   }
 
+  toJSON() {
+    return {
+      id: this.id,
+      titulo: this.titulo,
+      descricao: this.descricao,
+      idEquipe: this.idEquipe,
+      status: this.status,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
+    };
+  }
+
   validate() {
     if (!isNonEmptyString(this.titulo)) {
       throw new TypeError('Título não pode ser uma string vazia');

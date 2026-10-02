@@ -8,7 +8,7 @@ export class ProjetoController {
   async create(req, res) {
     try {
       const projeto = await this.service.create(req.body);
-      return res.status(201).json(projeto);
+      return res.status(201).json(projeto.toJSON());
     } catch (error) {
       if (error instanceof ValidationError) {
         return res.status(400).json({ error: error.message });
@@ -30,7 +30,7 @@ export class ProjetoController {
         return res.status(404).json({ error: 'Projeto não encontrado' });
       }
 
-      return res.json(projeto);
+      return res.json(projeto.toJSON());
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Erro interno do servidor' });
@@ -40,7 +40,7 @@ export class ProjetoController {
   async getAll(req, res) {
     try {
       const projetos = await this.service.getAll();
-      return res.json(projetos);
+      return res.json(projetos.map((projeto) => projeto.toJSON()));
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Erro interno do servidor' });
@@ -61,7 +61,7 @@ export class ProjetoController {
         return res.status(404).json({ error: 'Projeto não encontrado' });
       }
 
-      return res.json(projeto);
+      return res.json(projeto.toJSON());
     } catch (error) {
       if (error instanceof ValidationError) {
         return res.status(400).json({ error: error.message });

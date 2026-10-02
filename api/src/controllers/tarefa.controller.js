@@ -9,7 +9,7 @@ export class TarefaController {
   async create(req, res) {
     try {
       const tarefa = await this.service.create(req.body);
-      return res.status(201).json(tarefa);
+      return res.status(201).json(tarefa.toJSON());
     } catch (error) {
       if (error instanceof ValidationError) {
         return res.status(400).json({ error: error.message });
@@ -33,7 +33,7 @@ export class TarefaController {
         return res.status(404).json({ error: 'Tarefa não encontrada' });
       }
 
-      return res.json(tarefa);
+      return res.json(tarefa.toJSON());
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Erro interno do servidor' });
@@ -43,7 +43,7 @@ export class TarefaController {
   async getAll(req, res) {
     try {
       const tarefas = await this.service.getAll();
-      return res.json(tarefas);
+      return res.json(tarefas.map((tarefa) => tarefa.toJSON()));
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Erro interno do servidor' });
@@ -64,7 +64,7 @@ export class TarefaController {
         return res.status(404).json({ error: 'Tarefa não encontrada' });
       }
 
-      return res.json(tarefa);
+      return res.json(tarefa.toJSON());
     } catch (error) {
       if (error instanceof ValidationError) {
         return res.status(400).json({ error: error.message });

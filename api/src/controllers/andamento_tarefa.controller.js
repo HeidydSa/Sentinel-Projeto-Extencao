@@ -8,7 +8,7 @@ export class AndamentoTarefaController {
   async create(req, res) {
     try {
       const andamento = await this.service.create(req.body);
-      return res.status(201).json(andamento);
+      return res.status(201).json(andamento.toJSON());
     } catch (error) {
       if (error instanceof ValidationError) {
         return res.status(400).json({ error: error.message });
@@ -30,7 +30,7 @@ export class AndamentoTarefaController {
         return res.status(404).json({ error: 'Andamento não encontrado' });
       }
 
-      return res.json(andamento);
+      return res.json(andamento.toJSON());
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Erro interno do servidor' });
@@ -40,7 +40,7 @@ export class AndamentoTarefaController {
   async getAll(req, res) {
     try {
       const andamentos = await this.service.getAll();
-      return res.json(andamentos);
+      return res.json(andamentos.map((andamento) => andamento.toJSON()));
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Erro interno do servidor' });
@@ -59,7 +59,7 @@ export class AndamentoTarefaController {
         return res.status(404).json({ error: 'Andamento não encontrado' });
       }
 
-      return res.json(andamento);
+      return res.json(andamento.toJSON());
     } catch (error) {
       if (error instanceof ValidationError) {
         return res.status(400).json({ error: error.message });

@@ -8,7 +8,7 @@ export class FuncaoController {
   async create(req, res) {
     try {
       const funcao = await this.service.create(req.body);
-      return res.status(201).json(funcao);
+      return res.status(201).json(funcao.toJSON());
     } catch (error) {
       if (error instanceof ValidationError) {
         return res.status(400).json({ error: error.message });
@@ -30,7 +30,7 @@ export class FuncaoController {
         return res.status(404).json({ error: 'Função não encontrada' });
       }
 
-      return res.json(funcao);
+      return res.json(funcao.toJSON());
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Erro interno do servidor' });
@@ -40,7 +40,7 @@ export class FuncaoController {
   async getAll(req, res) {
     try {
       const funcoes = await this.service.getAll();
-      return res.json(funcoes);
+      return res.json(funcoes.map((funcao) => funcao.toJSON()));
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Erro interno do servidor' });
@@ -59,7 +59,7 @@ export class FuncaoController {
         return res.status(404).json({ error: 'Função não encontrada' });
       }
 
-      return res.json(funcao);
+      return res.json(funcao.toJSON());
     } catch (error) {
       if (error instanceof ValidationError) {
         return res.status(400).json({ error: error.message });
