@@ -12,9 +12,17 @@ import { createAndamentoTarefa } from './composition/create_andamento_tarefa.js'
 import { createTarefa } from './composition/create_tarefa.js';
 import { createComentario } from './composition/create_comentario.js';
 import { createAuth } from './composition/create_auth.js';
+import helmet from 'helmet';
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
+app.use(helmet);
+app.use(
+  cors({
+    origin: process.env?.['WHITELIST']?.split(',') || '*',
+  })
+);
 
 const controllers = {
   auth: createAuth(pool),
