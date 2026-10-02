@@ -1,5 +1,5 @@
 import { Comentario } from '../models/Comentario.model.js';
-import { ValidationError } from '../errors/ValidationError.js';
+import { ValidationError } from '../errors/validation.error.js';
 
 export class ComentarioService {
   constructor(repository) {

@@ -1,6 +1,6 @@
-import { UsuarioRepository } from '../repositories/UsuarioRepository.js';
-import { UsuarioService } from '../services/UsuarioService.js';
-import { UsuarioController } from '../controllers/UsuarioController.js';
+import { UsuarioRepository } from '../repositories/usuarios.repository.js';
+import { UsuarioService } from '../services/usuarios.service.js';
+import { UsuarioController } from '../controllers/usuario_service.controller.js';
 
 export function createUsuario(db) {
   const repository = new UsuarioRepository(db);

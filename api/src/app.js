@@ -1,21 +1,23 @@
 import express from 'express';
 
-import { pool } from './config/db.js';
+import { pool } from './config/db.config.js';
 import { buildRoutes } from './routes/index.js';
 
-import { createFuncao } from './create/createFuncao.js';
-import { createUsuario } from './create/createUsuario.js';
-import { createEquipe } from './create/createEquipe.js';
-import { createMembroEquipe } from './create/createMembroEquipe.js';
-import { createProjeto } from './create/createProjeto.js';
-import { createAndamentoTarefa } from './create/createAndamentoTarefa.js';
-import { createTarefa } from './create/createTarefa.js';
-import { createComentario } from './create/createComentario.js';
+import { createFuncao } from './composition/create_funcao.js';
+import { createUsuario } from './composition/create_usuario.js';
+import { createEquipe } from './composition/create_equipe.js';
+import { createMembroEquipe } from './composition/create_membro_equipe.js';
+import { createProjeto } from './composition/create_projeto.js';
+import { createAndamentoTarefa } from './composition/create_andamento_tarefa.js';
+import { createTarefa } from './composition/create_tarefa.js';
+import { createComentario } from './composition/create_comentario.js';
+import { createAuth } from './composition/create_auth.js';
 
 const app = express();
 app.use(express.json());
 
 const controllers = {
+  auth: createAuth(pool),
   funcao: createFuncao(pool),
   usuario: createUsuario(pool),
   equipe: createEquipe(pool),

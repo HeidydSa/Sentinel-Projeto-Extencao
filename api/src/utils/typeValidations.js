@@ -45,6 +45,18 @@ export const isValidPassword = (val) => {
   return typeof val === 'string' && passwordRegex.test(val);
 };
 
+export const isJwtToken = (val) => {
+  if (!isNonEmptyString(val)) return false;
+
+  const tokenParts = val.split(' ');
+
+  if (tokenParts[0] !== 'Bearer' || !tokenParts[1]) {
+    return false;
+  }
+
+  return true;
+};
+
 export default {
   isString,
   isNumber,

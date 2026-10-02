@@ -1,5 +1,5 @@
 import { Funcao } from '../models/Funcao.model.js';
-import { ValidationError } from '../errors/ValidationError.js';
+import { ValidationError } from '../errors/validation.error.js';
 
 export class FuncaoService {
   constructor(repository) {

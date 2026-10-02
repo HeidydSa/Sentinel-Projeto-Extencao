@@ -1,5 +1,5 @@
 import { Projeto } from '../models/Projeto.model.js';
-import { ValidationError } from '../errors/ValidationError.js';
+import { ValidationError } from '../errors/validation.error.js';
 
 export class ProjetoService {
   constructor(repository) {

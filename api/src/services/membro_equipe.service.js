@@ -1,5 +1,5 @@
 import { MembroEquipe } from '../models/MembroEquipe.model.js';
-import { ValidationError } from '../errors/ValidationError.js';
+import { ValidationError } from '../errors/validation.error.js';
 
 export class MembroEquipeService {
   constructor(repository) {

@@ -1,5 +1,5 @@
 import { Usuario } from '../models/Usuario.model.js';
-import { ValidationError } from '../errors/ValidationError.js';
+import { ValidationError } from '../errors/validation.error.js';
 
 export class UsuarioService {
   constructor(repository) {

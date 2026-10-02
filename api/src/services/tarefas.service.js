@@ -1,5 +1,5 @@
 import { Tarefa } from '../models/Tarefa.model.js';
-import { ValidationError } from '../errors/ValidationError.js';
+import { ValidationError } from '../errors/validation.error.js';
 
 export class TarefaService {
   constructor(repository) {

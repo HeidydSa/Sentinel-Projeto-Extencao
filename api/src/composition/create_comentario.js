@@ -1,6 +1,6 @@
-import { ComentarioRepository } from '../repositories/ComentarioRepository.js';
-import { ComentarioService } from '../services/ComentarioService.js';
-import { ComentarioController } from '../controllers/ComentarioController.js';
+import { ComentarioRepository } from '../repositories/comentario.repository.js';
+import { ComentarioService } from '../services/comentario.service.js';
+import { ComentarioController } from '../controllers/comentario.controller.js';
 
 export function createComentario(db) {
   const repository = new ComentarioRepository({ db });

@@ -1,6 +1,6 @@
-import { EquipeRepository } from '../repositories/EquipeRepository.js';
-import { EquipeService } from '../services/EquipeService.js';
-import { EquipeController } from '../controllers/EquipeController.js';
+import { EquipeRepository } from '../repositories/equipes.repository.js';
+import { EquipeService } from '../services/equipes.service.js';
+import { EquipeController } from '../controllers/equipe.controller.js';
 
 export function createEquipe(db) {
   const repository = new EquipeRepository(db);

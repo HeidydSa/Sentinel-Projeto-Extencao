@@ -1,5 +1,5 @@
 import { Equipe } from '../models/Equipe.model.js';
-import { ValidationError } from '../errors/ValidationError.js';
+import { ValidationError } from '../errors/validation.error.js';
 
 export class EquipeService {
   constructor(repository) {

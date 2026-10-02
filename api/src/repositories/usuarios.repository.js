@@ -21,6 +21,15 @@ export class UsuarioRepository {
     return this.fromPersisted(result.rows[0]);
   }
 
+  async getByEmail(email) {
+    const query = 'SELECT * FROM usuario WHERE email = $1';
+    const result = await this.db.query(query, [email]);
+
+    if (result.rows.length === 0) return null;
+
+    return this.fromPersisted(result.rows[0]);
+  }
+
   async create(usuario) {
     if (!(usuario instanceof Usuario)) {
       throw new TypeError('`usuario` deve ser uma instância da classe Usuario');

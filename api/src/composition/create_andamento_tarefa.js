@@ -1,6 +1,6 @@
-import { AndamentoTarefaRepository } from '../repositories/AndamentoTarefaRepository.js';
-import { AndamentoTarefaService } from '../services/AndamentoTarefaService.js';
-import { AndamentoTarefaController } from '../controllers/AndamentoTarefaController.js';
+import { AndamentoTarefaRepository } from '../repositories/andamento_tarefa.repository.js';
+import { AndamentoTarefaService } from '../services/andamento_tarefas.service.js';
+import { AndamentoTarefaController } from '../controllers/andamento_tarefa.controller.js';
 
 export function createAndamentoTarefa(db) {
   const repository = new AndamentoTarefaRepository(db);
