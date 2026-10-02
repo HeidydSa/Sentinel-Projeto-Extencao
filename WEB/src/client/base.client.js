@@ -1,8 +1,10 @@
+import { global } from '../config/global.js';
+
 export class BaseClient {
   baseUrl;
 
   constructor({ path }) {
-    this.baseUrl = 'https://sentinel-service.duckdns.org' + path;
+    this.baseUrl = global.API_URL + path;
   }
 
   getHeaders() {
@@ -44,7 +46,7 @@ export class BaseClient {
   }
 
   async update(id, payload) {
-    const response = await fetch(url, {
+    const response = await fetch(this.baseUrl, {
       method: 'PUT',
       headers: this.getHeaders(),
       body: payload.toJSON(),
@@ -60,7 +62,7 @@ export class BaseClient {
   }
 
   async create(payload) {
-    const response = await fetch(url, {
+    const response = await fetch(this.baseUrl, {
       method: 'POST',
       headers: this.getHeaders(),
       body: payload.toJSON(),

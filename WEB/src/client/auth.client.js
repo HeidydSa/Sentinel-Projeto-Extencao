@@ -1,11 +1,14 @@
+import { global } from '../config/global.js';
+import { isNonEmptyString } from '../utils/typeValidations.js';
+
 export class AuthClient {
   baseUrl;
-  constructor({ path }) {
-    this.baseUrl = 'https://sentinel-service.duckdns.org/auth';
+  constructor() {
+    this.baseUrl = global.API_URL + '/auth';
   }
 
   async login(email, senha) {
-    const response = await fetch(url + '/login', {
+    const response = await fetch(this.baseUrl + '/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -22,10 +25,16 @@ export class AuthClient {
       );
     }
 
-    return response.json();
+    const data = await response.json();
+
+    if (!isNonEmptyString(data.jwtToken)) {
+      throw new Error('Token recebido pela API é inválido');
+    }
+
+    localStorage.setItem('auth_token', data.jwtToken);
   }
   async register(payload) {
-    const response = await fetch(url + '/register', {
+    const response = await fetch(this.baseUrl + '/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
