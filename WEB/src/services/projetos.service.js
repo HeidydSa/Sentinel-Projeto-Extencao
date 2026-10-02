@@ -2,8 +2,8 @@ import { Projeto } from '../models/Projeto.model.js';
 import { isNonEmptyString } from '../utils/typeValidations.js';
 
 export class ProjetoService {
-  constructor(repository) {
-    this.repository = repository;
+  constructor(client) {
+    this.client = client;
   }
 
   async create(projeto) {
@@ -12,7 +12,7 @@ export class ProjetoService {
     }
 
     try {
-      return await this.repository.create(projeto);
+      return await this.client.create(projeto);
     } catch (error) {
       throw new Error(`Erro ao criar projeto:${error.message}`, error);
     }
@@ -24,7 +24,7 @@ export class ProjetoService {
     }
 
     try {
-      return await this.repository.getById(id);
+      return await this.client.getById(id);
     } catch (error) {
       throw new Error(`Erro ao obter projeto por ID:${error.message}`, error);
     }
@@ -32,7 +32,7 @@ export class ProjetoService {
 
   async getAll() {
     try {
-      return await this.repository.getAll();
+      return await this.client.getAll();
     } catch (error) {
       throw new Error(
         `Erro ao obter todos os projetos:${error.message}`,
@@ -51,7 +51,7 @@ export class ProjetoService {
     }
 
     try {
-      return await this.repository.update(id, updatedData);
+      return await this.client.update(id, updatedData);
     } catch (error) {
       throw new Error(`Erro ao atualizar projeto:${error.message}`, error);
     }
@@ -63,7 +63,7 @@ export class ProjetoService {
     }
 
     try {
-      return await this.repository.delete(id);
+      return await this.client.delete(id);
     } catch (error) {
       throw new Error(`Erro ao deletar projeto:${error.message}`, error);
     }

@@ -2,8 +2,8 @@ import { Equipe } from '../models/Equipe.model.js';
 import { isNonEmptyString } from '../utils/typeValidations.js';
 
 export class EquipeService {
-  constructor(repository) {
-    this.repository = repository;
+  constructor(client) {
+    this.client = client;
   }
 
   async create(equipe) {
@@ -12,7 +12,7 @@ export class EquipeService {
     }
 
     try {
-      return await this.repository.create(equipe);
+      return await this.client.create(equipe);
     } catch (error) {
       throw new Error(`Erro ao criar equipe: ${error.message}`, error);
     }
@@ -24,7 +24,7 @@ export class EquipeService {
     }
 
     try {
-      return await this.repository.getById(id);
+      return await this.client.getById(id);
     } catch (error) {
       throw new Error(`Erro ao obter equipe por ID:${error.message}`, error);
     }
@@ -32,7 +32,7 @@ export class EquipeService {
 
   async getAll() {
     try {
-      return await this.repository.getAll();
+      return await this.client.getAll();
     } catch (error) {
       throw new Error(`Erro ao obter todas as equipes:${error.message}`, error);
     }
@@ -48,7 +48,7 @@ export class EquipeService {
     }
 
     try {
-      return await this.repository.update(id, updatedData);
+      return await this.client.update(id, updatedData);
     } catch (error) {
       throw new Error(`Erro ao atualizar equipe:${error.message}`, error);
     }
@@ -60,7 +60,7 @@ export class EquipeService {
     }
 
     try {
-      return await this.repository.delete(id);
+      return await this.client.delete(id);
     } catch (error) {
       throw new Error(`Erro ao deletar equipe:${error.message}`, error);
     }

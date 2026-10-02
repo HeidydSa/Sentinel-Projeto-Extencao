@@ -5,13 +5,24 @@ import {
 } from '../utils/typeValidations.js';
 
 export class AndamentoTarefa {
-  constructor(id, titulo, ordem, dataCriacao) {
-    this.id = id ?? '';
+  constructor({ id, titulo, ordem, createdAt, updatedAt }) {
+    this.id = id ?? null;
     this.titulo = titulo;
     this.ordem = ordem;
-    this.dataCriacao = new Date(dataCriacao);
+    this.createdAt = createdAt ? new Date(createdAt) : new Date();
+    this.updatedAt = updatedAt ? new Date(updatedAt) : new Date();
 
     this.validate();
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      titulo: this.titulo,
+      ordem: this.ordem,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
+    };
   }
 
   validate() {
@@ -23,17 +34,12 @@ export class AndamentoTarefa {
       throw new TypeError('Ordem deve ser um número não negativo');
     }
 
-    if (!isDate(this.dataCriacao)) {
+    if (!isDate(this.createdAt)) {
       throw new TypeError('Data de criação deve ser um objeto Date');
     }
-  }
 
-  toPersisted() {
-    return {
-      id: this.id,
-      titulo: this.titulo,
-      ordem: this.ordem,
-      data_criacao: this.dataCriacao.toISOString(),
-    };
+    if (!isDate(this.updatedAt)) {
+      throw new TypeError('Data de atualização deve ser um objeto Date');
+    }
   }
 }

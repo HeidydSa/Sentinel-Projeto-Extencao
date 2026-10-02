@@ -1,10 +1,9 @@
-import { isDate, isNonEmptyString } from '../utils/typeValidations.js';
+import { isDate, isPositiveNumber } from '../utils/typeValidations.js';
 
-export class Equipe {
-  constructor({ id, nome, idLider, createdAt, updatedAt }) {
-    this.id = id ?? null;
-    this.nome = nome;
-    this.idLider = idLider ?? null;
+export class MembroEquipe {
+  constructor({ equipeId, usuarioId, createdAt, updatedAt }) {
+    this.equipeId = equipeId;
+    this.usuarioId = usuarioId;
     this.createdAt = createdAt ? new Date(createdAt) : new Date();
     this.updatedAt = updatedAt ? new Date(updatedAt) : new Date();
 
@@ -13,17 +12,20 @@ export class Equipe {
 
   toJSON() {
     return {
-      id: this.id,
-      nome: this.nome,
-      idLider: this.idLider,
+      equipeId: this.equipeId,
+      usuarioId: this.usuarioId,
       createdAt: this.createdAt.toISOString(),
       updatedAt: this.updatedAt.toISOString(),
     };
   }
 
   validate() {
-    if (!isNonEmptyString(this.nome)) {
-      throw new TypeError('Nome não pode ser uma string vazia');
+    if (!isPositiveNumber(this.equipeId)) {
+      throw new TypeError('EquipeId deve ser um número positivo');
+    }
+
+    if (!isPositiveNumber(this.usuarioId)) {
+      throw new TypeError('UsuarioId deve ser um número positivo');
     }
 
     if (!isDate(this.createdAt)) {

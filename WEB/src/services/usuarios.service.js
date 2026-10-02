@@ -2,8 +2,8 @@ import { Usuario } from '../models/Usuario.model.js';
 import { isNonEmptyString } from '../utils/typeValidations.js';
 
 export class UsuarioService {
-  constructor(repository) {
-    this.repository = repository;
+  constructor(client) {
+    this.client = client;
   }
 
   async create(usuario) {
@@ -12,7 +12,7 @@ export class UsuarioService {
     }
 
     try {
-      return await this.repository.create(usuario);
+      return await this.client.create(usuario);
     } catch (error) {
       throw new Error(`Erro ao criar usuário:${error.message}`, error);
     }
@@ -24,7 +24,7 @@ export class UsuarioService {
     }
 
     try {
-      return await this.repository.getById(id);
+      return await this.client.getById(id);
     } catch (error) {
       throw new Error(`Erro ao obter usuário por ID:${error.message}`, error);
     }
@@ -32,7 +32,7 @@ export class UsuarioService {
 
   async getAll() {
     try {
-      return await this.repository.getAll();
+      return await this.client.getAll();
     } catch (error) {
       throw new Error(
         `Erro ao obter todos os usuários:${error.message}`,
@@ -51,7 +51,7 @@ export class UsuarioService {
     }
 
     try {
-      return await this.repository.update(id, updatedData);
+      return await this.client.update(id, updatedData);
     } catch (error) {
       throw new Error(`Erro ao atualizar usuário:${error.message}`, error);
     }
@@ -63,7 +63,7 @@ export class UsuarioService {
     }
 
     try {
-      return await this.repository.delete(id);
+      return await this.client.delete(id);
     } catch (error) {
       throw new Error(`Erro ao deletar usuário:${error.message}`, error);
     }

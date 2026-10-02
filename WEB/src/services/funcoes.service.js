@@ -2,8 +2,8 @@ import { Funcao } from '../models/Funcao.model.js';
 import { isNonEmptyString } from '../utils/typeValidations.js';
 
 export class FuncaoService {
-  constructor(repository) {
-    this.repository = repository;
+  constructor(client) {
+    this.client = client;
   }
 
   async create(funcao) {
@@ -12,7 +12,7 @@ export class FuncaoService {
     }
 
     try {
-      return await this.repository.create(funcao);
+      return await this.client.create(funcao);
     } catch (error) {
       throw new Error(`Erro ao criar função:${error.message}`, error);
     }
@@ -24,7 +24,7 @@ export class FuncaoService {
     }
 
     try {
-      return await this.repository.getById(id);
+      return await this.client.getById(id);
     } catch (error) {
       console.error(error.message);
       throw new Error(`Erro ao obter função por ID:${error.message}`, error);
@@ -33,7 +33,7 @@ export class FuncaoService {
 
   async getAll() {
     try {
-      return await this.repository.getAll();
+      return await this.client.getAll();
     } catch (error) {
       console.error(error.message);
       throw new Error(`Erro ao obter todas as funções:${error.message}`, error);
@@ -50,7 +50,7 @@ export class FuncaoService {
     }
 
     try {
-      return await this.repository.update(id, updatedData);
+      return await this.client.update(id, updatedData);
     } catch (error) {
       throw new Error(`Erro ao atualizar função:${error.message}`, error);
     }
@@ -62,7 +62,7 @@ export class FuncaoService {
     }
 
     try {
-      return await this.repository.delete(id);
+      return await this.client.delete(id);
     } catch (error) {
       throw new Error(`Erro ao deletar função:${error.message}`, error);
     }

@@ -1,5 +1,8 @@
-import { isNonEmptyString, isString } from '../utils/typeValidations.js';
-import { Usuario } from './Usuario.model.js';
+import {
+  isDate,
+  isNonEmptyString,
+  isNonNegativeNumber,
+} from '../utils/typeValidations.js';
 
 export class Tarefa {
   constructor({
@@ -7,27 +10,61 @@ export class Tarefa {
     titulo,
     data,
     economia,
+    descricao,
+    status,
     idProjeto,
     idCriador,
     idResponsavel,
-    status,
+    idAndamento,
     responsavel,
-    descricao,
     comentarios,
+    createdAt,
+    updatedAt,
   }) {
-    this.id = id ?? '-1';
+    this.id = id ?? null;
     this.titulo = titulo;
-    this.data = new Date(data);
-    this.economia = economia;
-    this.idProjeto = idProjeto;
-    this.idCriador = idCriador;
-    this.idResponsavel = idResponsavel ?? '';
-    this.status = status ?? 'afazer';
-    this.responsavel = responsavel;
+    this.data = data ? new Date(data) : null;
+    this.economia = economia ?? 0;
     this.descricao = descricao ?? '';
+    this.status = status ?? 'pendente';
+    this.idProjeto = idProjeto ?? null;
+    this.idCriador = idCriador ?? null;
+    this.idResponsavel = idResponsavel ?? null;
+    this.idAndamento = idAndamento ?? null;
+    this.responsavel = responsavel ?? null;
     this.comentarios = comentarios ?? [];
+    this.createdAt = createdAt ? new Date(createdAt) : new Date();
+    this.updatedAt = updatedAt ? new Date(updatedAt) : new Date();
 
     this.validate();
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      titulo: this.titulo,
+      data: this.data ? this.data.toISOString() : null,
+      economia: this.economia,
+      descricao: this.descricao,
+      status: this.status,
+      idProjeto: this.idProjeto,
+      idCriador: this.idCriador,
+      idResponsavel: this.idResponsavel,
+      idAndamento: this.idAndamento,
+      responsavel:
+        this.responsavel && typeof this.responsavel.toJSON === 'function'
+          ? this.responsavel.toJSON()
+          : this.responsavel,
+      comentarios: Array.isArray(this.comentarios)
+        ? this.comentarios.map((comentario) =>
+            comentario && typeof comentario.toJSON === 'function'
+              ? comentario.toJSON()
+              : comentario
+          )
+        : this.comentarios,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
+    };
   }
 
   validate() {
@@ -35,58 +72,24 @@ export class Tarefa {
       throw new TypeError('Título não pode ser uma string vazia');
     }
 
-    if (!(this.data instanceof Date)) {
-      throw new TypeError('Data deve ser um objeto Date');
-    }
-
-    if (typeof this.economia !== 'number' || this.economia < 0) {
+    if (!isNonNegativeNumber(this.economia)) {
       throw new TypeError('Economia deve ser um número não negativo');
-    }
-
-    if (!isNonEmptyString(this.idProjeto)) {
-      throw new TypeError('ID do projeto não pode ser uma string vazia');
-    }
-
-    if (!isNonEmptyString(this.idCriador)) {
-      throw new TypeError('ID do criador não pode ser uma string vazia');
-    }
-
-    if (!isString(this.idResponsavel)) {
-      throw new TypeError('ID do responsável não pode ser uma string vazia');
-    }
-
-    if (!isString(this.descricao)) {
-      throw new TypeError('Descrição não pode ser uma string vazia');
     }
 
     if (!isNonEmptyString(this.status)) {
       throw new TypeError('Status não pode ser uma string vazia');
     }
 
-    if (
-      this.responsavel !== null &&
-      this.responsavel !== undefined &&
-      !(this.responsavel instanceof Usuario)
-    ) {
-      throw new TypeError('Responsável deve ser uma string ou null');
+    if (this.data !== null && !isDate(this.data)) {
+      throw new TypeError('Data deve ser um objeto Date válido ou nulo');
     }
 
-    if (!Array.isArray(this.comentarios)) {
-      throw new TypeError('Comentários deve ser um array');
+    if (!isDate(this.createdAt)) {
+      throw new TypeError('Data de criação deve ser um objeto Date');
     }
-  }
 
-  toPersisted() {
-    return {
-      id: this.id,
-      titulo: this.titulo,
-      data: this.data.toISOString(),
-      economia: this.economia,
-      id_projeto: this.idProjeto,
-      id_criador: this.idCriador,
-      id_responsavel: this.idResponsavel,
-      descricao: this.descricao,
-      status: this.status,
-    };
+    if (!isDate(this.updatedAt)) {
+      throw new TypeError('Data de atualização deve ser um objeto Date');
+    }
   }
 }

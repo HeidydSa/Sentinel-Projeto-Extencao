@@ -1,16 +1,28 @@
-import { isEmail, isNonEmptyString } from '../utils/typeValidations.js';
+import { isDate, isEmail, isNonEmptyString } from '../utils/typeValidations.js';
 
 export class Usuario {
-  constructor(id, nome, sobrenome, email, dataCriacao, funcaoId) {
-    this.id = id ?? '';
+  constructor({ id, nome, sobrenome, email, funcaoId, createdAt, updatedAt }) {
+    this.id = id ?? null;
     this.nome = nome;
     this.sobrenome = sobrenome;
     this.email = email;
-    //this.dataCriacao = dataCriacao?.toDate? dataCriacao.toDate(): new Date(dataCriacao);
-    this.dataCriacao = new Date(dataCriacao);
     this.funcaoId = funcaoId;
+    this.createdAt = createdAt ? new Date(createdAt) : new Date();
+    this.updatedAt = updatedAt ? new Date(updatedAt) : new Date();
 
     this.validate();
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      nome: this.nome,
+      sobrenome: this.sobrenome,
+      email: this.email,
+      funcaoId: this.funcaoId,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
+    };
   }
 
   validate() {
@@ -23,27 +35,19 @@ export class Usuario {
     }
 
     if (!isEmail(this.email)) {
-      throw new TypeError('Email não pode ser uma string vazia');
+      throw new TypeError('Email inválido');
     }
 
-    if (!(this.dataCriacao instanceof Date)) {
+    if (!isNonEmptyString(String(this.funcaoId))) {
+      throw new TypeError('FuncaoId é obrigatório');
+    }
+
+    if (!isDate(this.createdAt)) {
       throw new TypeError('Data de criação deve ser um objeto Date');
     }
-  }
 
-  getInitials() {
-    return `${this.nome.charAt(0)}${this.sobrenome.charAt(0)}`.toUpperCase();
-  }
-
-  toPersisted() {
-    return {
-      id: this.id,
-      nome: this.nome,
-      sobrenome: this.sobrenome,
-      email: this.email,
-      //senha: this.senha, (nao precisa guardar senha, busca ela pelo reauthenticateWithCredential)
-      funcao_id: this.funcaoId,
-      data_criacao: this.dataCriacao.toISOString(),
-    };
+    if (!isDate(this.updatedAt)) {
+      throw new TypeError('Data de atualização deve ser um objeto Date');
+    }
   }
 }

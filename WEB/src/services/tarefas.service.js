@@ -2,8 +2,8 @@ import { Tarefa } from '../models/Tarefa.model.js';
 import { isNonEmptyString } from '../utils/typeValidations.js';
 
 export class TarefaService {
-  constructor(repository) {
-    this.repository = repository;
+  constructor(client) {
+    this.client = client;
   }
 
   async create(tarefa) {
@@ -12,7 +12,7 @@ export class TarefaService {
     }
 
     try {
-      return await this.repository.create(tarefa);
+      return await this.client.create(tarefa);
     } catch (error) {
       throw new Error(`Erro ao criar tarefa:${error.message}`, error);
     }
@@ -24,7 +24,7 @@ export class TarefaService {
     }
 
     try {
-      return await this.repository.getById(id);
+      return await this.client.getById(id);
     } catch (error) {
       throw new Error(`Erro ao obter tarefa por ID:${error.message}`, error);
     }
@@ -32,7 +32,7 @@ export class TarefaService {
 
   async getAll() {
     try {
-      return await this.repository.getAll();
+      return await this.client.getAll();
     } catch (error) {
       throw new Error(`Erro ao obter todas as tarefas:${error.message}`, error);
     }
@@ -48,7 +48,7 @@ export class TarefaService {
     }
 
     try {
-      return await this.repository.update(id, updatedData);
+      return await this.client.update(id, updatedData);
     } catch (error) {
       throw new Error(`Erro ao atualizar tarefa:${error.message}`, error);
     }
@@ -60,7 +60,7 @@ export class TarefaService {
     }
 
     try {
-      return await this.repository.delete(id);
+      return await this.client.delete(id);
     } catch (error) {
       throw new Error(`Erro ao deletar tarefa:${error.message}`, error);
     }

@@ -2,8 +2,8 @@ import { AndamentoTarefa } from '../models/AndamentoTarefa.model.js';
 import { isNonEmptyString } from '../utils/typeValidations.js';
 
 export class AndamentoTarefaService {
-  constructor(repository) {
-    this.repository = repository;
+  constructor(client) {
+    this.client = client;
   }
 
   async create(andamentoTarefa) {
@@ -12,7 +12,7 @@ export class AndamentoTarefaService {
     }
 
     try {
-      return await this.repository.create(andamentoTarefa);
+      return await this.client.create(andamentoTarefa);
     } catch (error) {
       throw new Error(
         `Erro ao criar andamento de tarefa:${error.message}`,
@@ -27,7 +27,7 @@ export class AndamentoTarefaService {
     }
 
     try {
-      return await this.repository.getById(id);
+      return await this.client.getById(id);
     } catch (error) {
       throw new Error(
         `Erro ao obter andamento de tarefa por ID:`,
@@ -38,7 +38,7 @@ export class AndamentoTarefaService {
 
   async getAll() {
     try {
-      return await this.repository.getAll();
+      return await this.client.getAll();
     } catch (error) {
       throw new Error(
         `Erro ao obter todos os andamentos de tarefa:`,
@@ -57,7 +57,7 @@ export class AndamentoTarefaService {
     }
 
     try {
-      return await this.repository.update(id, updatedData);
+      return await this.client.update(id, updatedData);
     } catch (error) {
       throw new Error(
         `Erro ao atualizar andamento de tarefa:${error.message}`,
@@ -72,7 +72,7 @@ export class AndamentoTarefaService {
     }
 
     try {
-      return await this.repository.delete(id);
+      return await this.client.delete(id);
     } catch (error) {
       throw new Error(
         `Erro ao deletar andamento de tarefa:${error.message}`,
