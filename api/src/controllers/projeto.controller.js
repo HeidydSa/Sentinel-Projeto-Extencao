@@ -21,6 +21,9 @@ export class ProjetoController {
   async getById(req, res) {
     try {
       const { id } = req.params;
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      }
       const projeto = await this.service.getById(Number(id));
 
       if (!projeto) {
@@ -47,6 +50,11 @@ export class ProjetoController {
   async update(req, res) {
     try {
       const { id } = req.params;
+
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      }
+
       const projeto = await this.service.update(Number(id), req.body);
 
       if (!projeto) {
@@ -66,6 +74,11 @@ export class ProjetoController {
   async delete(req, res) {
     try {
       const { id } = req.params;
+
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      }
+
       const projeto = await this.service.delete(Number(id));
 
       if (!projeto) {

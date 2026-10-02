@@ -8,6 +8,11 @@ export class ComentarioController {
   async create(req, res) {
     try {
       const { tarefaId } = req.params;
+      if (isNaN(Number(tarefaId))) {
+        res
+          .status(400)
+          .send({ message: 'tarefaId deve ser um número inteiro' });
+      }
       const comentario = await this.service.create(Number(tarefaId), req.body);
       return res.status(201).json(comentario);
     } catch (error) {
@@ -22,6 +27,11 @@ export class ComentarioController {
   async getById(req, res) {
     try {
       const { tarefaId, comentarioId } = req.params;
+      if (isNaN(Number(tarefaId)) || isNaN(Number(comentarioId))) {
+        res.status(400).send({
+          message: 'tarefaId e comentarioId devem ser números inteiros',
+        });
+      }
       const comentario = await this.service.getById(
         Number(tarefaId),
         Number(comentarioId)
@@ -41,6 +51,11 @@ export class ComentarioController {
   async getAll(req, res) {
     try {
       const { tarefaId } = req.params;
+      if (isNaN(Number(tarefaId))) {
+        res
+          .status(400)
+          .send({ message: 'tarefaId deve ser um número inteiro' });
+      }
       const comentarios = await this.service.getAll(Number(tarefaId));
       return res.json(comentarios);
     } catch (error) {
@@ -52,6 +67,11 @@ export class ComentarioController {
   async delete(req, res) {
     try {
       const { tarefaId, comentarioId } = req.params;
+      if (isNaN(Number(tarefaId)) || isNaN(Number(comentarioId))) {
+        res.status(400).send({
+          message: 'tarefaId e comentarioId devem ser números inteiros',
+        });
+      }
       const comentario = await this.service.delete(
         Number(tarefaId),
         Number(comentarioId)

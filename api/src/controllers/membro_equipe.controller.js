@@ -1,4 +1,5 @@
 import { ValidationError } from '../errors/validation.error.js';
+import { isNumber } from '../utils/typeValidations.js';
 
 export class MembroEquipeController {
   constructor(service) {
@@ -8,6 +9,13 @@ export class MembroEquipeController {
   async create(req, res) {
     try {
       const { equipeId, usuarioId } = req.params;
+
+      if (!isNumber(Number(equipeId)) || !isNumber(Number(usuarioId))) {
+        res
+          .status(400)
+          .send({ message: 'equipeId e usuarioId devem ser números inteiros' });
+      }
+
       const membro = await this.service.create({
         equipeId: Number(equipeId),
         usuarioId: Number(usuarioId),
@@ -25,6 +33,11 @@ export class MembroEquipeController {
   async getById(req, res) {
     try {
       const { equipeId, usuarioId } = req.params;
+      if (!isNumber(Number(equipeId)) || !isNumber(Number(usuarioId))) {
+        res
+          .status(400)
+          .send({ message: 'equipeId e usuarioId devem ser números inteiros' });
+      }
       const membro = await this.service.getById(
         Number(equipeId),
         Number(usuarioId)
@@ -44,6 +57,11 @@ export class MembroEquipeController {
   async getAllByEquipe(req, res) {
     try {
       const { equipeId } = req.params;
+      if (!isNumber(Number(equipeId))) {
+        res
+          .status(400)
+          .send({ message: 'equipeId deve ser um número inteiro' });
+      }
       const membros = await this.service.getAllByEquipe(Number(equipeId));
       return res.json(membros);
     } catch (error) {
@@ -55,6 +73,12 @@ export class MembroEquipeController {
   async delete(req, res) {
     try {
       const { equipeId, usuarioId } = req.params;
+
+      if (!isNumber(Number(equipeId)) || !isNumber(Number(usuarioId))) {
+        res
+          .status(400)
+          .send({ message: 'equipeId e usuarioId devem ser números inteiros' });
+      }
       const membro = await this.service.delete(
         Number(equipeId),
         Number(usuarioId)

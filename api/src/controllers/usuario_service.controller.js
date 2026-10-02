@@ -21,6 +21,11 @@ export class UsuarioController {
   async getById(req, res) {
     try {
       const { id } = req.params;
+
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      }
+
       const usuario = await this.service.getById(Number(id));
 
       if (!usuario) {
@@ -47,6 +52,11 @@ export class UsuarioController {
   async update(req, res) {
     try {
       const { id } = req.params;
+
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      }
+
       const usuario = await this.service.update(Number(id), req.body);
 
       if (!usuario) {
@@ -66,6 +76,11 @@ export class UsuarioController {
   async delete(req, res) {
     try {
       const { id } = req.params;
+
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      }
+
       const usuario = await this.service.delete(Number(id));
 
       if (!usuario) {

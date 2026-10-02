@@ -21,6 +21,9 @@ export class FuncaoController {
   async getById(req, res) {
     try {
       const { id } = req.params;
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      }
       const funcao = await this.service.getById(Number(id));
 
       if (!funcao) {
@@ -47,6 +50,9 @@ export class FuncaoController {
   async update(req, res) {
     try {
       const { id } = req.params;
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      }
       const funcao = await this.service.update(Number(id), req.body);
 
       if (!funcao) {
@@ -66,6 +72,9 @@ export class FuncaoController {
   async delete(req, res) {
     try {
       const { id } = req.params;
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      }
       const funcao = await this.service.delete(Number(id));
 
       if (!funcao) {

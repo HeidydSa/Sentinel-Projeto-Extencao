@@ -21,6 +21,9 @@ export class AndamentoTarefaController {
   async getById(req, res) {
     try {
       const { id } = req.params;
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      }
       const andamento = await this.service.getById(Number(id));
 
       if (!andamento) {
@@ -47,6 +50,9 @@ export class AndamentoTarefaController {
   async update(req, res) {
     try {
       const { id } = req.params;
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      }
       const andamento = await this.service.update(Number(id), req.body);
 
       if (!andamento) {
@@ -66,6 +72,9 @@ export class AndamentoTarefaController {
   async delete(req, res) {
     try {
       const { id } = req.params;
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      }
       const andamento = await this.service.delete(Number(id));
 
       if (!andamento) {

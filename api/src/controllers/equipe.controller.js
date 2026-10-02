@@ -21,6 +21,9 @@ export class EquipeController {
   async getById(req, res) {
     try {
       const { id } = req.params;
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      }
       const equipe = await this.service.getById(Number(id));
 
       if (!equipe) {
@@ -47,6 +50,9 @@ export class EquipeController {
   async update(req, res) {
     try {
       const { id } = req.params;
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      }
       const equipe = await this.service.update(Number(id), req.body);
 
       if (!equipe) {
@@ -66,6 +72,9 @@ export class EquipeController {
   async delete(req, res) {
     try {
       const { id } = req.params;
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      }
       const equipe = await this.service.delete(Number(id));
 
       if (!equipe) {
