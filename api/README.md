@@ -1,5 +1,7 @@
 ## Informações gerais
 
+- Endpoint da API: https://sentinel-service.duckdns.org
+
 - **Formato:** JSON.
 - **Porta padrão:** `3000`, definida por `process.env.PORT`.
 - **Autenticação:** todas as rotas, exceto `/auth/login` e `/auth/register`, passam pelo middleware JWT.
