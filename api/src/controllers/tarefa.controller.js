@@ -1,5 +1,5 @@
+import { isId } from '../utils/typeValidations.js';
 import { ValidationError } from '../errors/validation.error.js';
-import { isNumber } from '../utils/typeValidations.js';
 
 export class TarefaController {
   constructor(service) {
@@ -23,8 +23,10 @@ export class TarefaController {
     try {
       const { id } = req.params;
 
-      if (isNaN(Number(id))) {
-        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      if (!isId(id)) {
+        return res
+          .status(400)
+          .send({ message: 'id deve ser um número inteiro' });
       }
 
       const tarefa = await this.service.getById(Number(id));
@@ -54,8 +56,10 @@ export class TarefaController {
     try {
       const { id } = req.params;
 
-      if (!isNumber(id)) {
-        res.status(400).send({ message: 'id deve ser uma string' });
+      if (!isId(id)) {
+        return res
+          .status(400)
+          .send({ message: 'id deve ser um número inteiro positivo' });
       }
 
       const tarefa = await this.service.update(Number(id), req.body);
@@ -78,8 +82,10 @@ export class TarefaController {
     try {
       const { id } = req.params;
 
-      if (!isNumber(id)) {
-        res.status(400).send({ message: 'id deve ser uma string' });
+      if (!isId(id)) {
+        return res
+          .status(400)
+          .send({ message: 'id deve ser um número inteiro positivo' });
       }
 
       const tarefa = await this.service.delete(Number(id));

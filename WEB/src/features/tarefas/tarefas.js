@@ -4,6 +4,7 @@ import {
   comentarioService,
   tarefasService,
   usuariosService,
+  funcoesService,
 } from '../../config/container.js';
 import {
   getState,
@@ -13,14 +14,15 @@ import {
   formatCurrency,
   getLocalState,
 } from '../../state.js';
-import { auth, googleProvider } from '../../config/db_config.js';
 import {
+  auth,
   deleteUser,
   updateProfile,
   signOut,
   onAuthStateChanged,
-  linkWithPopup,
-} from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js';
+  requireSession,
+  refreshSession,
+} from '../../config/session.js';
 import { Comentario } from '../../models/Comentario.model.js';
 import { Tarefa } from '../../models/Tarefa.model.js';
 import { showToast } from '../../utils/toast.js';
@@ -50,6 +52,7 @@ async function render(state = null) {
   if (state) {
     s = state;
   } else {
+    await refreshSession();
     s = await getState();
   }
 
@@ -178,7 +181,14 @@ onAuthStateChanged(auth, async (user) => {
     const usuarios = await usuariosService.getAll();
     const usuario = usuarios.find((u) => u.email === user.email);
 
-    const isAdmin = usuario && usuario.funcaoId === 'admin';
+    const funcoes = await funcoesService.getAll();
+    const isAdmin =
+      usuario &&
+      funcoes.some(
+        (f) =>
+          String(f.id) === String(usuario.funcaoId) &&
+          f.tipo.toLowerCase() === 'admin'
+      );
 
     btn.style.display = isAdmin ? 'block' : 'none';
   } catch (e) {
@@ -188,22 +198,6 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 //Vincular conta Google
-async function vincularGoogle() {
-  try {
-    await linkWithPopup(auth.currentUser, googleProvider);
-
-    alert('Conta Google vinculada com sucesso.');
-  } catch (erro) {
-    if (erro.code === 'auth/provider-already-linked') {
-      alert('Google já vinculado.');
-      return;
-    }
-
-    alert(erro.message);
-  }
-}
-
-window.vincularGoogle = vincularGoogle;
 
 // Excluir conta logada
 async function deleteAccount() {
@@ -241,14 +235,14 @@ function renderCard(t, s) {
       class="task-card" 
       role="listitem" 
       tabindex="0" 
-      aria-label="Tarefa: ${t.titulo}, ${projNome}" 
+      aria-label="Tarefa: ${esc(t.titulo)}, ${esc(projNome)}"
       draggable="true"
       ondragstart="event.dataTransfer.setData('text/plain', '${t.id}')"
     >
     
       <h4 class="task-title">${esc(t.titulo)}</h4>
-      <time class="task-date ${dataClass}" datetime="${t.data}">${t.data.toLocaleDateString('pt-BR')}</time>
-      <p class="task-economy">Custo: <strong>${formatCurrency(t.economia)}</strong></p>
+      <time class="task-date ${dataClass}" datetime="${t.data}">${t.data ? t.data.toLocaleDateString('pt-BR') : 'Sem prazo'}</time>
+      <p class="task-economy">Economia: <strong>${formatCurrency(t.economia)}</strong></p>
 
       <div class="task-footer">
         <span class="task-project">${esc(projNome)}</span>
@@ -331,7 +325,7 @@ async function moveCard(tarefaId, novaColuna) {
   } catch (error) {
     console.error(error);
     showToast('Erro ao mover tarefa', 'error');
-    render();
+    render().catch((error) => showToast(error.message, 'error'));
   }
 }
 
@@ -342,9 +336,7 @@ async function openEdit(tarefaId) {
 
   document.getElementById('edit-id').value = t.id;
   document.getElementById('edit-titulo').value = t.titulo;
-  document.getElementById('edit-data').value = t.data
-    .toISOString()
-    .split('T')[0];
+  document.getElementById('edit-data').value = t.toJSON().data || '';
   document.getElementById('edit-economia').value = t.economia;
   document.getElementById('edit-descricao').value = t.descricao;
 
@@ -352,7 +344,7 @@ async function openEdit(tarefaId) {
   sel.innerHTML = s.projetos
     .map(
       (p) =>
-        `<option value="${p.id}" ${p.id === t.idProjeto ? 'selected' : ''}>${esc(p.descricao)}</option>`
+        `<option value="${p.id}" ${p.id === t.idProjeto ? 'selected' : ''}>${esc(p.titulo)}</option>`
     )
     .join('');
   const responsavelSelect = document.getElementById('edit-responsavel');
@@ -426,9 +418,9 @@ async function saveEdit(e) {
   const titulo = formData.get('titulo').trim();
   const data = new Date(formData.get('data') + 'T00:00');
   const economia = parseFloat(formData.get('economia')) || 0;
-  const idResponsavel = formData.get('idResponsavel').trim();
+  const idResponsavel = formData.get('idResponsavel')?.trim() || null;
   const descricao = formData.get('descricao').trim();
-  const idProjeto = formData.get('idProjeto').trim();
+  const idProjeto = formData.get('idProjeto')?.trim() || null;
   const id = formData.get('id');
 
   let tarefa;
@@ -455,7 +447,7 @@ async function saveEdit(e) {
   } catch (error) {
     console.error(error);
     showToast('Erro ao atualizar tarefa', 'error');
-    render();
+    render().catch((error) => showToast(error.message, 'error'));
   } finally {
     closeModalEditTask();
   }
@@ -483,7 +475,7 @@ async function openCreateTask() {
   projetoSelect.innerHTML = [
     '<option selected disabled></option>',
     ...s.projetos.map(
-      (p) => `<option value="${p.id}">${esc(p.descricao)}</option>`
+      (p) => `<option value="${p.id}">${esc(p.titulo)}</option>`
     ),
   ].join('');
 
@@ -518,9 +510,9 @@ async function saveCreateTask(e) {
   const titulo = formData.get('titulo').trim();
   const data = new Date(formData.get('data') + 'T00:00');
   const economia = parseFloat(formData.get('economia')) || 0;
-  const idResponsavel = formData.get('idResponsavel').trim();
+  const idResponsavel = formData.get('idResponsavel')?.trim() || null;
   const descricao = formData.get('descricao').trim();
-  const idProjeto = formData.get('idProjeto').trim();
+  const idProjeto = formData.get('idProjeto')?.trim() || null;
   const user = auth.currentUser;
   const tarefa = new Tarefa({
     titulo,
@@ -529,16 +521,18 @@ async function saveCreateTask(e) {
     idResponsavel,
     idProjeto,
     descricao,
-    idCriador: user ? user.uid : 'unknown',
+    idCriador: user.uid,
+    status: 'afazer',
   });
 
   try {
     await tarefasService.create(tarefa);
+    await render();
     showToast(`Tarefa criada com sucesso`, 'success');
   } catch (error) {
     console.error(error);
     showToast('Erro ao criar tarefa', 'error');
-    render();
+    render().catch((error) => showToast(error.message, 'error'));
   } finally {
     closeModalCreateTask();
   }
@@ -577,7 +571,7 @@ function handleDragLeave(e) {
   }
 }
 
-function openDetailsModal(tarefaId) {
+async function openDetailsModal(tarefaId) {
   const s = getLocalState();
   const t = s.tarefas.find((x) => x.id === tarefaId);
   if (!t) return;
@@ -608,7 +602,7 @@ function openDetailsModal(tarefaId) {
     `${[criador?.nome, criador?.sobrenome].join(' ') || '—'}`;
 
   document.getElementById('details-data').textContent =
-    `${t.data.toLocaleDateString('pt-BR')}`;
+    `${t.data ? t.data.toLocaleDateString('pt-BR') : 'Sem prazo'}`;
 
   document.getElementById('details-economia').textContent =
     `${formatCurrency(t.economia)}`;
@@ -619,7 +613,12 @@ function openDetailsModal(tarefaId) {
 
   modal.classList.add('open');
 
-  renderComments(t);
+  try {
+    t.comentarios = await comentarioService.getAll(t.id);
+    renderComments(t);
+  } catch (error) {
+    showToast(error.message, 'error');
+  }
 }
 
 function closeDetailsModal() {
@@ -646,9 +645,9 @@ function renderComments(tarefa) {
       <div class="comentario">
         <button class="btn-delete-comentario" onclick="deleteComentario('${c.id}', '${tarefa.id}')">×</button>
 
-        <p class="comentario-autor">${autor}</p>
+        <p class="comentario-autor">${esc(autor)}</p>
         <p class="comentario-detalhe">
-          ${c.detalhe}
+          ${esc(c.detalhe)}
         </p>
         <div class="comentario-footer">
           <p class="comentario-data">${new Date(c.dataCriacao).toLocaleString('pt-BR')}</p>
@@ -672,15 +671,15 @@ async function addComentario(e, id) {
       if (tarefa) {
         const user = auth.currentUser;
         comentario = new Comentario({
-          id: `c${Date.now()}`,
-          idUsuario: user ? user.uid : 'unknown',
+          id: null,
+          idUsuario: Number(user.uid),
           detalhe,
           dataCriacao: new Date(),
         });
         comentario.autor = user
           ? `${user.displayName || user.email}`
           : 'Desconhecido';
-        tarefa.comentarios.push(comentario);
+        // O comentário entra na lista depois da confirmação do servidor.
       } else {
         throw new Error('Tarefa não encontrada no estado');
       }
@@ -688,12 +687,14 @@ async function addComentario(e, id) {
 
     const comentarioId = await comentarioService.create(tarefa.id, comentario);
     comentario.id = comentarioId;
+    tarefa.comentarios = await comentarioService.getAll(tarefa.id);
     renderComments(tarefa);
     document.getElementById('comentario-input').value = '';
   } catch (error) {
     console.error(error);
     showToast('Erro ao comentar', 'error');
     const tarefa = await tarefasService.getById(id);
+    tarefa.comentarios = await comentarioService.getAll(tarefa.id);
     renderComments(tarefa);
   }
 }
@@ -709,15 +710,16 @@ async function deleteComentario(comentarioId, tarefaId) {
     });
   });
 
-  renderComments(tarefa);
   try {
     await comentarioService.delete(tarefaId, comentarioId);
-    await tarefasService.getById(tarefaId);
+    tarefa.comentarios = await comentarioService.getAll(tarefaId);
+    renderComments(tarefa);
     showToast('Comentário excluído', 'success');
   } catch (error) {
     console.error(error);
     showToast('Erro ao excluir comentário', 'error');
     const tarefa = await tarefasService.getById(tarefaId);
+    tarefa.comentarios = await comentarioService.getAll(tarefa.id);
     renderComments(tarefa);
   }
 }
@@ -743,7 +745,8 @@ function filtrarTarefa() {
   render({ ...state, tarefas: tarefasFiltradas });
 }
 
-render();
+if (requireSession())
+  render().catch((error) => showToast(error.message, 'error'));
 
 if (typeof window !== 'undefined') {
   Object.assign(window, {

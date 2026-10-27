@@ -1,5 +1,7 @@
 # Sentinel
 
+> Na branch `feat/backend`, login e dados usam a API e PostgreSQL no Supabase. Consulte [Integração com o backend](INTEGRACAO_BACKEND.md) para configuração, testes e publicação. O endereço hospedado pode estar com uma versão anterior; um push não faz deploy automático.
+
 ## Equipe de Desenvolvimento
 
 - ADOLFO JULIO GOMES
@@ -13,7 +15,9 @@ A aplicação está disponível em:
 https://sentinel-5d699.web.app
 
 ## Para iniciar o projeto localmente
+
 Acesse a pasta `WEB/`:
+
 ```bash
 cd WEB/
 npm install
@@ -40,7 +44,7 @@ O Sentinel é uma aplicação web desenvolvida para auxiliar no gerenciamento de
 - Criação, edição e exclusão de tarefas
 - Organização das tarefas em quadro Kanban
 - Busca e filtros dinâmicos
-- Persistência de dados utilizando Firebase Firestore
+- Persistência de dados utilizando PostgreSQL no Supabase, por meio da API
 - Hospedagem em Firebase Hosting
 
 ## Tecnologias Utilizadas
@@ -51,11 +55,11 @@ O Sentinel é uma aplicação web desenvolvida para auxiliar no gerenciamento de
 - CSS3
 - JavaScript (ES6)
 
-### Back-end (BaaS)
+### Back-end
 
-- Firebase Authentication
-- Firebase Firestore
-- Firebase Hosting
+- Node.js, Express e autenticação JWT
+- PostgreSQL no Supabase
+- Firebase Hosting para hospedagem estática do frontend
 
 ## Estrutura do Projeto
 
@@ -75,4 +79,4 @@ src/
 
 ## Objetivo Acadêmico
 
-Projeto desenvolvido para a disciplina de Desenvolvimento Web (DWE-1), utilizando a arquitetura BaaS (Backend as a Service) através do Firebase para autenticação, armazenamento de dados e hospedagem.
+Projeto desenvolvido para a disciplina de Desenvolvimento Web (DWE-1), com frontend em HTML/CSS/JavaScript e API para autenticação e persistência de dados no Supabase.

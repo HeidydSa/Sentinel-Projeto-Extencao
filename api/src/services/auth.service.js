@@ -8,54 +8,69 @@ export class AuthService {
     this.repository = repository;
     this.usuarioService = usuarioService;
   }
-
   async login(email, senha) {
-    const usuario = await this.repository.getByEmail(email);
-
-    if (!usuario || !(await this.doesPasswordMatch(senha, usuario.senha))) {
-      throw new InvalidCredentialsError('Credênciais incorretas');
-    }
-
-    const jwtToken = jwt.sign(
-      { email: usuario.email },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: '2h',
-      }
+    if (
+      typeof email !== 'string' ||
+      typeof senha !== 'string' ||
+      !email.trim() ||
+      !senha
+    )
+      throw new ValidationError('Email e senha são obrigatórios.');
+    const usuario = await this.repository.getByEmail(
+      email.trim().toLowerCase()
     );
-
-    return { jwtToken };
+    if (!usuario || !(await bcrypt.compare(senha, usuario.senha)))
+      throw new InvalidCredentialsError('E-mail ou senha inválidos.');
+    return {
+      jwtToken: jwt.sign(
+        { id: usuario.id, email: usuario.email },
+        process.env.JWT_SECRET,
+        { expiresIn: '2h' }
+      ),
+    };
   }
-
+  async roles() {
+    return (await this.repository.getRoles()).filter(
+      (role) => !/admin/i.test(role.tipo)
+    );
+  }
   async register(payload) {
-    const { email, senha } = payload;
-
-    if (!email || !senha) {
-      throw new ValidationError('Email e senha são obrigatórios');
-    }
-
-    const usuario = await this.repository.getByEmail(email);
-
-    if (usuario) {
-      throw new Error('Usuário já existe.');
-    }
-
-    const hashSenha = await bcrypt.hash(senha, 10);
-
-    const usuarioCriado = await this.usuarioService.create({
-      ...payload,
-      senha: hashSenha,
+    const { nome, sobrenome, email, senha, funcaoId } = payload;
+    if (typeof senha !== 'string' || senha.length < 8)
+      throw new ValidationError('A senha deve ter pelo menos 8 caracteres.');
+    if (typeof email !== 'string')
+      throw new ValidationError('Email é obrigatório.');
+    const roleId = Number(funcaoId);
+    if (!(await this.roles()).some((role) => Number(role.id) === roleId))
+      throw new ValidationError('Função inválida para cadastro.');
+    const normalizedEmail = email.trim().toLowerCase();
+    if (await this.repository.getByEmail(normalizedEmail))
+      throw new ValidationError('E-mail já cadastrado.');
+    const user = await this.usuarioService.create({
+      nome,
+      sobrenome,
+      email: normalizedEmail,
+      senha: await bcrypt.hash(senha, 10),
+      funcaoId: roleId,
     });
-
-    return usuarioCriado.id;
+    return { id: user.id };
   }
-
-  async doesPasswordMatch(senha, hashedPassword) {
-    return await bcrypt.compare(senha, hashedPassword);
+  async current(claims) {
+    const user = await this.repository.getByEmail(claims.email);
+    if (!user)
+      throw new InvalidCredentialsError('Sessão inválida. Entre novamente.');
+    return user;
   }
-
-  generateToken(user) {
-    const payload = { id: user.id, email: user.email };
-    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '2h' });
+  async profile(claims, payload) {
+    const user = await this.current(claims);
+    return this.usuarioService.update(user.id, {
+      ...user,
+      nome: payload.nome,
+      sobrenome: payload.sobrenome,
+    });
+  }
+  async removeAccount(claims) {
+    const user = await this.current(claims);
+    return this.usuarioService.delete(user.id);
   }
 }

@@ -43,7 +43,13 @@ export class Tarefa {
     return {
       id: this.id,
       titulo: this.titulo,
-      data: this.data ? this.data.toISOString() : null,
+      data: this.data
+        ? [
+            this.data.getFullYear(),
+            String(this.data.getMonth() + 1).padStart(2, '0'),
+            String(this.data.getDate()).padStart(2, '0'),
+          ].join('-')
+        : null,
       economia: this.economia,
       descricao: this.descricao,
       status: this.status,

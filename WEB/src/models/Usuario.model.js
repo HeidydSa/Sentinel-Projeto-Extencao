@@ -25,6 +25,10 @@ export class Usuario {
     };
   }
 
+  getInitials() {
+    return `${this.nome[0]}${this.sobrenome[0]}`.toUpperCase();
+  }
+
   validate() {
     if (!isNonEmptyString(this.nome)) {
       throw new TypeError('Nome não pode ser uma string vazia');

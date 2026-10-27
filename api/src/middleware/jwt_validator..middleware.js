@@ -16,6 +16,8 @@ export const jwtValidator = (req, res, next) => {
     req.user = authorizedUser;
     next();
   } catch {
-    return res.status(403).json({ message: 'Usuário não está autorizado' });
+    return res
+      .status(401)
+      .json({ message: 'Sessão expirada ou inválida. Entre novamente.' });
   }
 };

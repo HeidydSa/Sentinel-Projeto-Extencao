@@ -1,3 +1,4 @@
+import { isId } from '../utils/typeValidations.js';
 import { ValidationError } from '../errors/validation.error.js';
 
 export class ComentarioController {
@@ -8,8 +9,8 @@ export class ComentarioController {
   async create(req, res) {
     try {
       const { tarefaId } = req.params;
-      if (isNaN(Number(tarefaId))) {
-        res
+      if (!isId(tarefaId)) {
+        return res
           .status(400)
           .send({ message: 'tarefaId deve ser um número inteiro' });
       }
@@ -27,8 +28,8 @@ export class ComentarioController {
   async getById(req, res) {
     try {
       const { tarefaId, comentarioId } = req.params;
-      if (isNaN(Number(tarefaId)) || isNaN(Number(comentarioId))) {
-        res.status(400).send({
+      if (!isId(tarefaId) || !isId(comentarioId)) {
+        return res.status(400).send({
           message: 'tarefaId e comentarioId devem ser números inteiros',
         });
       }
@@ -51,8 +52,8 @@ export class ComentarioController {
   async getAll(req, res) {
     try {
       const { tarefaId } = req.params;
-      if (isNaN(Number(tarefaId))) {
-        res
+      if (!isId(tarefaId)) {
+        return res
           .status(400)
           .send({ message: 'tarefaId deve ser um número inteiro' });
       }
@@ -67,8 +68,8 @@ export class ComentarioController {
   async delete(req, res) {
     try {
       const { tarefaId, comentarioId } = req.params;
-      if (isNaN(Number(tarefaId)) || isNaN(Number(comentarioId))) {
-        res.status(400).send({
+      if (!isId(tarefaId) || !isId(comentarioId)) {
+        return res.status(400).send({
           message: 'tarefaId e comentarioId devem ser números inteiros',
         });
       }

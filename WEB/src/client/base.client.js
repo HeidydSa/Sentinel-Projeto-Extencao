@@ -1,94 +1,90 @@
 import { global } from '../config/global.js';
 
+export class ApiError extends Error {
+  constructor(message, status) {
+    super(message);
+    this.status = status;
+  }
+}
+
 export class BaseClient {
-  baseUrl;
-
-  constructor({ path }) {
-    this.baseUrl = global.API_URL + path;
+  constructor({ path, map = (value) => value }) {
+    this.baseUrl = global.API_URL.replace(/\/$/, '') + path;
+    this.map = map;
   }
-
-  getHeaders() {
+  async request(
+    path = '',
+    { method = 'GET', payload, authenticated = true } = {}
+  ) {
     const token = localStorage.getItem('auth_token');
-    return {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    };
+    let response;
+    try {
+      response = await fetch(this.baseUrl + path, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(authenticated && token
+            ? { Authorization: `Bearer ${token}` }
+            : {}),
+        },
+        ...(payload === undefined ? {} : { body: JSON.stringify(payload) }),
+        signal: AbortSignal.timeout(15000),
+      });
+    } catch {
+      throw new ApiError(
+        'Não foi possível acessar o servidor. Verifique a conexão e tente novamente.',
+        0
+      );
+    }
+    const text = await response.text();
+    let data;
+    try {
+      data = text ? JSON.parse(text) : null;
+    } catch {
+      data = null;
+    }
+    if (!response.ok) {
+      if (response.status === 401 && authenticated) {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('auth_user');
+      }
+      throw new ApiError(
+        response.status >= 500
+          ? 'O servidor está indisponível. Tente novamente mais tarde.'
+          : data?.error ||
+              data?.message ||
+              `A requisição falhou (${response.status}).`,
+        response.status
+      );
+    }
+    if (text && data === null)
+      throw new ApiError(
+        'O servidor retornou uma resposta inválida.',
+        response.status
+      );
+    return data;
   }
-
   async getAll() {
-    const response = await fetch(this.baseUrl, {
-      method: 'GET',
-      headers: this.getHeaders(),
-    });
-
-    if (!response.ok) {
-      throw new Error(
-        `Requisição falhou com status ${response.status} ${response.statusText}`
-      );
-    }
-
-    return response.json();
+    const data = await this.request();
+    if (!Array.isArray(data))
+      throw new ApiError('A lista retornada pelo servidor é inválida.', 200);
+    return data.map(this.map);
   }
-
   async getById(id) {
-    const response = await fetch(`${this.baseUrl}/${id}`, {
-      method: 'GET',
-      headers: this.getHeaders(),
-    });
-
-    if (!response.ok) {
-      throw new Error(
-        `Requisição falhou com status ${response.status} ${response.statusText}`
-      );
-    }
-
-    return response.json();
+    return this.map(await this.request('/' + encodeURIComponent(id)));
   }
-
-  async update(id, payload) {
-    const response = await fetch(this.baseUrl, {
-      method: 'PUT',
-      headers: this.getHeaders(),
-      body: payload.toJSON(),
-    });
-
-    if (!response.ok) {
-      throw new Error(
-        `Requisição falhou com status ${response.status} ${response.statusText}`
-      );
-    }
-
-    return response.json();
-  }
-
   async create(payload) {
-    const response = await fetch(this.baseUrl, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      body: payload.toJSON(),
-    });
-
-    if (!response.ok) {
-      throw new Error(
-        `Requisição falhou com status ${response.status} ${response.statusText}`
-      );
-    }
-
-    return response.json();
+    return this.map(await this.request('', { method: 'POST', payload }));
   }
-
+  async update(id, payload) {
+    return this.map(
+      await this.request('/' + encodeURIComponent(id), {
+        method: 'PUT',
+        payload,
+      })
+    );
+  }
   async delete(id) {
-    const response = await fetch(`${this.baseUrl}/${id}`, {
-      method: 'DELETE',
-      headers: this.getHeaders(),
-    });
-
-    if (!response.ok) {
-      throw new Error(
-        `Requisição falhou com status ${response.status} ${response.statusText}`
-      );
-    }
-
-    return response.json();
+    return this.request('/' + encodeURIComponent(id), { method: 'DELETE' });
   }
 }

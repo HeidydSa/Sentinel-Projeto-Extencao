@@ -1,25 +1,29 @@
 /* exported render, esc, toggleMenu */
 
-import { projetosService, usuariosService } from '../../config/container.js';
+import {
+  projetosService,
+  usuariosService,
+  funcoesService,
+} from '../../config/container.js';
 import {
   getState,
   setState,
-  projetosAtivos,
   economiaPorProjeto,
   formatCurrency,
   getLocalState,
 } from '../../state.js';
-import { auth, googleProvider } from '../../config/db_config.js';
 import {
+  auth,
   deleteUser,
   updateProfile,
   signOut,
   onAuthStateChanged,
-  linkWithPopup,
-} from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js';
+  requireSession,
+  refreshSession,
+} from '../../config/session.js';
 import { EnumStatusProjeto } from '../../utils/enums.js';
 import { Projeto } from '../../models/Projeto.model.js';
-import { showToast } from '../tarefas/tarefas.js';
+import { showToast } from '../../utils/toast.js';
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') handleEsc();
@@ -30,11 +34,12 @@ async function render(s) {
   if (s) {
     state = s;
   } else {
+    await refreshSession();
     state = await getState();
   }
 
   const grid = document.getElementById('projetos-grid');
-  const ativos = projetosAtivos(state);
+  const ativos = state.projetos;
 
   const user = auth.currentUser;
 
@@ -50,7 +55,7 @@ async function render(s) {
   }
 
   if (ativos.length === 0) {
-    grid.innerHTML = '<p class="empty-state">Nenhum projeto ativo.</p>';
+    grid.innerHTML = '<p class="empty-state">Nenhum projeto cadastrado.</p>';
     return;
   }
 
@@ -197,7 +202,14 @@ onAuthStateChanged(auth, async (user) => {
     const usuarios = await usuariosService.getAll();
     const usuario = usuarios.find((u) => u.email === user.email);
 
-    const isAdmin = usuario && usuario.funcaoId === 'admin';
+    const funcoes = await funcoesService.getAll();
+    const isAdmin =
+      usuario &&
+      funcoes.some(
+        (f) =>
+          String(f.id) === String(usuario.funcaoId) &&
+          f.tipo.toLowerCase() === 'admin'
+      );
 
     btn.style.display = isAdmin ? 'block' : 'none';
   } catch (e) {
@@ -207,22 +219,6 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 //Vincular conta Google
-async function vincularGoogle() {
-  try {
-    await linkWithPopup(auth.currentUser, googleProvider);
-
-    alert('Conta Google vinculada com sucesso.');
-  } catch (erro) {
-    if (erro.code === 'auth/provider-already-linked') {
-      alert('Google já vinculado.');
-      return;
-    }
-
-    alert(erro.message);
-  }
-}
-
-window.vincularGoogle = vincularGoogle;
 
 // Excluir conta logada
 async function deleteAccount() {
@@ -348,7 +344,13 @@ async function onUpdate(e) {
   const descricao = formData.get('descricao').trim();
   const status = formData.get('status');
 
-  const projeto = new Projeto({ id, titulo, descricao, status });
+  const projeto = new Projeto({
+    ...getLocalState().projetos.find((p) => p.id === id),
+    id,
+    titulo,
+    descricao,
+    status,
+  });
 
   try {
     const state = setState((s) => {
@@ -369,7 +371,7 @@ async function onUpdate(e) {
   } catch (error) {
     console.error(error);
     showToast('Erro ao atualizar projeto', 'error');
-    render();
+    render().catch((error) => showToast(error.message, 'error'));
   } finally {
     closeEditModal();
   }
@@ -402,11 +404,11 @@ async function onCreate(e) {
   try {
     await projetosService.create(projeto);
     showToast(`Projeto criado com sucesso`, 'success');
-    render();
+    render().catch((error) => showToast(error.message, 'error'));
   } catch (error) {
     console.error(error);
     showToast('Erro ao criar projeto', 'error');
-    render();
+    render().catch((error) => showToast(error.message, 'error'));
   } finally {
     closeCreateModal();
   }
@@ -470,7 +472,8 @@ function handleEsc() {
   }
 }
 
-render();
+if (requireSession())
+  render().catch((error) => showToast(error.message, 'error'));
 
 if (typeof window !== 'undefined') {
   Object.assign(window, {

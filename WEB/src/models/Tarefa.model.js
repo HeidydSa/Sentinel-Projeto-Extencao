@@ -23,7 +23,13 @@ export class Tarefa {
   }) {
     this.id = id ?? null;
     this.titulo = titulo;
-    this.data = data ? new Date(data) : null;
+    this.data = data
+      ? new Date(
+          typeof data === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(data)
+            ? `${data}T00:00:00`
+            : data
+        )
+      : null;
     this.economia = economia ?? 0;
     this.descricao = descricao ?? '';
     this.status = status ?? 'pendente';
@@ -43,7 +49,13 @@ export class Tarefa {
     return {
       id: this.id,
       titulo: this.titulo,
-      data: this.data ? this.data.toISOString() : null,
+      data: this.data
+        ? [
+            this.data.getFullYear(),
+            String(this.data.getMonth() + 1).padStart(2, '0'),
+            String(this.data.getDate()).padStart(2, '0'),
+          ].join('-')
+        : null,
       economia: this.economia,
       descricao: this.descricao,
       status: this.status,
