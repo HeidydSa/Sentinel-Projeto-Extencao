@@ -114,10 +114,46 @@
             ></span>
           </div>
           <div class="field">
-            <label for="funcao-select">Função *</label>
-            <select id="funcao-select">
-              <option value="">Selecione uma função</option>
-            </select>
+            <label for="funcao">Função *</label>
+            <div class="btn-funcao">
+              <button
+                type="button"
+                class="btn btn-primary-alt btn-full"
+                data-role="lider"
+                id="lider"
+                onclick="funcao(this)"
+              >
+                Líder
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary-alt btn-full"
+                data-role="dev"
+                id="dev"
+                onclick="funcao(this)"
+              >
+                Dev
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary-alt btn-full"
+                data-role="analista"
+                id="analista"
+                onclick="funcao(this)"
+              >
+                Finan
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary-alt btn-full"
+                data-role="admin"
+                id="admin"
+                style="display: none"
+                onclick="funcao(this)"
+              >
+                Admin
+              </button>
+            </div>
             <span
               class="field-error"
               id="atributo-error"
@@ -130,7 +166,7 @@
           <button
             type="button"
             class="btn btn-primary-alt btn-full"
-            id="cadastroButton"
+            onclick="handleCad()"
           >
             Criar conta
           </button>

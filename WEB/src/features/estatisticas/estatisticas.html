@@ -80,14 +80,13 @@
           </button>
         </div>
 
-        <button
+        <buton
           href="#"
           class="btn-user"
           aria-label="Sair da conta"
           onclick="logout()"
+          >SAIR</buton
         >
-          SAIR
-        </button>
       </div>
     </aside>
 
@@ -120,39 +119,290 @@
         </nav>
       </header>
 
-      <section class="stats-filtro" aria-label="Filtros de estatísticas">
+      <!-- FILTRO -->
+      <section class="stats-filtro">
         <div class="periodo-filter">
           <strong>Período:</strong>
-          <button
-            class="periodo-btn active"
-            data-quarter="all"
-            aria-pressed="true"
-          >
-            Todos
-          </button>
-          <button class="periodo-btn" data-quarter="0" aria-pressed="false">
-            Janeiro — Março
-          </button>
-          <button class="periodo-btn" data-quarter="1" aria-pressed="false">
-            Abril — Junho
-          </button>
-          <button class="periodo-btn" data-quarter="2" aria-pressed="false">
-            Julho — Setembro
-          </button>
-          <button class="periodo-btn" data-quarter="3" aria-pressed="false">
-            Outubro — Dezembro
-          </button>
+
+          <button class="periodo-btn active">Janeiro — Março</button>
+          <button class="periodo-btn">Abril — Junho</button>
+          <button class="periodo-btn">Julho — Setembro</button>
+          <button class="periodo-btn">Outubro — Dezembro</button>
         </div>
-        <label
-          >Ano
-          <select class="stats-data" id="stats-year"></select
-        ></label>
-        <button class="periodo-btn" id="stats-refresh">Atualizar dados</button>
+
+        <input type="date" class="stats-data" />
       </section>
-      <p id="stats-feedback" role="status" aria-live="polite">
-        Carregando dados do servidor…
-      </p>
-      <div id="stats-dashboard" hidden></div>
+
+      <!-- KPIS -->
+      <section class="stats-kpis">
+        <article class="stats-card">
+          <span>PROJETOS ATIVOS</span>
+          <strong>5</strong>
+          <small class="positivo">↑ 25%</small>
+        </article>
+
+        <article class="stats-card">
+          <span>PROJETOS FINALIZADOS</span>
+          <strong>1</strong>
+          <small class="positivo">↑ 100%</small>
+        </article>
+
+        <article class="stats-card">
+          <span>TAREFAS TOTAIS</span>
+          <strong>48</strong>
+          <small class="positivo">↑ 12%</small>
+        </article>
+
+        <article class="stats-card">
+          <span>TAREFAS CONCLUÍDAS</span>
+          <strong>32</strong>
+          <small class="positivo">↑ 12%</small>
+        </article>
+
+        <article class="stats-card">
+          <span>TAREFAS EM ANDAMENTO</span>
+          <strong>12</strong>
+          <small class="negativo">↓ 8%</small>
+        </article>
+
+        <article class="stats-card">
+          <span>ECONOMIA TOTAL</span>
+          <strong>R$ 27.000,00</strong>
+          <small class="positivo">↑ 35%</small>
+        </article>
+      </section>
+
+      <!-- LINHA 1 -->
+      <section class="stats-grid-linha1">
+        <!-- ECONOMIA -->
+        <article class="stats-panel economia-panel">
+          <div class="stats-panel-header">
+            <h2>Economia por projeto</h2>
+
+            <select>
+              <option>Todos os projetos</option>
+            </select>
+          </div>
+
+          <div class="grafico-economia">
+            <div class="grafico-barra">
+              <span>R$ 17.0k</span>
+              <div style="height: 85%"></div>
+              <small>Projeto A</small>
+            </div>
+
+            <div class="grafico-barra">
+              <span>R$ 10.0k</span>
+              <div class="rosa" style="height: 50%"></div>
+              <small>Projeto B</small>
+            </div>
+
+            <div class="grafico-barra">
+              <span>R$ 0.0k</span>
+              <div style="height: 2%"></div>
+              <small>Projeto C</small>
+            </div>
+
+            <div class="grafico-barra">
+              <span>R$ 0.0k</span>
+              <div style="height: 2%"></div>
+              <small>Projeto D</small>
+            </div>
+
+            <div class="grafico-barra">
+              <span>R$ 0.0k</span>
+              <div style="height: 2%"></div>
+              <small>Projeto E</small>
+            </div>
+          </div>
+        </article>
+
+        <!-- TAREFAS STATUS -->
+        <article class="stats-panel">
+          <h2>Tarefas por status</h2>
+
+          <div class="donut-container">
+            <div class="donut donut-tarefas">
+              <div class="donut-centro">
+                <strong>48</strong>
+                <span>Tarefas</span>
+              </div>
+            </div>
+
+            <div class="stats-legenda">
+              <span><i class="cor roxo"></i> Concluídas <b>32</b></span>
+              <span><i class="cor rosa"></i> Em andamento <b>12</b></span>
+              <span><i class="cor laranja"></i> Atrasadas <b>3</b></span>
+              <span><i class="cor cinza"></i> Não iniciadas <b>1</b></span>
+            </div>
+          </div>
+        </article>
+
+        <!-- PROJETOS STATUS -->
+        <article class="stats-panel">
+          <h2>Projetos por status</h2>
+
+          <div class="donut-container">
+            <div class="donut donut-projetos">
+              <div class="donut-centro">
+                <strong>5</strong>
+                <span>Projetos</span>
+              </div>
+            </div>
+
+            <div class="stats-legenda">
+              <span><i class="cor roxo"></i> Em andamento <b>3</b></span>
+              <span><i class="cor verde"></i> Finalizados <b>1</b></span>
+              <span><i class="cor rosa"></i> Atrasados <b>1</b></span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- LINHA 2 -->
+      <section class="stats-grid-linha2">
+        <!-- EVOLUÇÃO -->
+        <article class="stats-panel">
+          <div class="stats-panel-header">
+            <h2>Evolução mensal da economia</h2>
+
+            <select>
+              <option>Este ano</option>
+            </select>
+          </div>
+
+          <div class="linha-chart">
+            <svg class="economia-evolucao" viewBox="0 0 400 150" preserveAspectRatio="none" role="img" aria-label="Economia acumulada: janeiro 6 mil reais, fevereiro 20 mil reais e março 27 mil reais">
+              <defs>
+                <linearGradient id="economia-area" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#9b39ff" stop-opacity="0.35" />
+                  <stop offset="100%" stop-color="#9b39ff" stop-opacity="0.06" />
+                </linearGradient>
+              </defs>
+              <path d="M8 12H392 M8 54H392 M8 96H392 M8 138H392" stroke="#e8e8ec" fill="none" />
+              <path d="M8 113 L200 54 L392 25 V138 H8Z" fill="url(#economia-area)" />
+              <path d="M8 113 L200 54 L392 25" stroke="#9229ff" stroke-width="2" fill="none" vector-effect="non-scaling-stroke" />
+              <g fill="#9229ff">
+                <circle cx="8" cy="113" r="4" />
+                <circle cx="200" cy="54" r="4" />
+                <circle cx="392" cy="25" r="4" />
+              </g>
+            </svg>
+
+            <div class="meses">
+              <span>Jan</span>
+              <span>Fev</span>
+              <span>Mar</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- PROJETOS MAIS ECONÔMICOS -->
+        <article class="stats-panel">
+          <div class="stats-panel-header">
+            <h2>Projetos mais econômicos</h2>
+
+            <select>
+              <option>TOP 5</option>
+            </select>
+          </div>
+
+          <div class="ranking">
+            <div>
+              <span>Projeto A</span>
+              <div class="ranking-bar"><i style="width: 100%"></i></div>
+              <b>R$ 17.000,00</b>
+            </div>
+
+            <div>
+              <span>Projeto B</span>
+              <div class="ranking-bar">
+                <i class="rosa-bg" style="width: 58%"></i>
+              </div>
+              <b>R$ 10.000,00</b>
+            </div>
+
+            <div>
+              <span>Projeto C</span>
+              <div class="ranking-bar"><i style="width: 5%"></i></div>
+              <b>R$ 0,00</b>
+            </div>
+
+            <div>
+              <span>Projeto D</span>
+              <div class="ranking-bar">
+                <i class="verde-bg" style="width: 4%"></i>
+              </div>
+              <b>R$ 0,00</b>
+            </div>
+
+            <div>
+              <span>Projeto E</span>
+              <div class="ranking-bar">
+                <i class="laranja-bg" style="width: 3%"></i>
+              </div>
+              <b>R$ 0,00</b>
+            </div>
+          </div>
+        </article>
+
+        <!-- TAREFAS POR PROJETO -->
+        <article class="stats-panel">
+          <div class="stats-panel-header">
+            <h2>Tarefas por projeto</h2>
+
+            <select>
+              <option>Total de tarefas</option>
+            </select>
+          </div>
+
+          <div class="tarefas-projeto">
+            <div>
+              <span>Projeto A</span>
+              <div class="task-progress">
+                <i class="roxo-bg" style="width: 45%"></i>
+                <i class="amarelo-bg" style="width: 30%"></i>
+                <i class="rosa-bg" style="width: 25%"></i>
+              </div>
+              <b>20</b>
+            </div>
+
+            <div>
+              <span>Projeto B</span>
+              <div class="task-progress">
+                <i class="roxo-bg" style="width: 40%"></i>
+                <i class="amarelo-bg" style="width: 35%"></i>
+                <i class="rosa-bg" style="width: 25%"></i>
+              </div>
+              <b>15</b>
+            </div>
+
+            <div>
+              <span>Projeto C</span>
+              <div class="task-progress">
+                <i class="cinza-bg" style="width: 60%"></i>
+              </div>
+              <b>8</b>
+            </div>
+
+            <div>
+              <span>Projeto D</span>
+              <div class="task-progress">
+                <i class="verde-bg" style="width: 15%"></i>
+              </div>
+              <b>3</b>
+            </div>
+
+            <div>
+              <span>Projeto E</span>
+              <div class="task-progress">
+                <i class="rosa-bg" style="width: 10%"></i>
+              </div>
+              <b>2</b>
+            </div>
+          </div>
+        </article>
+      </section>
     </main>
 
     <!-- MODAL EDITAR PERFIL -->
@@ -195,7 +445,18 @@
           >
             Cadastrar
           </button>
-
+          <button
+            type="button"
+            class="btn btn-primary btn-full btn-dark"
+            onclick="vincularGoogle()"
+          >
+            Vincular conta com
+            <span class="google-text">
+              <span class="g-blue">G</span><span class="g-red">o</span
+              ><span class="g-yellow">o</span><span class="g-blue">g</span
+              ><span class="g-green">l</span><span class="g-red">e</span>
+            </span>
+          </button>
           <a href="#" class="btn btn-danger" onclick="deleteAccount()"
             >Excluir Conta</a
           >

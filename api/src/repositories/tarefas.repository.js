@@ -103,7 +103,7 @@ export class TarefaRepository {
       id: data.id,
       titulo: data.titulo,
       data: data.data,
-      economia: Number(data.economia),
+      economia: data.economia,
       idProjeto: data.id_projeto,
       idCriador: data.id_criador,
       idResponsavel: data.id_responsavel,

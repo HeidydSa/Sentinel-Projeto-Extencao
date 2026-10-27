@@ -1,4 +1,3 @@
-import { isId } from '../utils/typeValidations.js';
 import { ValidationError } from '../errors/validation.error.js';
 
 export class AndamentoTarefaController {
@@ -22,10 +21,8 @@ export class AndamentoTarefaController {
   async getById(req, res) {
     try {
       const { id } = req.params;
-      if (!isId(id)) {
-        return res
-          .status(400)
-          .send({ message: 'id deve ser um número inteiro' });
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
       }
       const andamento = await this.service.getById(Number(id));
 
@@ -53,10 +50,8 @@ export class AndamentoTarefaController {
   async update(req, res) {
     try {
       const { id } = req.params;
-      if (!isId(id)) {
-        return res
-          .status(400)
-          .send({ message: 'id deve ser um número inteiro' });
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
       }
       const andamento = await this.service.update(Number(id), req.body);
 
@@ -77,10 +72,8 @@ export class AndamentoTarefaController {
   async delete(req, res) {
     try {
       const { id } = req.params;
-      if (!isId(id)) {
-        return res
-          .status(400)
-          .send({ message: 'id deve ser um número inteiro' });
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
       }
       const andamento = await this.service.delete(Number(id));
 

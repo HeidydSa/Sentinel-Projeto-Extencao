@@ -1,36 +1,53 @@
-import { BaseClient } from './base.client.js';
-export class AuthClient extends BaseClient {
+import { global } from '../config/global.js';
+import { isNonEmptyString } from '../utils/typeValidations.js';
+
+export class AuthClient {
+  baseUrl;
   constructor() {
-    super({ path: '/auth' });
+    this.baseUrl = global.API_URL + '/auth';
   }
+
   async login(email, senha) {
-    const data = await this.request('/login', {
+    const response = await fetch(this.baseUrl + '/login', {
       method: 'POST',
-      payload: { email, senha },
-      authenticated: false,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        senha,
+      }),
     });
-    if (typeof data?.jwtToken !== 'string' || !data.jwtToken)
-      throw new Error('Token recebido pela API é inválido.');
+
+    if (!response.ok) {
+      throw new Error(
+        `Não foi possível realizar o login: ${response.status} ${response.statusText}`
+      );
+    }
+
+    const data = await response.json();
+
+    if (!isNonEmptyString(data.jwtToken)) {
+      throw new Error('Token recebido pela API é inválido');
+    }
+
     localStorage.setItem('auth_token', data.jwtToken);
-    return data;
   }
-  register(payload) {
-    return this.request('/register', {
+  async register(payload) {
+    const response = await fetch(this.baseUrl + '/register', {
       method: 'POST',
-      payload,
-      authenticated: false,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: payload.toJSON(),
     });
-  }
-  roles() {
-    return this.request('/roles', { authenticated: false });
-  }
-  me() {
-    return this.request('/me');
-  }
-  profile(payload) {
-    return this.request('/me', { method: 'PUT', payload });
-  }
-  removeAccount() {
-    return this.request('/me', { method: 'DELETE' });
+
+    if (!response.ok) {
+      throw new Error(
+        `Não foi possível cadastrar o usuário: ${response.status} ${response.statusText}`
+      );
+    }
+
+    return response.json();
   }
 }

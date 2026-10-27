@@ -9,8 +9,4 @@ export default defineConfig([
     extends: ['js/recommended'],
     languageOptions: { globals: globals.node },
   },
-  {
-    files: ['src/utils/toast.js', 'test/**/*.js'],
-    languageOptions: { globals: globals.browser },
-  },
 ]);

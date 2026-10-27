@@ -7,7 +7,17 @@ import {
   tarefasService,
 } from './config/container.js';
 import { EnumStatusProjeto } from './utils/enums.js';
-import { auth } from './config/session.js';
+import { auth } from './config/db_config.js';
+
+const DEFAULT_STATE = {
+  projetos: [],
+  funcoes: [],
+  equipes: [],
+  andamentoTarefas: [],
+  tarefas: [],
+  usuarios: [],
+  usuario: { nome: 'Heidy de Sá', iniciais: 'He' },
+};
 
 let state = null;
 
@@ -22,9 +32,6 @@ async function loadState() {
         andamentoTarefasService.getAll(),
         usuariosService.getAll(),
       ]);
-    tarefas.forEach((t) => {
-      t.responsavel = usuarios.find((u) => u.id === t.idResponsavel) || null;
-    });
     return {
       projetos,
       tarefas,
@@ -32,11 +39,11 @@ async function loadState() {
       funcoes,
       andamentoTarefas,
       usuarios,
-      usuario: auth.currentUser,
+      usuario: { nome: 'Heidy de Sá', iniciais: 'He' },
     };
   } catch (error) {
     console.error('Erro ao carregar o estado:', error.message);
-    throw error;
+    return JSON.parse(JSON.stringify(DEFAULT_STATE));
   }
 }
 
@@ -82,7 +89,7 @@ function tarefasAtivas(state) {
 }
 
 function economiaTotal(state) {
-  return state.tarefas.reduce((sum, t) => sum + (Number(t.economia) || 0), 0);
+  return state.tarefas.reduce((sum, t) => sum + (t.economia || 0), 0);
 }
 
 function economiaPorProjeto(state, projetoId) {

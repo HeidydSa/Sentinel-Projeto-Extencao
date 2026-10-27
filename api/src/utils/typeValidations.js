@@ -1,6 +1,3 @@
-export const isId = (value) =>
-  Number.isSafeInteger(Number(value)) && Number(value) > 0;
-
 export const isString = (val) => {
   return typeof val == 'string';
 };
@@ -22,7 +19,7 @@ export const isArray = (val) => {
 };
 
 export const isDate = (val) => {
-  return val instanceof Date && !Number.isNaN(val.getTime());
+  return val instanceof Date;
 };
 
 export const isEmail = (val) => {

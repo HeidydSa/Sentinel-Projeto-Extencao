@@ -1,4 +1,3 @@
-import { isId } from '../utils/typeValidations.js';
 import { ValidationError } from '../errors/validation.error.js';
 
 export class UsuarioController {
@@ -23,10 +22,8 @@ export class UsuarioController {
     try {
       const { id } = req.params;
 
-      if (!isId(id)) {
-        return res
-          .status(400)
-          .send({ message: 'id deve ser um número inteiro' });
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
       }
 
       const usuario = await this.service.getById(Number(id));
@@ -56,10 +53,8 @@ export class UsuarioController {
     try {
       const { id } = req.params;
 
-      if (!isId(id)) {
-        return res
-          .status(400)
-          .send({ message: 'id deve ser um número inteiro' });
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
       }
 
       const usuario = await this.service.update(Number(id), req.body);
@@ -82,10 +77,8 @@ export class UsuarioController {
     try {
       const { id } = req.params;
 
-      if (!isId(id)) {
-        return res
-          .status(400)
-          .send({ message: 'id deve ser um número inteiro' });
+      if (isNaN(Number(id))) {
+        res.status(400).send({ message: 'id deve ser um número inteiro' });
       }
 
       const usuario = await this.service.delete(Number(id));

@@ -12,13 +12,6 @@ export class UsuarioRepository {
     return result.rows.map((row) => this.fromPersisted(row));
   }
 
-  async getRoles() {
-    const result = await this.db.query(
-      'SELECT id, tipo FROM funcao ORDER BY tipo'
-    );
-    return result.rows;
-  }
-
   async getById(id) {
     const query = 'SELECT * FROM usuario WHERE id = $1';
     const result = await this.db.query(query, [id]);
