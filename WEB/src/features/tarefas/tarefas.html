@@ -194,7 +194,7 @@
               <input type="date" id="edit-data" name="data" />
             </div>
             <div class="field">
-              <label for="edit-economia">Custo (R$)</label>
+              <label for="edit-economia">Economia (R$)</label>
               <input
                 type="number"
                 id="edit-economia"
@@ -272,7 +272,7 @@
               <input type="date" id="create-data" name="data" required />
             </div>
             <div class="field">
-              <label for="create-economia">Custo (R$)</label>
+              <label for="create-economia">Economia (R$)</label>
               <input
                 type="number"
                 id="create-economia"
@@ -392,7 +392,7 @@
               <span id="details-data"></span>
             </p>
             <p>
-              <strong>Custo:</strong>
+              <strong>Economia:</strong>
               <span id="details-economia"> </span>
             </p>
             <p>
@@ -458,8 +458,13 @@
           <input
             type="text"
             id="alterar-perfil-nome"
+            readonly
+            aria-describedby="perfil-edicao-aviso"
             placeholder="Nome do usuário"
           />
+          <small id="perfil-edicao-aviso"
+            >Edição de perfil temporariamente indisponível.</small
+          >
 
           <button
             id="btnCadastro"
@@ -469,18 +474,7 @@
           >
             Cadastrar
           </button>
-          <button
-            type="button"
-            class="btn btn-primary btn-full btn-dark"
-            onclick="vincularGoogle()"
-          >
-            Vincular conta com
-            <span class="google-text">
-              <span class="g-blue">G</span><span class="g-red">o</span
-              ><span class="g-yellow">o</span><span class="g-blue">g</span
-              ><span class="g-green">l</span><span class="g-red">e</span>
-            </span>
-          </button>
+
           <a href="#" class="btn btn-danger" onclick="deleteAccount()"
             >Excluir Conta</a
           >
@@ -488,7 +482,12 @@
             <button class="btn btn-primary-alt" onclick="fecharPerfil()">
               Cancelar
             </button>
-            <button class="btn btn-primary" onclick="salvarPerfil()">
+            <button
+              class="btn btn-primary"
+              onclick="salvarPerfil()"
+              disabled
+              title="Edição de perfil temporariamente indisponível"
+            >
               Salvar Alterações
             </button>
           </div>

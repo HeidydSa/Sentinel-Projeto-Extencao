@@ -1,34 +1,56 @@
+import { BaseClient } from '../client/base.client.js';
 import { AndamentoTarefasClient } from '../client/andamento_tarefa.client.js';
-import { AndamentoTarefaService } from '../services/andamento_tarefas.service.js';
 import { EquipesClient } from '../client/equipes.client.js';
 import { FuncoesClient } from '../client/funcoes.client.js';
-// import { MembroEquipesClient } from '../client/membro_equipe.client.js';
 import { ProjetosClient } from '../client/projetos.client.js';
 import { TarefasClient } from '../client/tarefas.client.js';
+import { ComentariosClient } from '../client/comentarios.client.js';
+import { AuthClient } from '../client/auth.client.js';
+import { AuthService } from '../services/auth_service.js';
+import { AndamentoTarefaService } from '../services/andamento_tarefas.service.js';
 import { FuncaoService } from '../services/funcoes.service.js';
 import { ProjetoService } from '../services/projetos.service.js';
 import { TarefaService } from '../services/tarefas.service.js';
+import { UsuarioService } from '../services/usuarios.service.js';
 import { EquipeService } from '../services/equipes.service.js';
-import { ComentariosClient } from '../client/comentarios.client.js';
 import { ComentarioService } from '../services/comentario.service.js';
-import { AuthClient } from '../client/auth.client.js';
-import { AuthService } from '../services/auth_service.js';
+import { Projeto } from '../models/Projeto.model.js';
+import { Tarefa } from '../models/Tarefa.model.js';
+import { Usuario } from '../models/Usuario.model.js';
 
-const andamentoTarefasClient = new AndamentoTarefasClient();
-const equipesClient = new EquipesClient();
-const funcoesClient = new FuncoesClient();
-// const membroEquipesClient = new MembroEquipesClient();'
+const id = (value) => (value == null ? null : String(value));
 const projetosClient = new ProjetosClient();
-const comentariosClient = new ComentariosClient();
+projetosClient.map = (p) =>
+  new Projeto({
+    ...p,
+    id: id(p.id),
+    idEquipe: id(p.idEquipe),
+    status: p.status === 'ativo' ? 'em_producao' : p.status,
+  });
 const tarefasClient = new TarefasClient();
-const authClient = new AuthClient();
-
-export const comentarioService = new ComentarioService(comentariosClient);
-export const equipesService = new EquipeService(equipesClient);
-export const funcoesService = new FuncaoService(funcoesClient);
+tarefasClient.map = (t) =>
+  new Tarefa({
+    ...t,
+    id: id(t.id),
+    idProjeto: id(t.idProjeto),
+    idCriador: id(t.idCriador),
+    data: typeof t.data === 'string' ? t.data.slice(0, 10) : t.data,
+    idResponsavel: id(t.idResponsavel),
+    economia: Number(t.economia ?? 0),
+    status: t.status === 'pendente' ? 'afazer' : t.status,
+  });
+export const comentarioService = new ComentarioService(new ComentariosClient());
+export const equipesService = new EquipeService(new EquipesClient());
+export const funcoesService = new FuncaoService(new FuncoesClient());
 export const projetosService = new ProjetoService(projetosClient);
 export const tarefasService = new TarefaService(tarefasClient);
-export const andamentoTarefasService = new AndamentoTarefaService(
-  andamentoTarefasClient
+export const usuariosService = new UsuarioService(
+  new BaseClient({
+    path: '/usuarios',
+    map: (u) => new Usuario({ ...u, id: id(u.id), funcaoId: id(u.funcaoId) }),
+  })
 );
-export const authService = new AuthService(authClient);
+export const andamentoTarefasService = new AndamentoTarefaService(
+  new AndamentoTarefasClient()
+);
+export const authService = new AuthService(new AuthClient());

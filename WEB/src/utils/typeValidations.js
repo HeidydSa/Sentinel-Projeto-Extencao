@@ -19,7 +19,7 @@ export const isArray = (val) => {
 };
 
 export const isDate = (val) => {
-  return val instanceof Date;
+  return val instanceof Date && !Number.isNaN(val.getTime());
 };
 
 export const isEmail = (val) => {

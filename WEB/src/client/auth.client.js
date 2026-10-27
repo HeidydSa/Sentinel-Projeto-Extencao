@@ -1,53 +1,25 @@
-import { global } from '../config/global.js';
-import { isNonEmptyString } from '../utils/typeValidations.js';
+import { BaseClient } from './base.client.js';
 
-export class AuthClient {
-  baseUrl;
+export class AuthClient extends BaseClient {
   constructor() {
-    this.baseUrl = global.API_URL + '/auth';
+    super({ path: '/auth' });
   }
-
   async login(email, senha) {
-    const response = await fetch(this.baseUrl + '/login', {
+    const data = await this.request('/login', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email,
-        senha,
-      }),
+      payload: { email, senha },
+      authenticated: false,
     });
-
-    if (!response.ok) {
-      throw new Error(
-        `Não foi possível realizar o login: ${response.status} ${response.statusText}`
-      );
-    }
-
-    const data = await response.json();
-
-    if (!isNonEmptyString(data.jwtToken)) {
-      throw new Error('Token recebido pela API é inválido');
-    }
-
+    if (typeof data?.jwtToken !== 'string' || !data.jwtToken)
+      throw new Error('Token recebido pela API é inválido.');
     localStorage.setItem('auth_token', data.jwtToken);
+    return data;
   }
-  async register(payload) {
-    const response = await fetch(this.baseUrl + '/register', {
+  register(payload) {
+    return this.request('/register', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: payload.toJSON(),
+      payload,
+      authenticated: false,
     });
-
-    if (!response.ok) {
-      throw new Error(
-        `Não foi possível cadastrar o usuário: ${response.status} ${response.statusText}`
-      );
-    }
-
-    return response.json();
   }
 }

@@ -343,8 +343,8 @@
     <div id="toast-container" role="status"></div>
 
     <!-- MODAL EDITAR PERFIL -->
-    <div 
-      class="overlay" 
+    <div
+      class="overlay"
       id="perfilModal"
       role="dialog"
       aria-modal="true"
@@ -371,8 +371,13 @@
           <input
             type="text"
             id="alterar-perfil-nome"
+            readonly
+            aria-describedby="perfil-edicao-aviso"
             placeholder="Nome do usuário"
           />
+          <small id="perfil-edicao-aviso"
+            >Edição de perfil temporariamente indisponível.</small
+          >
 
           <button
             id="btnCadastro"
@@ -382,18 +387,7 @@
           >
             Cadastrar
           </button>
-          <button
-            type="button"
-            class="btn btn-primary btn-full btn-dark"
-            onclick="vincularGoogle()"
-          >
-            Vincular conta com
-            <span class="google-text">
-              <span class="g-blue">G</span><span class="g-red">o</span
-              ><span class="g-yellow">o</span><span class="g-blue">g</span
-              ><span class="g-green">l</span><span class="g-red">e</span>
-            </span>
-          </button>
+
           <a href="#" class="btn btn-danger" onclick="deleteAccount()"
             >Excluir Conta</a
           >
@@ -401,7 +395,12 @@
             <button class="btn btn-primary-alt" onclick="fecharPerfil()">
               Cancelar
             </button>
-            <button class="btn btn-primary" onclick="salvarPerfil()">
+            <button
+              class="btn btn-primary"
+              onclick="salvarPerfil()"
+              disabled
+              title="Edição de perfil temporariamente indisponível"
+            >
               Salvar Alterações
             </button>
           </div>

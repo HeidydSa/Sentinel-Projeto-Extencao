@@ -25,6 +25,10 @@ export class Usuario {
     };
   }
 
+  getInitials() {
+    return `${this.nome[0]}${this.sobrenome[0]}`.toUpperCase();
+  }
+
   validate() {
     if (!isNonEmptyString(this.nome)) {
       throw new TypeError('Nome não pode ser uma string vazia');
@@ -38,7 +42,10 @@ export class Usuario {
       throw new TypeError('Email inválido');
     }
 
-    if (!isNonEmptyString(String(this.funcaoId))) {
+    if (
+      !Number.isSafeInteger(Number(this.funcaoId)) ||
+      Number(this.funcaoId) <= 0
+    ) {
       throw new TypeError('FuncaoId é obrigatório');
     }
 

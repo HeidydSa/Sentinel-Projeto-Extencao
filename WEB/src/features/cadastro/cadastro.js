@@ -1,137 +1,98 @@
-/* eslint-disable no-unused-vars */
-/* exported togglePw, handleCad */
-
-import { setState } from '../../state.js';
-import { auth, db } from '../../config/db_config.js';
+import { authService, funcoesService } from '../../config/container.js';
 import {
-  createUserWithEmailAndPassword,
-  updateProfile,
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-  signOut,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-} from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js';
-import { usuariosService } from '../../config/container.js';
-import { Usuario } from '../../models/Usuario.model.js';
+  auth,
+  loginSession,
+  refreshSession,
+} from '../../services/auth_service.js';
+import { global } from '../../config/global.js';
 
-function togglePw(inputId, btn) {
-  const inp = document.getElementById(inputId);
-
-  const hide = inp.type === 'password';
-  inp.type = hide ? 'text' : 'password';
-
-  btn.setAttribute('aria-label', hide ? 'Ocultar senha' : 'Mostrar senha');
-  btn.setAttribute('aria-pressed', hide);
-  btn.innerHTML = hide ? '⎯⎯' : '&#128065;';
+function togglePw(inputId, button) {
+  const input = document.getElementById(inputId);
+  const show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  button.setAttribute('aria-pressed', String(show));
+  button.setAttribute('aria-label', show ? 'Ocultar senha' : 'Mostrar senha');
 }
+let roles = [];
+let pending = false;
+const button = document.getElementById('cadastroButton');
+const feedback = document.getElementById('atributo-error');
 
-let tipoFuncao = '';
-
-window.funcao = function (btn) {
-  if (!btn) return;
-
-  // remove seleção por ID
-  document.getElementById('lider')?.classList.remove('btn-selected');
-  document.getElementById('dev')?.classList.remove('btn-selected');
-  document.getElementById('analista')?.classList.remove('btn-selected');
-  document.getElementById('admin')?.classList.remove('btn-selected');
-
-  // aplica no clicado
-  btn.classList.add('btn-selected');
-
-  // salva valor
-  tipoFuncao = btn.dataset.role;
-};
-
-function getFuncaoSelecionada() {
-  return document.querySelector('.btn-funcao .btn-selected')?.dataset.role;
+async function loadRoles() {
+  button.disabled = true;
+  try {
+    let available = global.PUBLIC_ROLES;
+    if (auth.currentUser) {
+      await refreshSession();
+      available = await funcoesService.getAll();
+    }
+    roles = available.filter(
+      (role) =>
+        global.PUBLIC_ROLES.some((allowed) => allowed.id === Number(role.id)) &&
+        !/^adm/i.test(role.tipo)
+    );
+    const select = document.getElementById('funcao-select');
+    select.replaceChildren(new Option('Selecione uma função', ''));
+    roles.forEach((role) => select.add(new Option(role.tipo, String(role.id))));
+    if (!roles.length)
+      throw new Error(
+        'Cadastro temporariamente indisponível. Entre em contato com a equipe.'
+      );
+    button.disabled = false;
+  } catch (error) {
+    feedback.textContent = error.message;
+  }
 }
 
 async function handleCad() {
+  if (pending || !roles.length) return;
+  feedback.textContent = '';
   const nome = document.getElementById('nome').value.trim();
-  const sobrenome = document.getElementById('sobrenome').value.trim() || 'N/A';
+  const sobrenome = document.getElementById('sobrenome').value.trim();
   const email = document.getElementById('email').value.trim();
   const senha = document.getElementById('senha').value;
-  //const senhaAdm = document.getElementById('senha_adm').value;
-
-  let ok = true;
-
-  /*if (!senhaAdm) {
-    document.getElementById('senha_adm-error').textContent =
-      'Informe a senha do admin';
-    ok = false;
-  }*/
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    document.getElementById('email-error').textContent =
-      'Informe um e-mail válido.';
-    if (ok) document.getElementById('email').focus();
-    ok = false;
-  }
-  if (!senha || senha.length < 8) {
-    document.getElementById('senha-error').textContent = 'Mínimo 8 caracteres.';
-    if (ok) document.getElementById('senha').focus();
-    ok = false;
-  }
-  if (!tipoFuncao) {
-    document.getElementById('atributo-error').textContent =
-      'Selecione uma função';
+  const funcaoId = Number(document.getElementById('funcao-select').value);
+  document.getElementById('email-error').textContent = '';
+  document.getElementById('senha-error').textContent = '';
+  if (!nome || !sobrenome) {
+    feedback.textContent = 'Preencha nome e sobrenome.';
     return;
   }
-
-  if (!ok) return;
-
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('email-error').textContent =
+      'Informe um e-mail válido.';
+    return;
+  }
+  if (senha.length < 8) {
+    document.getElementById('senha-error').textContent = 'Mínimo 8 caracteres.';
+    return;
+  }
+  if (!roles.some((role) => Number(role.id) === funcaoId)) {
+    feedback.textContent = 'Selecione uma função.';
+    return;
+  }
+  pending = true;
+  button.disabled = true;
   try {
-    // 1. cria usuário novo
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      senha
-    );
-
-    await updateProfile(userCredential.user, {
-      displayName: nome,
-    });
-
-    // 2. salva no Firestore (com função)
-    const usuario = new Usuario(
-      userCredential.user.uid,
-      nome,
-      sobrenome,
-      email,
-      new Date(),
-      tipoFuncao
-    );
-
-    await usuariosService.create(usuario);
-
-    await signInWithEmailAndPassword(auth);
-
+    const wasLoggedIn = Boolean(auth.currentUser);
+    await authService.register({ nome, sobrenome, email, senha, funcaoId });
+    if (!wasLoggedIn) {
+      try {
+        await loginSession(email, senha);
+      } catch {
+        location.href = '../login/login.html?cadastro=sucesso';
+        return;
+      }
+    }
     location.href = '../tarefas/tarefas.html';
   } catch (error) {
-    console.error(error);
-    /*
-    document.getElementById('senha_adm-error').textContent =
-      'Senha do admin incorreta ou erro de autenticação';
-  */
+    feedback.textContent = error.message;
+  } finally {
+    pending = false;
+    button.disabled = false;
   }
 }
-
-/* CONTROLE DO BOTÃO ADMIN */
-/*
-onAuthStateChanged(auth, (user) => {
-  const btn = document.getElementById('admin');
-  if (!btn) return;
-
-  btn.style.display = 'none';
-
-  if (user && user.email == 'adm@gmail.com') {
-    btn.style.display = 'block';
-  }
-});
-
-if (typeof window !== 'undefined') {
-  Object.assign(window, { togglePw, handleCad });
-}*/
-
+button.onclick = handleCad;
+Object.assign(window, { togglePw, handleCad });
+loadRoles();
 export { togglePw, handleCad };
