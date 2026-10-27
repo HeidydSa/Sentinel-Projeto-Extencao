@@ -2193,3 +2193,428 @@ MODAL DE DETALHES DO PROJETO
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Estatisticas */
+
+.page-estatisticas .app-main {
+  min-width: 0;
+  gap: 1rem;
+}
+
+.page-estatisticas .app-header {
+  align-items: flex-start;
+}
+
+.stats-subtitulo {
+  color: var(--grey-400);
+}
+
+.stats-filtro {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stats-data,
+.stats-panel select {
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.8rem;
+  background: white;
+}
+
+.stats-kpis {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.stats-card {
+  min-width: 0;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--white);
+}
+
+.stats-card span {
+  font-size: 0.72rem;
+  color: var(--grey-400);
+}
+
+.stats-card strong {
+  font-size: clamp(1.2rem, 1.65vw, 1.9rem);
+  overflow-wrap: anywhere;
+  font-family: var(--font-head);
+}
+
+.stats-card small {
+  font-weight: 700;
+}
+
+.positivo {
+  color: var(--green);
+}
+
+.negativo {
+  color: var(--red);
+}
+
+.stats-grid-linha1 {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.stats-grid-linha2 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.stats-panel {
+  min-width: 0;
+  container-type: inline-size;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  background: var(--white);
+}
+
+.stats-panel h2 {
+  font-size: 0.95rem;
+}
+
+.stats-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* ECONOMIA */
+
+.grafico-economia {
+  height: 180px;
+  background: #0d0d1a;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding: 1.5rem 0.5rem 0.5rem;
+  gap: 0.4rem;
+  background-image: repeating-linear-gradient(to top, transparent 0 35px, #ffffff1a 35px 36px);
+}
+
+.grafico-barra {
+  min-width: 0;
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.grafico-barra div {
+  width: min(45px, 70%);
+  flex-shrink: 0;
+  border-radius: 4px 4px 0 0;
+  background: #8760aa;
+}
+
+.grafico-barra .rosa {
+  background: #df5484;
+}
+
+.grafico-barra span,
+.grafico-barra small {
+  color: white;
+  font-size: 0.7rem;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+/* DONUT */
+
+.donut-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 0.6rem;
+}
+
+.donut {
+  flex: 0 0 145px;
+  width: 145px;
+  height: 145px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-tarefas {
+  background: conic-gradient(
+    var(--purple) 0 67%,
+    #df5484 67% 92%,
+    #ffd35c 92% 98%,
+    var(--grey-200) 98%
+  );
+}
+
+.donut-projetos {
+  background: conic-gradient(
+    var(--purple) 0 60%,
+    var(--green) 60% 80%,
+    #df5484 80%
+  );
+}
+
+.donut-centro {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.stats-legenda {
+  flex: 1 1 145px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.stats-legenda span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.stats-legenda b {
+  margin-left: auto;
+}
+
+.cor {
+  flex-shrink: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.roxo {
+  background: var(--purple);
+}
+.rosa {
+  background: #df5484;
+}
+.verde {
+  background: var(--green);
+}
+.laranja {
+  background: var(--orange);
+}
+.cinza {
+  background: var(--grey-400);
+}
+
+/* LINHA */
+
+.linha-chart {
+  height: 165px;
+  position: relative;
+  border-left: 1px solid var(--grey-200);
+  border-bottom: 1px solid var(--grey-200);
+  margin-bottom: 1.5rem;
+}
+
+.economia-evolucao {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.linha-fundo {
+  position: absolute;
+  left: 5%;
+  bottom: 20%;
+  width: 90%;
+  height: 60%;
+  background: linear-gradient(
+    160deg,
+    transparent 48%,
+    var(--purple) 49%,
+    var(--purple) 51%,
+    transparent 52%
+  );
+}
+
+.linha-pontos .ponto {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background: var(--purple);
+  border-radius: 50%;
+}
+
+.p1 {
+  left: 5%;
+  bottom: 22%;
+}
+.p2 {
+  left: 50%;
+  bottom: 50%;
+}
+.p3 {
+  right: 5%;
+  bottom: 72%;
+}
+
+.meses {
+  position: absolute;
+  bottom: -1.5rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* RANKING */
+
+.ranking {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.ranking > div {
+  display: grid;
+  grid-template-columns: minmax(0, 70px) minmax(20px, 1fr) minmax(0, 95px);
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.75rem;
+}
+
+.ranking-bar {
+  background: var(--grey-200);
+  height: 20px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.ranking-bar i {
+  display: block;
+  height: 100%;
+  background: var(--purple-light-alt);
+}
+
+/* TAREFAS PROJETO */
+
+.tarefas-projeto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.tarefas-projeto > div {
+  display: grid;
+  grid-template-columns: minmax(0, 70px) minmax(0, 1fr) 25px;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.task-progress {
+  display: flex;
+  height: 15px;
+  background: var(--grey-200);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.task-progress i {
+  height: 100%;
+}
+
+.roxo-bg {
+  background: var(--purple-light-alt);
+}
+.rosa-bg {
+  background: #df5484;
+}
+.verde-bg {
+  background: var(--green);
+}
+.amarelo-bg {
+  background: #ffd35c;
+}
+.cinza-bg {
+  background: var(--grey-400);
+}
+.laranja-bg {
+  background: var(--orange);
+}
+
+@media (max-width: 1500px) {
+  .stats-kpis {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .stats-grid-linha1,
+  .stats-grid-linha2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .economia-panel {
+    grid-column: 1 / -1;
+  }
+}
+
+@container (max-width: 290px) {
+  .ranking > div {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .ranking-bar {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+@media (max-width: 720px) {
+  .page-estatisticas .sidebar.minimized ~ .app-main {
+    margin-left: 0;
+  }
+
+  .stats-kpis,
+  .stats-grid-linha1,
+  .stats-grid-linha2 {
+    grid-template-columns: 1fr;
+  }
+
+  .economia-panel {
+    grid-column: auto;
+  }
+
+  .stats-filtro {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
