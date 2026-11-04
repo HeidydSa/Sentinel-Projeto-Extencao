@@ -137,6 +137,8 @@ window.salvarPerfil = async function () {
 };
 
 window.abrirPerfil = function () {
+  document.getElementById('alterar-perfil-nome').value =
+    auth.currentUser?.displayName || '';
   document.getElementById('perfilModal').classList.add('open');
 };
 

@@ -87,8 +87,18 @@ function renderUser() {
     : 'none';
 }
 const monthNames = [
-  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
+  'Janeiro',
+  'Fevereiro',
+  'Março',
+  'Abril',
+  'Maio',
+  'Junho',
+  'Julho',
+  'Agosto',
+  'Setembro',
+  'Outubro',
+  'Novembro',
+  'Dezembro',
 ];
 function renderYearFilter() {
   document.getElementById('stats-year-value').textContent = yearInput.value;
@@ -99,7 +109,10 @@ function renderYearFilter() {
     button.type = 'button';
     button.className = 'stats-month-option';
     button.textContent = option.textContent;
-    button.setAttribute('aria-pressed', String(option.value === yearInput.value));
+    button.setAttribute(
+      'aria-pressed',
+      String(option.value === yearInput.value)
+    );
     button.onclick = () => {
       yearInput.value = option.value;
       yearInput.dispatchEvent(new Event('change'));
@@ -122,10 +135,14 @@ document.addEventListener('click', (event) => {
 });
 function renderMonthFilter() {
   const year = Number(yearInput.value);
-  const available = [...new Set(state.tarefas.flatMap((task) => {
-    const date = task.createdAt ? new Date(task.createdAt) : null;
-    return date?.getFullYear() === year ? [date.getMonth()] : [];
-  }))].sort((a, b) => a - b);
+  const available = [
+    ...new Set(
+      state.tarefas.flatMap((task) => {
+        const date = task.createdAt ? new Date(task.createdAt) : null;
+        return date?.getFullYear() === year ? [date.getMonth()] : [];
+      })
+    ),
+  ].sort((a, b) => a - b);
   for (const month of selectedMonths) {
     if (!available.includes(month)) selectedMonths.delete(month);
   }
@@ -151,7 +168,10 @@ function renderMonthFilter() {
       if (checkbox.checked) selectedMonths.add(month);
       else selectedMonths.delete(month);
       draw();
-      document.querySelectorAll('#stats-month-options input')[available.indexOf(month)]?.focus();
+      const monthInputs = document.querySelectorAll(
+        '#stats-month-options input'
+      );
+      monthInputs[available.indexOf(month)]?.focus();
     };
     label.append(checkbox, document.createTextNode(monthNames[month]));
     options.append(label);
@@ -174,7 +194,10 @@ function renderMonthFilter() {
     remove.onclick = () => {
       selectedMonths.delete(month);
       draw();
-      document.getElementById('stats-month-picker').querySelector('summary').focus();
+      document
+        .getElementById('stats-month-picker')
+        .querySelector('summary')
+        .focus();
     };
     chip.append(document.createTextNode(monthNames[month]), remove);
     chips.append(chip);
@@ -184,12 +207,14 @@ document.addEventListener('click', (event) => {
   const picker = document.getElementById('stats-month-picker');
   if (!picker.contains(event.target)) picker.open = false;
 });
-document.getElementById('stats-month-picker').addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') {
-    event.currentTarget.open = false;
-    event.currentTarget.querySelector('summary').focus();
-  }
-});
+document
+  .getElementById('stats-month-picker')
+  .addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      event.currentTarget.open = false;
+      event.currentTarget.querySelector('summary').focus();
+    }
+  });
 yearInput.onchange = () => {
   selectedMonths.clear();
   draw();
@@ -207,6 +232,8 @@ window.toggleMenu = (button) => {
 window.minimizeMenu = () =>
   document.getElementById('sidebar').classList.toggle('minimized');
 window.abrirPerfil = () => {
+  document.getElementById('alterar-perfil-nome').value =
+    auth.currentUser?.displayName || '';
   renderUser();
   document.getElementById('perfilModal').classList.add('open');
 };
@@ -299,7 +326,9 @@ export function dashboardData(
   const monthlyTotals = Array(12).fill(0);
   tasks.forEach((t) => {
     if (t.createdAt && new Date(t.createdAt).getFullYear() === Number(year))
-      monthlyTotals[new Date(t.createdAt).getMonth()] += Number(t.economia || 0);
+      monthlyTotals[new Date(t.createdAt).getMonth()] += Number(
+        t.economia || 0
+      );
   });
   return {
     projects,

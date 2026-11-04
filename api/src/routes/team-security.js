@@ -59,18 +59,6 @@ const memberOf = (db, userId) =>
     'SELECT m.equipe_id FROM membro_equipe m JOIN equipe e ON e.id=m.equipe_id WHERE m.usuario_id=$1 AND NOT e.sistema',
     [userId]
   );
-async function clearWaiting(db, userId) {
-  await db.query(
-    'DELETE FROM membro_equipe m USING equipe e WHERE m.equipe_id=e.id AND e.sistema AND m.usuario_id=$1',
-    [userId]
-  );
-}
-async function waitForTeam(db, userId) {
-  await db.query(
-    "INSERT INTO membro_equipe(equipe_id,usuario_id) SELECT e.id,u.id FROM equipe e CROSS JOIN usuario u JOIN funcao f ON f.id=u.funcao_id WHERE e.sistema AND u.id=$1 AND lower(f.tipo) IN ('desenvolvedor','analista') AND NOT EXISTS(SELECT 1 FROM membro_equipe m WHERE m.usuario_id=u.id) ON CONFLICT DO NOTHING",
-    [userId]
-  );
-}
 const actor = (db, req) =>
   one(
     db,
@@ -166,7 +154,6 @@ async function enroll(db, user, teamId, secret) {
       400,
       'Senha da equipe incorreta. Se não possui uma equipe, crie a sua.'
     );
-  await clearWaiting(db, user.id);
   await db.query(
     'INSERT INTO membro_equipe(equipe_id,usuario_id) VALUES($1,$2)',
     [team.id, user.id]
@@ -189,7 +176,6 @@ async function createTeam(db, user, payload) {
     'INSERT INTO equipe(nome,senha,id_lider) VALUES($1,$2,$3) RETURNING id,nome,id_lider',
     [text(payload.nome, 150), hash, user.id]
   );
-  await clearWaiting(db, user.id);
   await db.query(
     'INSERT INTO membro_equipe(equipe_id,usuario_id) VALUES($1,$2)',
     [team.id, user.id]
@@ -239,7 +225,6 @@ export function publicTeamRoutes() {
       if (p.novaEquipe) await createTeam(db, user, p.novaEquipe);
       else if (p.equipeId)
         await enroll(db, user, positiveId(p.equipeId), p.senhaEquipe);
-      await waitForTeam(db, user.id);
       return { id: user.id };
     }, false)
   );
@@ -309,7 +294,6 @@ export function secureTeamRoutes() {
         ]))
       )
         fail(404, 'Convite revogado.');
-      await clearWaiting(db, user.id);
       await db.query(
         'INSERT INTO membro_equipe(equipe_id,usuario_id) VALUES($1,$2)',
         [invite.equipe_id, user.id]
@@ -382,7 +366,6 @@ export function secureTeamRoutes() {
           user.id,
         ]);
       }
-      await waitForTeam(db, user.id);
       return { ok: true };
     })
   );
@@ -458,7 +441,6 @@ export function secureTeamRoutes() {
         'DELETE FROM membro_equipe WHERE equipe_id=$1 AND usuario_id=$2',
         [team.id, target]
       );
-      await waitForTeam(db, target);
       await db.query(
         'DELETE FROM convite_equipe WHERE equipe_id=$1 AND usuario_id=$2',
         [team.id, target]

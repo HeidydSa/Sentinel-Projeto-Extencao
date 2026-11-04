@@ -1,0 +1,7 @@
+{
+  "hosting": {
+    "site": "sentinel-5d699",
+    "public": "WEB/src",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+  }
+}

@@ -51,15 +51,9 @@ Andamentos antigos usados por tarefas são copiados por equipe na migração. At
 
 Se houver proxy reverso, configure também o limite de tentativas por IP no proxy.
 
-## Equipe interna de espera
+## Usuarios sem equipe
 
-A equipe Aguardando equipe tem sistema=true, sem senha e sem lider.
-Ela nao aparece na selecao de equipes nem permite consultar integrantes, criar projetos ou tarefas.
-Desenvolvedores e analistas sem equipe real recebem um vinculo com ela no cadastro, na migracao,
-ao deixar uma equipe ou quando sao removidos. Gestores continuam como perfis de consulta global.
-Criar equipe, entrar com senha ou aceitar convite troca o vinculo na mesma transacao.
-A sessao retorna equipe=null e aguardandoEquipe=true: o vinculo interno nao concede permissoes.
-A migracao nao usa a equipe de espera para atribuir tarefas antigas sem origem identificada.
+Usuarios sem equipe nao possuem vinculo em membro_equipe. A sessao retorna equipe=null e aguardandoEquipe=true. Projetos e tarefas ficam vazios e alteracoes sao bloqueadas ate entrar em uma equipe. Podem editar o perfil, criar equipe, entrar com senha ou aceitar convite. Ao sair ou ser removido, permanecem sem equipe. Gestores mantem consulta global.
 
 ## Publicacao com possibilidade de recuperacao
 

@@ -1,5 +1,7 @@
 BEGIN;
 ALTER TABLE equipe ADD COLUMN IF NOT EXISTS sistema BOOLEAN NOT NULL DEFAULT FALSE;
+-- Remove apenas vinculos da antiga equipe de espera; preserva equipes e dados.
+DELETE FROM membro_equipe m USING equipe e WHERE m.equipe_id=e.id AND e.sistema;
 CREATE UNIQUE INDEX IF NOT EXISTS equipe_sistema_unica ON equipe(sistema) WHERE sistema;
 ALTER TABLE equipe ADD COLUMN IF NOT EXISTS senha TEXT;
 ALTER TABLE equipe ALTER COLUMN senha TYPE TEXT;
@@ -65,9 +67,4 @@ CREATE TABLE IF NOT EXISTS convite_equipe (
  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
  UNIQUE(equipe_id, usuario_id)
 );
-INSERT INTO equipe(nome,sistema) SELECT 'Aguardando equipe',TRUE WHERE NOT EXISTS(SELECT 1 FROM equipe WHERE sistema);
-INSERT INTO membro_equipe(equipe_id,usuario_id)
-SELECT e.id,u.id FROM equipe e CROSS JOIN usuario u JOIN funcao f ON f.id=u.funcao_id
-WHERE e.sistema AND lower(f.tipo) IN ('desenvolvedor','analista')
-AND NOT EXISTS(SELECT 1 FROM membro_equipe m WHERE m.usuario_id=u.id) ON CONFLICT DO NOTHING;
 COMMIT;

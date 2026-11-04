@@ -102,7 +102,12 @@
       >
         <span aria-hidden="true">☰</span>
       </button>
-      <span class="topbar-title">Sentinel</span>
+      <a
+        class="topbar-title"
+        href="../../index.html"
+        aria-label="Sentinel - Home"
+        >Sentinel</a
+      >
     </div>
 
     <main class="app-main" id="main-content">
@@ -198,13 +203,11 @@
           <input
             type="text"
             id="alterar-perfil-nome"
-            readonly
+            autocomplete="name"
             aria-describedby="perfil-edicao-aviso"
             placeholder="Nome do usuário"
           />
-          <small id="perfil-edicao-aviso"
-            >Edição de perfil temporariamente indisponível.</small
-          >
+          <small id="perfil-edicao-aviso">Informe seu nome e sobrenome.</small>
 
           <button
             id="btnCadastro"
@@ -222,12 +225,7 @@
             <button class="btn btn-primary-alt" onclick="fecharPerfil()">
               Cancelar
             </button>
-            <button
-              class="btn btn-primary"
-              onclick="salvarPerfil()"
-              disabled
-              title="Edição de perfil temporariamente indisponível"
-            >
+            <button class="btn btn-primary" onclick="salvarPerfil()">
               Salvar Alterações
             </button>
           </div>

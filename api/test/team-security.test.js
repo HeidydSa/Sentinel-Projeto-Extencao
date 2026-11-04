@@ -594,18 +594,21 @@ test('team lifecycle and server-side isolation with PostgreSQL', async (t) => {
     }
   );
   await t.test(
-    'waiting area has a database membership without granting team access',
+    'users without a team have no membership or resource access',
     async () => {
-      const waiting = (await db.query('SELECT id FROM equipe WHERE sistema'))
-        .rows[0];
-      assert.ok(waiting);
-      const membership = (
-        await db.query(
-          'SELECT equipe_id FROM membro_equipe WHERE usuario_id=$1',
-          [bob]
-        )
-      ).rows[0];
-      assert.equal(membership.equipe_id, waiting.id);
+      assert.equal(
+        (await db.query('SELECT id FROM equipe WHERE sistema')).rows.length,
+        0
+      );
+      assert.equal(
+        (
+          await db.query(
+            'SELECT equipe_id FROM membro_equipe WHERE usuario_id=$1',
+            [bob]
+          )
+        ).rows.length,
+        0
+      );
       assert.equal(
         (await call('/sessao', 'GET', null, 'bob@test.local')).body
           .aguardandoEquipe,
@@ -625,33 +628,6 @@ test('team lifecycle and server-side isolation with PostgreSQL', async (t) => {
           )
         ).status,
         403
-      );
-      const listed = (await call('/equipes-publicas')).body;
-      assert.equal(
-        listed.some((team) => team.id === waiting.id),
-        false
-      );
-      assert.equal(
-        (
-          await call(
-            '/equipes/' + waiting.id + '/membros',
-            'GET',
-            null,
-            'gestor@test.local'
-          )
-        ).status,
-        404
-      );
-      assert.equal(
-        (
-          await call(
-            '/equipes/' + waiting.id + '/entrar',
-            'POST',
-            { senha: 'anything' },
-            'bob@test.local'
-          )
-        ).status,
-        404
       );
       const newTeam = await call(
         '/equipes',

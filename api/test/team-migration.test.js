@@ -74,3 +74,30 @@ test('duplicate full names cancel the migration without partial schema changes',
     await db.close();
   }
 });
+
+test('migration supports required team passwords and clears legacy waiting memberships', async () => {
+  const db = new PGlite();
+  try {
+    await db.exec(
+      (await schema()).replace('CREATE EXTENSION IF NOT EXISTS "pgcrypto";', '')
+    );
+    await db.exec('ALTER TABLE equipe ADD COLUMN senha TEXT NOT NULL');
+    await db.exec(await migration());
+    assert.equal(
+      (await db.query('SELECT id FROM equipe WHERE sistema')).rows.length,
+      0
+    );
+    await db.exec(
+      "INSERT INTO funcao(id,tipo) VALUES(3,'Desenvolvedor'); INSERT INTO usuario(id,nome,sobrenome,email,senha,funcao_id) VALUES(1,'Alice','Teste','alice@test.local','hash',3); INSERT INTO equipe(id,nome,senha,sistema) VALUES(1,'Legacy waiting','hash',TRUE); INSERT INTO membro_equipe(equipe_id,usuario_id) VALUES(1,1)"
+    );
+    await db.exec(await migration());
+    assert.equal(
+      (await db.query('SELECT * FROM membro_equipe')).rows.length,
+      0
+    );
+    assert.equal((await db.query('SELECT * FROM usuario')).rows.length, 1);
+    assert.equal((await db.query('SELECT * FROM equipe')).rows.length, 1);
+  } finally {
+    await db.close();
+  }
+});

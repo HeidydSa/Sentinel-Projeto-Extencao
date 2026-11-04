@@ -103,7 +103,8 @@ function openDetailsModal(projectId) {
     : 'Sem data de entrega';
 
   document.getElementById('details-titulo').textContent = p.titulo;
-  document.getElementById('details-descricao').textContent = p.descricao || 'Nenhuma descrição informada.';
+  document.getElementById('details-descricao').textContent =
+    p.descricao || 'Nenhuma descrição informada.';
   const statusEl = document.getElementById('details-status');
   statusEl.className = `status-badge ${badgeCls}`;
   statusEl.textContent = badgeTxt;
@@ -177,6 +178,8 @@ window.salvarPerfil = async function () {
 };
 
 window.abrirPerfil = function () {
+  document.getElementById('alterar-perfil-nome').value =
+    auth.currentUser?.displayName || '';
   document.getElementById('perfilModal').classList.add('open');
 };
 

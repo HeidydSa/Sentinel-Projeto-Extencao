@@ -103,6 +103,12 @@
   border-color: var(--red);
 }
 .team-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  min-width: 0;
   padding: 1rem;
   margin: 0.8rem 0;
   color: var(--grey-700);
@@ -124,18 +130,15 @@
   font: inherit;
 }
 .team-status .btn {
-  margin: 0.75rem 0 0;
-  background: var(--purple);
-  color: var(--white);
+  margin: 0;
+  flex: 0 1 auto;
+  max-width: 100%;
   white-space: normal;
 }
 body.team-no-work .app-main > :not(.team-status):not(.app-header) {
   display: none !important;
 }
-.team-sidebar {
-  width: 100%;
-  text-align: left;
-}
+
 .team-help {
   font-size: 0.9rem;
   margin: 0.7rem 0;
@@ -160,13 +163,470 @@ body.team-no-work .app-main > :not(.team-status):not(.app-header) {
   gap: 0.5rem;
   margin-top: 0.8rem;
 }
+
+/* Mesmo seletor usado no filtro de periodo das estatisticas. */
+.team-dialog select[hidden] {
+  display: none;
+}
+.team-picker {
+  margin: 0 0 1rem;
+}
+.team-picker summary {
+  width: 100%;
+  box-sizing: border-box;
+}
+.team-picker summary strong {
+  font: inherit;
+  overflow-wrap: anywhere;
+}
+.team-picker .stats-month-options {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  max-height: min(240px, 40dvh);
+}
+.team-picker .stats-month-option {
+  font-family: var(--font-head);
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+.team-picker .stats-month-option:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: -2px;
+}
+
+.team-status-message {
+  flex: 1 1 18rem;
+  min-width: 0;
+  margin: 0;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.team-status > label {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.team-status > p {
+  margin: 0;
+}
+.team-status select {
+  min-width: 0;
+}
+.team-sidebar:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 3px;
+}
+@media (max-width: 540px) {
+  .team-status {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .team-status-message {
+    flex: auto;
+  }
+  .team-status .btn {
+    width: 100%;
+  }
+}
+
+.team-picker summary,
+.team-picker .stats-month-option {
+  color: var(--purple);
+}
+
+.team-dialog .team-entry-form {
+  margin-top: 1.75rem;
+  margin-bottom: 1.75rem;
+}
+
+/* As cores e o hover dos botoes usam btn-primary e btn-primary-alt de style.css. */
 .team-sidebar {
-  color: var(--white);
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  width: 100%;
+  justify-content: center;
+  text-align: center;
   white-space: normal;
+  border-color: var(--white);
+  cursor: pointer;
 }
 .team-sidebar:hover {
-  background: var(--purple-dark);
+  border-color: var(--purple-light-alt);
+}
+.team-dialog .btn-primary-alt {
+  border-color: var(--white);
+}
+.team-dialog .btn-primary-alt:hover {
+  border-color: var(--purple-light-alt);
+}
+.team-dialog .btn:disabled,
+.team-dialog .btn:disabled:hover {
+  background: var(--grey-200);
+  color: var(--grey-700);
+  border-color: var(--grey-200);
+  cursor: not-allowed;
+}
+.team-picker .stats-month-option:hover,
+.team-picker .stats-month-option:focus-visible,
+.team-picker .stats-month-option[aria-pressed='true'] {
+  background: var(--purple-light);
+  color: var(--purple);
+}
+
+/* Gestao da equipe pelo lider. */
+.team-dialog.team-leader-dialog {
+  background: var(--white);
+  color: var(--purple);
+  border: 1px solid var(--grey-200);
+}
+.team-leader-dialog h2 {
+  margin-bottom: 0.75rem;
+}
+.team-leader-dialog label {
+  color: var(--purple);
+}
+.team-leader-dialog ul {
+  margin: 1rem 0 1.5rem;
+}
+.team-leader-dialog li {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--grey-200);
+}
+.team-leader-dialog li:nth-child(odd) {
+  background: var(--purple-light);
+  border-radius: var(--radius-sm);
+}
+.team-leader-dialog li label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.team-leader-dialog input[type='checkbox'] {
+  flex-shrink: 0;
+  accent-color: var(--purple);
+}
+
+.team-leader-dialog .btn {
+  margin: 0;
+}
+.team-leader-dialog .btn:not(.btn-primary-alt):not(.team-danger) {
+  background: var(--white);
+  color: var(--purple);
+  border-color: var(--purple);
+}
+.team-leader-dialog .btn:not(.btn-primary-alt):not(.team-danger):hover {
+  background: var(--purple-light);
+  color: var(--purple);
+}
+.team-leader-dialog .btn[data-add]:not(.btn-primary-alt):not(.team-danger) {
+  background: var(--green);
   color: var(--white);
+  border-color: var(--green);
+}
+.team-leader-dialog
+  .btn[data-add]:not(.btn-primary-alt):not(.team-danger):hover {
+  background: var(--green);
+  color: var(--white);
+}
+.team-leader-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--grey-200);
+}
+.team-leader-dialog .btn:disabled,
+.team-leader-dialog .btn:disabled:hover {
+  background: var(--grey-200);
+  color: var(--grey-700);
+  border-color: var(--grey-200);
+}
+@media (max-width: 540px) {
+  .team-leader-footer .btn {
+    flex: 1 1 100%;
+  }
+}
+
+.team-dialog.team-leader-dialog {
+  width: min(620px, calc(100% - 32px));
+  padding: 2rem;
+}
+.team-leader-dialog h2 {
+  margin-bottom: 1.75rem;
+  font-size: 1.3rem;
+  line-height: 1.5;
+}
+.team-leader-dialog h3 {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.team-leader-dialog p {
+  line-height: 1.75;
+  font-size: 0.85rem;
+}
+.team-leader-dialog .team-selection-help {
+  color: var(--grey-700);
+  margin: 0 0 1.25rem;
+}
+.team-leader-dialog ul {
+  margin: 0 0 1.25rem;
+}
+.team-leader-dialog li {
+  padding: 1rem;
+}
+.team-leader-dialog li label {
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+.team-leader-dialog .btn {
+  min-height: 36px;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+.team-settings-section {
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--grey-200);
+}
+.team-settings-section p {
+  margin: 0.6rem 0 1rem;
+  color: var(--grey-700);
+}
+.team-leader-footer {
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+}
+@media (max-width: 540px) {
+  .team-dialog.team-leader-dialog {
+    padding: 1.25rem;
+  }
+
+  .team-leader-dialog .btn {
+    min-height: 44px;
+  }
+}
+
+/* Modal de equipe conforme a referencia visual. */
+.team-dialog.team-leader-dialog {
+  width: min(1040px, calc(100% - 40px));
+  padding: 2.5rem;
+  border-radius: 28px;
+}
+.team-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--grey-200);
+  margin-bottom: 1.75rem;
+}
+.team-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  min-width: 0;
+}
+.team-modal-title h2 {
+  margin: 0;
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--grey-200);
+  font-size: 2rem;
+  color: var(--black);
+  overflow-wrap: anywhere;
+}
+.team-section-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 15px;
+  background: var(--purple-light);
+  color: var(--purple);
+}
+.team-modal-title .team-section-icon {
+  width: 64px;
+  height: 64px;
+}
+.team-leader-dialog svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+.team-section-icon svg {
+  width: 28px;
+  height: 28px;
+}
+.team-leader-dialog h3 {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+}
+.team-leader-dialog .btn {
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  min-height: 42px;
+  padding: 0.55rem 1rem;
+  border-radius: 14px;
+}
+.team-modal-header .btn[data-add] {
+  min-height: 52px;
+  padding: 0.75rem 1.25rem;
+}
+.team-leader-dialog .team-selection-help {
+  margin: 0 0 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.team-leader-dialog .team-member-list {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+}
+.team-leader-dialog .team-member-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--grey-200);
+  border-radius: 18px;
+  background: var(--purple-light);
+}
+.team-leader-dialog .team-member-card.is-leader {
+  background: var(--white);
+}
+
+.team-avatar {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--purple-light-alt);
+  color: var(--purple-dark);
+  font-family: var(--font-head);
+  font-weight: 700;
+}
+.team-member-info {
+  min-width: 0;
+  flex: 1;
+  padding-left: 1rem;
+  border-left: 1px solid var(--grey-200);
+}
+.team-member-info > strong {
+  display: block;
+  color: var(--black);
+  font-family: var(--font-head);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.team-member-badges {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+.team-member-badges > span {
+  padding: 0.1rem 0.7rem;
+  border-radius: var(--radius-pill);
+  background: var(--grey-200);
+  color: var(--grey-700);
+  font-size: 0.8rem;
+}
+.team-member-badges .team-leader-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--purple-light);
+  color: var(--purple);
+  font-weight: 700;
+}
+.team-leader-badge svg {
+  width: 17px;
+  height: 17px;
+}
+.team-member-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+.team-leader-dialog
+  .btn.team-remove-outline:not(.btn-primary-alt):not(.team-danger) {
+  background: var(--white);
+  color: var(--red);
+  border-color: var(--red);
+}
+.team-leader-dialog
+  .btn.team-remove-outline:not(.btn-primary-alt):not(.team-danger):hover {
+  background: var(--red);
+  color: var(--white);
+}
+.team-leader-dialog .team-settings-section {
+  margin-top: 1.75rem;
+  padding-top: 1.75rem;
+}
+.team-settings-section p {
+  margin: 0.75rem 0 1.25rem;
+  font-size: 0.95rem;
+}
+.team-leader-footer {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+}
+
+@media (max-width: 850px) {
+  .team-leader-dialog .team-member-card {
+    flex-wrap: wrap;
+  }
+  .team-member-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+@media (max-width: 540px) {
+  .team-dialog.team-leader-dialog {
+    padding: 1.25rem;
+    width: calc(100% - 24px);
+  }
+  .team-modal-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .team-modal-title h2 {
+    font-size: 1.5rem;
+  }
+  .team-leader-dialog h3 {
+    font-size: 1.1rem;
+  }
+  .team-member-info {
+    flex: 1 1 120px;
+  }
+  .team-member-actions .btn {
+    flex: 1 1 100%;
+  }
+}
+
+a.topbar-title,
+a.topbar-title:hover {
+  color: var(--white);
+  text-decoration: none;
+}
+a.topbar-title:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 4px;
 }
