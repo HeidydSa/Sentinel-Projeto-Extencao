@@ -103,7 +103,9 @@ export class TarefaRepository {
       id: data.id,
       titulo: data.titulo,
       data: data.data,
-      economia: data.economia,
+      // PostgreSQL retorna NUMERIC como string; o modelo exige number.
+      economia:
+        typeof data.economia === 'string' && data.economia.trim() !== '' ? Number(data.economia) : data.economia,
       idProjeto: data.id_projeto,
       idCriador: data.id_criador,
       idResponsavel: data.id_responsavel,

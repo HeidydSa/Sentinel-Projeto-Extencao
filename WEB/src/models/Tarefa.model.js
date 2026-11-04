@@ -85,7 +85,7 @@ export class Tarefa {
     }
 
     if (!isNonNegativeNumber(this.economia)) {
-      throw new TypeError('Economia deve ser um número não negativo');
+      throw new TypeError('Gastos deve ser um número não negativo');
     }
 
     if (!isNonEmptyString(this.status)) {

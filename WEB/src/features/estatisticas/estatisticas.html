@@ -123,30 +123,20 @@
       <section class="stats-filtro" aria-label="Filtros de estatísticas">
         <div class="periodo-filter">
           <strong>Período:</strong>
-          <button
-            class="periodo-btn active"
-            data-quarter="all"
-            aria-pressed="true"
-          >
-            Todos
-          </button>
-          <button class="periodo-btn" data-quarter="0" aria-pressed="false">
-            Janeiro — Março
-          </button>
-          <button class="periodo-btn" data-quarter="1" aria-pressed="false">
-            Abril — Junho
-          </button>
-          <button class="periodo-btn" data-quarter="2" aria-pressed="false">
-            Julho — Setembro
-          </button>
-          <button class="periodo-btn" data-quarter="3" aria-pressed="false">
-            Outubro — Dezembro
-          </button>
+          <details class="stats-month-picker" id="stats-month-picker">
+            <summary>Todos <span aria-hidden="true">▾</span></summary>
+            <div class="stats-month-options" id="stats-month-options" role="group" aria-label="Meses de criação das tarefas"></div>
+          </details>
+          <div class="stats-month-chips" id="stats-month-chips" role="group" aria-label="Meses selecionados"></div>
         </div>
-        <label
-          >Ano
-          <select class="stats-data" id="stats-year"></select
-        ></label>
+        <div class="stats-year-filter">
+          <strong id="stats-year-label">Ano</strong>
+          <select id="stats-year" hidden aria-hidden="true" tabindex="-1"></select>
+          <details class="stats-month-picker" id="stats-year-picker">
+            <summary aria-labelledby="stats-year-label stats-year-value"><span id="stats-year-value">Ano</span><span aria-hidden="true">▾</span></summary>
+            <div class="stats-month-options" id="stats-year-options" role="group" aria-label="Ano das estatísticas"></div>
+          </details>
+        </div>
         <button class="periodo-btn" id="stats-refresh">Atualizar dados</button>
       </section>
       <p id="stats-feedback" role="status" aria-live="polite">

@@ -51,7 +51,7 @@ export class BaseClient {
       }
       throw new ApiError(
         response.status >= 500
-          ? 'O servidor está indisponível. Tente novamente mais tarde.'
+          ? 'A API retornou um erro interno do servidor. A operação pode ter sido gravada; confira os dados antes de tentar novamente.'
           : data?.error ||
               data?.message ||
               `A requisição falhou (${response.status}).`,

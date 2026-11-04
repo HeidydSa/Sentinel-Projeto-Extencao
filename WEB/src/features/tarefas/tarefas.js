@@ -240,7 +240,7 @@ function renderCard(t, s) {
     
       <h4 class="task-title">${esc(t.titulo)}</h4>
       <time class="task-date ${dataClass}" datetime="${t.data}">${t.data ? t.data.toLocaleDateString('pt-BR') : 'Sem prazo'}</time>
-      <p class="task-economy">Economia: <strong>${formatCurrency(t.economia)}</strong></p>
+      <p class="task-economy">Gastos: <strong>${formatCurrency(t.economia)}</strong></p>
 
       <div class="task-footer">
         <span class="task-project">${esc(projNome)}</span>
@@ -529,7 +529,7 @@ async function saveCreateTask(e) {
     showToast(`Tarefa criada com sucesso`, 'success');
   } catch (error) {
     console.error(error);
-    showToast('Erro ao criar tarefa', 'error');
+    showToast(error.message || 'Erro ao criar tarefa', 'error');
     render().catch((error) => showToast(error.message, 'error'));
   } finally {
     closeModalCreateTask();

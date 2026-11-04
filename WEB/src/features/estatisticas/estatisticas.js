@@ -11,7 +11,7 @@ import {
 import { showToast } from '../../utils/toast.js';
 
 let state;
-let quarter = 'all';
+const selectedMonths = new Set();
 let projectId = '';
 let top = 5;
 const yearInput = document.getElementById('stats-year');
@@ -20,14 +20,16 @@ const dashboard = document.getElementById('stats-dashboard');
 function draw() {
   if (!state) return;
   const year = Number(yearInput.value);
-  const data = dashboardData(state, { quarter, year });
+  renderYearFilter();
+  renderMonthFilter();
+  const data = dashboardData(state, { months: [...selectedMonths], year });
   if (!data.projects.some((p) => p.id === projectId)) projectId = '';
   dashboard.innerHTML = renderDashboard(data, { projectId, top, year });
   dashboard.hidden = false;
   feedback.textContent =
-    quarter === 'all'
-      ? 'Dados atuais do servidor. Todos os períodos.'
-      : 'Tarefas filtradas pelo prazo; projetos criados no período ou vinculados às tarefas.';
+    selectedMonths.size === 0
+      ? 'Todos os meses do ano selecionado.'
+      : 'Tarefas filtradas pelos meses de criação selecionados; projetos criados no período ou vinculados às tarefas.';
   document.getElementById('stats-project').onchange = (e) => {
     projectId = e.target.value;
     draw();
@@ -49,7 +51,7 @@ async function render() {
       ...new Set(
         [
           new Date().getFullYear(),
-          ...state.tarefas.map((t) => t.data?.getFullYear()),
+          ...state.tarefas.map((t) => t.createdAt?.getFullYear()),
           ...state.projetos.map((p) => p.createdAt?.getFullYear()),
         ].filter(Number.isFinite)
       ),
@@ -84,17 +86,114 @@ function renderUser() {
     ? 'block'
     : 'none';
 }
-document.querySelectorAll('[data-quarter]').forEach((button) => {
-  button.onclick = () => {
-    quarter = button.dataset.quarter;
-    document.querySelectorAll('[data-quarter]').forEach((b) => {
-      b.classList.toggle('active', b === button);
-      b.setAttribute('aria-pressed', String(b === button));
-    });
+const monthNames = [
+  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
+];
+function renderYearFilter() {
+  document.getElementById('stats-year-value').textContent = yearInput.value;
+  const options = document.getElementById('stats-year-options');
+  options.replaceChildren();
+  for (const option of yearInput.options) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'stats-month-option';
+    button.textContent = option.textContent;
+    button.setAttribute('aria-pressed', String(option.value === yearInput.value));
+    button.onclick = () => {
+      yearInput.value = option.value;
+      yearInput.dispatchEvent(new Event('change'));
+      const picker = document.getElementById('stats-year-picker');
+      picker.open = false;
+      picker.querySelector('summary').focus();
+    };
+    options.append(button);
+  }
+}
+const yearPicker = document.getElementById('stats-year-picker');
+yearPicker.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    yearPicker.open = false;
+    yearPicker.querySelector('summary').focus();
+  }
+});
+document.addEventListener('click', (event) => {
+  if (!yearPicker.contains(event.target)) yearPicker.open = false;
+});
+function renderMonthFilter() {
+  const year = Number(yearInput.value);
+  const available = [...new Set(state.tarefas.flatMap((task) => {
+    const date = task.createdAt ? new Date(task.createdAt) : null;
+    return date?.getFullYear() === year ? [date.getMonth()] : [];
+  }))].sort((a, b) => a - b);
+  for (const month of selectedMonths) {
+    if (!available.includes(month)) selectedMonths.delete(month);
+  }
+  const options = document.getElementById('stats-month-options');
+  options.replaceChildren();
+  const all = document.createElement('button');
+  all.type = 'button';
+  all.className = 'stats-month-option';
+  all.textContent = 'Todos';
+  all.onclick = () => {
+    selectedMonths.clear();
+    document.getElementById('stats-month-picker').open = false;
     draw();
   };
+  options.append(all);
+  for (const month of available) {
+    const label = document.createElement('label');
+    label.className = 'stats-month-option';
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = selectedMonths.has(month);
+    checkbox.onchange = () => {
+      if (checkbox.checked) selectedMonths.add(month);
+      else selectedMonths.delete(month);
+      draw();
+      document.querySelectorAll('#stats-month-options input')[available.indexOf(month)]?.focus();
+    };
+    label.append(checkbox, document.createTextNode(monthNames[month]));
+    options.append(label);
+  }
+  if (!available.length) {
+    const empty = document.createElement('p');
+    empty.className = 'stats-month-empty';
+    empty.textContent = 'Nenhuma tarefa criada neste ano.';
+    options.append(empty);
+  }
+  const chips = document.getElementById('stats-month-chips');
+  chips.replaceChildren();
+  for (const month of [...selectedMonths].sort((a, b) => a - b)) {
+    const chip = document.createElement('span');
+    chip.className = 'stats-month-chip';
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.textContent = '×';
+    remove.setAttribute('aria-label', `Remover ${monthNames[month]}`);
+    remove.onclick = () => {
+      selectedMonths.delete(month);
+      draw();
+      document.getElementById('stats-month-picker').querySelector('summary').focus();
+    };
+    chip.append(document.createTextNode(monthNames[month]), remove);
+    chips.append(chip);
+  }
+}
+document.addEventListener('click', (event) => {
+  const picker = document.getElementById('stats-month-picker');
+  if (!picker.contains(event.target)) picker.open = false;
 });
-yearInput.onchange = draw;
+document.getElementById('stats-month-picker').addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    event.currentTarget.open = false;
+    event.currentTarget.querySelector('summary').focus();
+  }
+});
+yearInput.onchange = () => {
+  selectedMonths.clear();
+  draw();
+};
 document.getElementById('stats-refresh').onclick = render;
 window.toggleMenu = (button) => {
   document.getElementById('sidebar').classList.toggle('sidebar--open');
@@ -163,18 +262,17 @@ export function taskStatus(task, now = new Date()) {
 }
 export function dashboardData(
   state,
-  { quarter = 'all', year = new Date().getFullYear(), now = new Date() } = {}
+  { months = [], year = new Date().getFullYear(), now = new Date() } = {}
 ) {
   const inside = (value) => {
-    if (quarter === 'all') return true;
     if (!value) return false;
     const date = new Date(value);
     return (
       date.getFullYear() === Number(year) &&
-      Math.floor(date.getMonth() / 3) === Number(quarter)
+      (months.length === 0 || months.map(Number).includes(date.getMonth()))
     );
   };
-  const tasks = state.tarefas.filter((t) => inside(t.data));
+  const tasks = state.tarefas.filter((t) => inside(t.createdAt));
   const projects = state.projetos.filter(
     (p) => inside(p.createdAt) || tasks.some((t) => t.idProjeto === p.id)
   );
@@ -198,10 +296,10 @@ export function dashboardData(
       .reduce((sum, t) => sum + Number(t.economia || 0), 0),
     tasks: tasks.filter((t) => t.idProjeto === p.id),
   }));
-  const months = Array(12).fill(0);
+  const monthlyTotals = Array(12).fill(0);
   tasks.forEach((t) => {
-    if (t.data && new Date(t.data).getFullYear() === Number(year))
-      months[new Date(t.data).getMonth()] += Number(t.economia || 0);
+    if (t.createdAt && new Date(t.createdAt).getFullYear() === Number(year))
+      monthlyTotals[new Date(t.createdAt).getMonth()] += Number(t.economia || 0);
   });
   return {
     projects,
@@ -209,7 +307,7 @@ export function dashboardData(
     taskCounts,
     projectCounts,
     savings,
-    months,
+    months: monthlyTotals,
     total: tasks.reduce((sum, t) => sum + Number(t.economia || 0), 0),
   };
 }
@@ -260,20 +358,20 @@ export function renderDashboard(
       'TAREFAS EM ANDAMENTO',
       data.tasks.filter((t) => t.status === 'iniciado').length,
     ],
-    ['ECONOMIA TOTAL', money(data.total)],
+    ['GASTOS TOTAIS', money(data.total)],
   ];
   const bars = selected.length
     ? `<div class="grafico-economia">${selected.map((p, i) => `<div class="grafico-barra"><span>${money(p.total)}</span><div style="height:${(p.total / max) * 75}%;background:${colors[i % colors.length]}"></div><small>${escape(p.titulo)}</small></div>`).join('')}</div>`
     : '<p class="empty-state">Nenhum projeto neste período.</p>';
   return `<section class="stats-kpis" aria-label="Indicadores">${kpis.map(([label, value]) => `<article class="stats-card"><span>${label}</span><strong>${value}</strong><small>Período selecionado</small></article>`).join('')}</section>
     <section class="stats-grid-linha1">
-      <article class="stats-panel economia-panel"><div class="stats-panel-header"><h2>Economia por projeto</h2><label class="sr-only" for="stats-project">Projeto</label><select id="stats-project"><option value="">Todos os projetos</option>${data.projects.map((p) => `<option value="${escape(p.id)}" ${p.id === projectId ? 'selected' : ''}>${escape(p.titulo)}</option>`).join('')}</select></div>${bars}</article>
+      <article class="stats-panel economia-panel"><div class="stats-panel-header"><h2>Gastos por projeto</h2><label class="sr-only" for="stats-project">Projeto</label><select id="stats-project"><option value="">Todos os projetos</option>${data.projects.map((p) => `<option value="${escape(p.id)}" ${p.id === projectId ? 'selected' : ''}>${escape(p.titulo)}</option>`).join('')}</select></div>${bars}</article>
       ${panel('Tarefas por status', donut('Tarefas', tasksLabels, data.taskCounts))}
       ${panel('Projetos por status', donut('Projetos', ['Em andamento', 'Finalizados', 'Não iniciados'], data.projectCounts, ['#ad69ff', '#3acdae', '#a2a2bb']))}
     </section>
     <section class="stats-grid-linha2">
-      ${panel('Economia por mês', `<div class="linha-chart"><svg class="economia-evolucao" viewBox="0 0 400 150" preserveAspectRatio="none" role="img" aria-label="${escape(data.months.map((v, i) => i + 1 + ': ' + money(v)).join('; '))}"><path d="M8 18H392 M8 78H392 M8 138H392" stroke="#e8e8ec" fill="none"/><polygon points="8,138 ${points} 392,138" fill="#983bff22"/><polyline points="${points}" fill="none" stroke="#983bff" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><div class="meses"><span>Jan</span><span>Jun</span><span>Dez</span></div></div><small>Ano ${year}. Valores agrupados pelo prazo das tarefas; não representam datas de recebimento.</small>`)}
-      ${panel('Projetos mais econômicos', `<div class="ranking">${ranking.map((p, i) => `<div><span>${escape(p.titulo)}</span><div class="ranking-bar"><i style="width:${(p.total / maxRank) * 100}%;background:${colors[i % 4]}"></i></div><b>${money(p.total)}</b></div>`).join('') || '<p>Nenhum projeto.</p>'}</div>`, `<label class="sr-only" for="stats-top">Quantidade no ranking</label><select id="stats-top">${[5, 10, 20].map((n) => `<option value="${n}" ${Number(top) === n ? 'selected' : ''}>TOP ${n}</option>`).join('')}</select>`)}
+      ${panel('Gastos por mês', `<div class="linha-chart"><svg class="economia-evolucao" viewBox="0 0 400 150" preserveAspectRatio="none" role="img" aria-label="${escape(data.months.map((v, i) => i + 1 + ': ' + money(v)).join('; '))}"><path d="M8 18H392 M8 78H392 M8 138H392" stroke="#e8e8ec" fill="none"/><polygon points="8,138 ${points} 392,138" fill="#983bff22"/><polyline points="${points}" fill="none" stroke="#983bff" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><div class="meses"><span>Jan</span><span>Jun</span><span>Dez</span></div></div><small>Ano ${year}. Valores agrupados pelo mês de criação das tarefas; não representam datas de pagamento.</small>`)}
+      ${panel('Projetos com maiores gastos', `<div class="ranking">${ranking.map((p, i) => `<div><span>${escape(p.titulo)}</span><div class="ranking-bar"><i style="width:${(p.total / maxRank) * 100}%;background:${colors[i % 4]}"></i></div><b>${money(p.total)}</b></div>`).join('') || '<p>Nenhum projeto.</p>'}</div>`, `<label class="sr-only" for="stats-top">Quantidade no ranking</label><select id="stats-top">${[5, 10, 20].map((n) => `<option value="${n}" ${Number(top) === n ? 'selected' : ''}>TOP ${n}</option>`).join('')}</select>`)}
       ${panel(
         'Tarefas por projeto',
         `<div class="tarefas-projeto">${

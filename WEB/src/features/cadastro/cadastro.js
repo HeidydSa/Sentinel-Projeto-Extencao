@@ -32,7 +32,9 @@ async function loadRoles() {
         !/^adm/i.test(role.tipo)
     );
     const select = document.getElementById('funcao-select');
-    select.replaceChildren(new Option('Selecione uma função', ''));
+    const placeholder = new Option('Selecione uma função', '', true, true);
+    placeholder.disabled = true;
+    select.replaceChildren(placeholder);
     roles.forEach((role) => select.add(new Option(role.tipo, String(role.id))));
     if (!roles.length)
       throw new Error(

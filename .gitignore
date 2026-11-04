@@ -1,3 +1,43 @@
-api/node_modules
-api/.env
-api/dist/
+# Dependências e arquivos gerados
+node_modules/
+dist/
+build/
+.firebase/
+
+# Variáveis de ambiente em qualquer pasta
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+
+# Credenciais e configurações privadas
+credentials.json
+credentials.*.json
+*-credentials.json
+service-account*.json
+serviceAccount*.json
+*firebase-adminsdk*.json
+sentinel-firebase.json
+secrets.json
+secrets.*.json
+.npmrc
+.pypirc
+.netrc
+
+# Chaves privadas e certificados com chave
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+
+# Logs e arquivos locais
+*.log
+.DS_Store
+Thumbs.db

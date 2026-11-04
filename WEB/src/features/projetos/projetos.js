@@ -72,7 +72,7 @@ async function render(s) {
         <h3 id="p-${p.id}" class="projeto-nome">${esc(p.titulo)}</h3>
         <dl class="projeto-info">
           <div><dt>Status</dt><dd><span class="status-badge ${badgeCls}">${badgeTxt}</span></dd></div>
-          <div><dt>Economia total</dt><dd>${formatCurrency(econ)}</dd></div>
+          <div><dt>Gastos totais</dt><dd>${formatCurrency(econ)}</dd></div>
           <div><dt>Tarefas ativas</dt><dd>${tarefas}</dd></div>
         </dl>
         <button class="btn btn-primary btn-details" onclick="openDetailsModal('${p.id}')">Detalhes</button>
@@ -85,6 +85,7 @@ async function render(s) {
     .join('');
 }
 
+let detailsTrigger;
 function openDetailsModal(projectId) {
   const modalDetails = document.getElementById('modal-details-project');
   modalDetails.onclick = (e) => {
@@ -102,7 +103,7 @@ function openDetailsModal(projectId) {
     : 'Sem data de entrega';
 
   document.getElementById('details-titulo').textContent = p.titulo;
-  document.getElementById('details-descricao').textContent = p.descricao;
+  document.getElementById('details-descricao').textContent = p.descricao || 'Nenhuma descrição informada.';
   const statusEl = document.getElementById('details-status');
   statusEl.className = `status-badge ${badgeCls}`;
   statusEl.textContent = badgeTxt;
@@ -116,13 +117,31 @@ function openDetailsModal(projectId) {
       .length
   }`;
 
+  detailsTrigger = document.activeElement;
+  modalDetails.inert = false;
   modalDetails.classList.add('open');
   modalDetails.setAttribute('aria-hidden', 'false');
+  modalDetails.querySelector('.project-details-close').focus();
+  modalDetails.onkeydown = (event) => {
+    if (event.key !== 'Tab') return;
+    const buttons = modalDetails.querySelectorAll('button');
+    const first = buttons[0];
+    const last = buttons[buttons.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
 }
 
 function closeDetailsModal() {
   const modalDetails = document.getElementById('modal-details-project');
   modalDetails.classList.remove('open');
+  detailsTrigger?.focus();
+  modalDetails.inert = true;
   modalDetails.setAttribute('aria-hidden', 'true');
 }
 
