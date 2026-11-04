@@ -21,8 +21,13 @@ export class FuncaoController {
   async getById(req, res) {
     try {
       const { id } = req.params;
-      if (isNaN(Number(id))) {
-        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      if (
+        !Number.isSafeInteger(Number(id)) ||
+        Number(id) <= 0
+      ) {
+        return res.status(400).json({
+          message: 'id: informe um inteiro positivo para cada ID',
+        });
       }
       const funcao = await this.service.getById(Number(id));
 
@@ -50,8 +55,13 @@ export class FuncaoController {
   async update(req, res) {
     try {
       const { id } = req.params;
-      if (isNaN(Number(id))) {
-        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      if (
+        !Number.isSafeInteger(Number(id)) ||
+        Number(id) <= 0
+      ) {
+        return res.status(400).json({
+          message: 'id: informe um inteiro positivo para cada ID',
+        });
       }
       const funcao = await this.service.update(Number(id), req.body);
 
@@ -72,8 +82,13 @@ export class FuncaoController {
   async delete(req, res) {
     try {
       const { id } = req.params;
-      if (isNaN(Number(id))) {
-        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      if (
+        !Number.isSafeInteger(Number(id)) ||
+        Number(id) <= 0
+      ) {
+        return res.status(400).json({
+          message: 'id: informe um inteiro positivo para cada ID',
+        });
       }
       const funcao = await this.service.delete(Number(id));
 

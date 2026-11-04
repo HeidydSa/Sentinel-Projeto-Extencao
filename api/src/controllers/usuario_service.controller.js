@@ -22,8 +22,13 @@ export class UsuarioController {
     try {
       const { id } = req.params;
 
-      if (isNaN(Number(id))) {
-        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      if (
+        !Number.isSafeInteger(Number(id)) ||
+        Number(id) <= 0
+      ) {
+        return res.status(400).json({
+          message: 'id: informe um inteiro positivo para cada ID',
+        });
       }
 
       const usuario = await this.service.getById(Number(id));
@@ -53,8 +58,13 @@ export class UsuarioController {
     try {
       const { id } = req.params;
 
-      if (isNaN(Number(id))) {
-        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      if (
+        !Number.isSafeInteger(Number(id)) ||
+        Number(id) <= 0
+      ) {
+        return res.status(400).json({
+          message: 'id: informe um inteiro positivo para cada ID',
+        });
       }
 
       const usuario = await this.service.update(Number(id), req.body);
@@ -77,8 +87,13 @@ export class UsuarioController {
     try {
       const { id } = req.params;
 
-      if (isNaN(Number(id))) {
-        res.status(400).send({ message: 'id deve ser um número inteiro' });
+      if (
+        !Number.isSafeInteger(Number(id)) ||
+        Number(id) <= 0
+      ) {
+        return res.status(400).json({
+          message: 'id: informe um inteiro positivo para cada ID',
+        });
       }
 
       const usuario = await this.service.delete(Number(id));

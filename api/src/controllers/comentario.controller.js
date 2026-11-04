@@ -8,10 +8,13 @@ export class ComentarioController {
   async create(req, res) {
     try {
       const { tarefaId } = req.params;
-      if (isNaN(Number(tarefaId))) {
-        res
-          .status(400)
-          .send({ message: 'tarefaId deve ser um número inteiro' });
+      if (
+        !Number.isSafeInteger(Number(tarefaId)) ||
+        Number(tarefaId) <= 0
+      ) {
+        return res.status(400).json({
+          message: 'tarefaId: informe um inteiro positivo para cada ID',
+        });
       }
       const comentario = await this.service.create(Number(tarefaId), req.body);
       return res.status(201).json(comentario);
@@ -27,9 +30,14 @@ export class ComentarioController {
   async getById(req, res) {
     try {
       const { tarefaId, comentarioId } = req.params;
-      if (isNaN(Number(tarefaId)) || isNaN(Number(comentarioId))) {
-        res.status(400).send({
-          message: 'tarefaId e comentarioId devem ser números inteiros',
+      if (
+        !Number.isSafeInteger(Number(tarefaId)) ||
+        Number(tarefaId) <= 0 ||
+        !Number.isSafeInteger(Number(comentarioId)) ||
+        Number(comentarioId) <= 0
+      ) {
+        return res.status(400).json({
+          message: 'tarefaId e comentarioId: informe um inteiro positivo para cada ID',
         });
       }
       const comentario = await this.service.getById(
@@ -51,10 +59,13 @@ export class ComentarioController {
   async getAll(req, res) {
     try {
       const { tarefaId } = req.params;
-      if (isNaN(Number(tarefaId))) {
-        res
-          .status(400)
-          .send({ message: 'tarefaId deve ser um número inteiro' });
+      if (
+        !Number.isSafeInteger(Number(tarefaId)) ||
+        Number(tarefaId) <= 0
+      ) {
+        return res.status(400).json({
+          message: 'tarefaId: informe um inteiro positivo para cada ID',
+        });
       }
       const comentarios = await this.service.getAll(Number(tarefaId));
       return res.json(comentarios.map((c) => c.toJSON()));
@@ -67,9 +78,14 @@ export class ComentarioController {
   async delete(req, res) {
     try {
       const { tarefaId, comentarioId } = req.params;
-      if (isNaN(Number(tarefaId)) || isNaN(Number(comentarioId))) {
-        res.status(400).send({
-          message: 'tarefaId e comentarioId devem ser números inteiros',
+      if (
+        !Number.isSafeInteger(Number(tarefaId)) ||
+        Number(tarefaId) <= 0 ||
+        !Number.isSafeInteger(Number(comentarioId)) ||
+        Number(comentarioId) <= 0
+      ) {
+        return res.status(400).json({
+          message: 'tarefaId e comentarioId: informe um inteiro positivo para cada ID',
         });
       }
       const comentario = await this.service.delete(

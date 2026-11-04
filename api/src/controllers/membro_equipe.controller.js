@@ -1,5 +1,4 @@
 import { ValidationError } from '../errors/validation.error.js';
-import { isNumber } from '../utils/typeValidations.js';
 
 export class MembroEquipeController {
   constructor(service) {
@@ -10,10 +9,15 @@ export class MembroEquipeController {
     try {
       const { equipeId, usuarioId } = req.params;
 
-      if (!isNumber(Number(equipeId)) || !isNumber(Number(usuarioId))) {
-        res
-          .status(400)
-          .send({ message: 'equipeId e usuarioId devem ser números inteiros' });
+      if (
+        !Number.isSafeInteger(Number(equipeId)) ||
+        Number(equipeId) <= 0 ||
+        !Number.isSafeInteger(Number(usuarioId)) ||
+        Number(usuarioId) <= 0
+      ) {
+        return res.status(400).json({
+          message: 'equipeId e usuarioId: informe um inteiro positivo para cada ID',
+        });
       }
 
       const membro = await this.service.create({
@@ -33,10 +37,15 @@ export class MembroEquipeController {
   async getById(req, res) {
     try {
       const { equipeId, usuarioId } = req.params;
-      if (!isNumber(Number(equipeId)) || !isNumber(Number(usuarioId))) {
-        res
-          .status(400)
-          .send({ message: 'equipeId e usuarioId devem ser números inteiros' });
+      if (
+        !Number.isSafeInteger(Number(equipeId)) ||
+        Number(equipeId) <= 0 ||
+        !Number.isSafeInteger(Number(usuarioId)) ||
+        Number(usuarioId) <= 0
+      ) {
+        return res.status(400).json({
+          message: 'equipeId e usuarioId: informe um inteiro positivo para cada ID',
+        });
       }
       const membro = await this.service.getById(
         Number(equipeId),
@@ -57,10 +66,13 @@ export class MembroEquipeController {
   async getAllByEquipe(req, res) {
     try {
       const { equipeId } = req.params;
-      if (!isNumber(Number(equipeId))) {
-        res
-          .status(400)
-          .send({ message: 'equipeId deve ser um número inteiro' });
+      if (
+        !Number.isSafeInteger(Number(equipeId)) ||
+        Number(equipeId) <= 0
+      ) {
+        return res.status(400).json({
+          message: 'equipeId: informe um inteiro positivo para cada ID',
+        });
       }
       const membros = await this.service.getAllByEquipe(Number(equipeId));
       return res.json(membros.map((membro) => membro.toJSON()));
@@ -74,10 +86,15 @@ export class MembroEquipeController {
     try {
       const { equipeId, usuarioId } = req.params;
 
-      if (!isNumber(Number(equipeId)) || !isNumber(Number(usuarioId))) {
-        res
-          .status(400)
-          .send({ message: 'equipeId e usuarioId devem ser números inteiros' });
+      if (
+        !Number.isSafeInteger(Number(equipeId)) ||
+        Number(equipeId) <= 0 ||
+        !Number.isSafeInteger(Number(usuarioId)) ||
+        Number(usuarioId) <= 0
+      ) {
+        return res.status(400).json({
+          message: 'equipeId e usuarioId: informe um inteiro positivo para cada ID',
+        });
       }
       const membro = await this.service.delete(
         Number(equipeId),
