@@ -10,6 +10,9 @@ export class AuthService {
   }
 
   async login(email, senha) {
+    email = typeof email === 'string' ? email.trim().toLowerCase() : '';
+    if (!email || typeof senha !== 'string')
+      throw new ValidationError('Email e senha são obrigatórios.');
     const usuario = await this.repository.getByEmail(email);
 
     if (!usuario || !(await this.doesPasswordMatch(senha, usuario.senha))) {

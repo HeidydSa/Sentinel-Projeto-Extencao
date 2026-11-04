@@ -1,0 +1,172 @@
+.team-dialog {
+  width: min(560px, calc(100% - 32px));
+  max-height: 85vh;
+  padding: 2rem 1.8rem;
+  border: 0;
+  border-radius: var(--radius-lg);
+  color: var(--white);
+  background: var(--purple);
+  box-shadow: var(--shadow-lg);
+  font-family: var(--font-body);
+}
+.team-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+.team-dialog h2 {
+  margin: 0 0 1.4rem;
+  font-size: 1.2rem;
+}
+.team-dialog p {
+  line-height: 1.4;
+}
+.team-dialog label {
+  display: block;
+  margin: 0.8rem 0;
+  font-family: var(--font-head);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--white);
+}
+.team-dialog input:not([type='checkbox']),
+.team-dialog select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.75rem 1.2rem;
+  border: 2px solid transparent;
+  border-radius: var(--radius-pill);
+  color: var(--white);
+  background: var(--purple-dim);
+  font: inherit;
+  transition:
+    border-color var(--transition),
+    background var(--transition);
+}
+.team-dialog input:focus,
+.team-dialog select:focus {
+  outline: none;
+  border-color: var(--white);
+  background: var(--purple-dark);
+}
+.team-dialog select option {
+  color: var(--white);
+  background: var(--purple-dark);
+}
+.team-dialog input[type='checkbox'] {
+  margin-right: 0.5rem;
+  accent-color: var(--purple-dark);
+}
+.team-dialog .btn {
+  margin: 0.4rem 0.4rem 0.4rem 0;
+  white-space: normal;
+}
+.team-dialog .btn:not(.btn-primary-alt):not(.team-danger) {
+  color: var(--white);
+  border-color: var(--white);
+  background: transparent;
+}
+.team-dialog .btn:not(.btn-primary-alt):not(.team-danger):hover {
+  background: var(--purple-dark);
+}
+.team-dialog ul {
+  list-style: none;
+  padding: 0;
+}
+.team-dialog li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--purple-light-alt);
+}
+.team-dialog .team-danger {
+  background: var(--red);
+  color: var(--white);
+  border-color: var(--red);
+}
+.team-dialog .btn:disabled,
+.team-dialog .btn:disabled:hover {
+  background: var(--grey-200);
+  color: var(--grey-700);
+  border-color: var(--grey-200);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.team-error {
+  color: var(--red);
+  margin: 0.8rem 0;
+}
+.team-dialog .team-error:not(:empty) {
+  background: var(--white);
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+.team-dialog .team-password-invalid {
+  border-color: var(--red);
+}
+.team-status {
+  padding: 1rem;
+  margin: 0.8rem 0;
+  color: var(--grey-700);
+  background: var(--purple-light);
+  border-radius: var(--radius-md);
+}
+.team-status label {
+  font-family: var(--font-head);
+  font-weight: 600;
+}
+.team-status select {
+  max-width: 100%;
+  min-height: 44px;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-pill);
+  background: var(--white);
+  color: var(--grey-700);
+  font: inherit;
+}
+.team-status .btn {
+  margin: 0.75rem 0 0;
+  background: var(--purple);
+  color: var(--white);
+  white-space: normal;
+}
+body.team-no-work .app-main > :not(.team-status):not(.app-header) {
+  display: none !important;
+}
+.team-sidebar {
+  width: 100%;
+  text-align: left;
+}
+.team-help {
+  font-size: 0.9rem;
+  margin: 0.7rem 0;
+}
+.team-dialog .input-wrapper {
+  position: relative;
+}
+.team-dialog .input-wrapper input {
+  padding-right: 44px;
+}
+.team-dialog .toggle-pw {
+  margin: 0;
+  color: var(--white);
+}
+
+.team-dialog {
+  margin: auto;
+}
+.team-sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+.team-sidebar {
+  color: var(--white);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  white-space: normal;
+}
+.team-sidebar:hover {
+  background: var(--purple-dark);
+  color: var(--white);
+}

@@ -12,6 +12,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../../style.css" />
+    <link rel="stylesheet" href="../equipes/equipes.css" />
   </head>
 
   <body class="page-app">
@@ -148,7 +149,16 @@
     </main>
 
     <!-- MODAL DETALHES PROJETO -->
-    <div class="modal-details" id="modal-details-project" role="dialog" aria-modal="true" aria-labelledby="details-titulo" aria-describedby="details-descricao" aria-hidden="true" inert>
+    <div
+      class="modal-details"
+      id="modal-details-project"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="details-titulo"
+      aria-describedby="details-descricao"
+      aria-hidden="true"
+      inert
+    >
       <div class="modal project-details-card">
         <header class="project-details-header">
           <div>
@@ -156,13 +166,29 @@
             <h2 id="details-titulo"></h2>
             <span id="details-status" class="status-badge"></span>
           </div>
-          <button type="button" class="project-details-close" onclick="closeDetailsModal()" aria-label="Fechar detalhes do projeto">×</button>
+          <button
+            type="button"
+            class="project-details-close"
+            onclick="closeDetailsModal()"
+            aria-label="Fechar detalhes do projeto"
+          >
+            ×
+          </button>
         </header>
         <div class="project-details-body">
           <dl class="project-details-metrics">
-            <div><dt>Gastos totais</dt><dd id="details-economia"></dd></div>
-            <div><dt>Tarefas ativas</dt><dd id="details-tarefas_ativas"></dd></div>
-            <div><dt>Data de entrega</dt><dd id="details-data"></dd></div>
+            <div>
+              <dt>Gastos totais</dt>
+              <dd id="details-economia"></dd>
+            </div>
+            <div>
+              <dt>Tarefas ativas</dt>
+              <dd id="details-tarefas_ativas"></dd>
+            </div>
+            <div>
+              <dt>Data de entrega</dt>
+              <dd id="details-data"></dd>
+            </div>
           </dl>
           <section class="project-details-description">
             <h3>Sobre o projeto</h3>
@@ -170,7 +196,13 @@
           </section>
         </div>
         <footer class="project-details-footer">
-          <button type="button" class="btn btn-primary" onclick="closeDetailsModal()">Fechar detalhes</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            onclick="closeDetailsModal()"
+          >
+            Fechar detalhes
+          </button>
         </footer>
       </div>
     </div>
@@ -392,5 +424,6 @@
     </div>
 
     <script type="module" src="projetos.js"></script>
+    <script type="module" src="../equipes/equipes.js"></script>
   </body>
 </html>

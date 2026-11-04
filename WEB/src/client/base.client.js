@@ -19,18 +19,27 @@ export class BaseClient {
     const token = localStorage.getItem('auth_token');
     let response;
     try {
-      response = await fetch(this.baseUrl + path, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          ...(global.API_KEY ? { 'x-api-key': global.API_KEY } : {}),
-          ...(authenticated && token
-            ? { Authorization: `Bearer ${token}` }
-            : {}),
-        },
-        ...(payload === undefined ? {} : { body: JSON.stringify(payload) }),
-        signal: AbortSignal.timeout(15000),
-      });
+      response = await fetch(
+        this.baseUrl +
+          path +
+          (sessionStorage.getItem('equipe_consulta')
+            ? (path.includes('?') ? '&' : '?') +
+              'equipe=' +
+              encodeURIComponent(sessionStorage.getItem('equipe_consulta'))
+            : ''),
+        {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            ...(global.API_KEY ? { 'x-api-key': global.API_KEY } : {}),
+            ...(authenticated && token
+              ? { Authorization: `Bearer ${token}` }
+              : {}),
+          },
+          ...(payload === undefined ? {} : { body: JSON.stringify(payload) }),
+          signal: AbortSignal.timeout(15000),
+        }
+      );
     } catch {
       throw new ApiError(
         'Não foi possível acessar o servidor. Verifique a conexão e tente novamente.',
@@ -45,7 +54,7 @@ export class BaseClient {
       data = null;
     }
     if (!response.ok) {
-      if ([401, 403].includes(response.status) && authenticated) {
+      if (response.status === 401 && authenticated) {
         localStorage.removeItem('auth_token');
         localStorage.removeItem('auth_user');
       }

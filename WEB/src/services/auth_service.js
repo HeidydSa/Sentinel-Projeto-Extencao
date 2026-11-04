@@ -69,8 +69,7 @@ export async function refreshSession() {
     await signOut();
     throw new Error('Sessão expirada. Entre novamente.');
   }
-  const users = await usersClient.getAll();
-  const user = users.find((u) => u.email === token.email);
+  const user = await new BaseClient({ path: '/sessao' }).request();
   if (!user) {
     await signOut();
     throw new Error('Usuário não encontrado. Entre novamente.');
@@ -78,6 +77,8 @@ export async function refreshSession() {
   const profile = new Usuario(user).toJSON();
   const session = {
     ...profile,
+    gestor: Boolean(user.gestor),
+    equipe: user.equipe,
     uid: String(user.id),
     displayName: `${user.nome} ${user.sobrenome}`.trim(),
   };
@@ -112,6 +113,15 @@ export async function deleteUser(user) {
   await usersClient.delete(user.uid);
   await signOut();
 }
-export function updateProfile() {
-  throw new Error('A edição do perfil ainda não é suportada pela API atual.');
+export async function updateProfile(user, changes) {
+  if (!user) throw new Error('Entre novamente.');
+  const parts = String(changes.displayName || '')
+    .trim()
+    .split(/\s+/);
+  if (parts.length < 2) throw new Error('Informe nome e sobrenome.');
+  await usersClient.update(user.uid, {
+    nome: parts.shift(),
+    sobrenome: parts.join(' '),
+  });
+  return refreshSession();
 }

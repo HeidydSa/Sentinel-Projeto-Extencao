@@ -77,7 +77,13 @@ async function handleCad() {
   button.disabled = true;
   try {
     const wasLoggedIn = Boolean(auth.currentUser);
-    await authService.register({ nome, sobrenome, email, senha, funcaoId });
+    await authService.register({
+      nome,
+      sobrenome,
+      email,
+      senha,
+      funcaoId,
+    });
     if (!wasLoggedIn) {
       try {
         await loginSession(email, senha);

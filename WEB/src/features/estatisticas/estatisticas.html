@@ -12,6 +12,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../../style.css" />
+    <link rel="stylesheet" href="../equipes/equipes.css" />
   </head>
 
   <body class="page-app page-estatisticas">
@@ -125,16 +126,39 @@
           <strong>Período:</strong>
           <details class="stats-month-picker" id="stats-month-picker">
             <summary>Todos <span aria-hidden="true">▾</span></summary>
-            <div class="stats-month-options" id="stats-month-options" role="group" aria-label="Meses de criação das tarefas"></div>
+            <div
+              class="stats-month-options"
+              id="stats-month-options"
+              role="group"
+              aria-label="Meses de criação das tarefas"
+            ></div>
           </details>
-          <div class="stats-month-chips" id="stats-month-chips" role="group" aria-label="Meses selecionados"></div>
+          <div
+            class="stats-month-chips"
+            id="stats-month-chips"
+            role="group"
+            aria-label="Meses selecionados"
+          ></div>
         </div>
         <div class="stats-year-filter">
           <strong id="stats-year-label">Ano</strong>
-          <select id="stats-year" hidden aria-hidden="true" tabindex="-1"></select>
+          <select
+            id="stats-year"
+            hidden
+            aria-hidden="true"
+            tabindex="-1"
+          ></select>
           <details class="stats-month-picker" id="stats-year-picker">
-            <summary aria-labelledby="stats-year-label stats-year-value"><span id="stats-year-value">Ano</span><span aria-hidden="true">▾</span></summary>
-            <div class="stats-month-options" id="stats-year-options" role="group" aria-label="Ano das estatísticas"></div>
+            <summary aria-labelledby="stats-year-label stats-year-value">
+              <span id="stats-year-value">Ano</span
+              ><span aria-hidden="true">▾</span>
+            </summary>
+            <div
+              class="stats-month-options"
+              id="stats-year-options"
+              role="group"
+              aria-label="Ano das estatísticas"
+            ></div>
           </details>
         </div>
         <button class="periodo-btn" id="stats-refresh">Atualizar dados</button>
@@ -212,5 +236,6 @@
     </div>
 
     <script type="module" src="estatisticas.js"></script>
+    <script type="module" src="../equipes/equipes.js"></script>
   </body>
 </html>
