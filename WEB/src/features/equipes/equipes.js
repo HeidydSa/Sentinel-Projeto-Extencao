@@ -278,10 +278,10 @@ async function openTeam() {
           ? '<button class="btn team-danger" data-leave>Deixar equipe</button>'
           : '')
     );
-    if (leader) {
+    {
       modal.classList.add('team-leader-dialog');
       const add = modal.querySelector('[data-add]');
-      add.innerHTML = teamIcon('plus') + 'Adicionar membro';
+      if (add) add.innerHTML = teamIcon('plus') + 'Adicionar membro';
       const title = modal.querySelector('h2');
       const header = document.createElement('header');
       header.className = 'team-modal-header';
@@ -291,7 +291,8 @@ async function openTeam() {
       heading.innerHTML =
         '<span class="team-section-icon">' + teamIcon('people') + '</span>';
       heading.append(title);
-      header.append(heading, add);
+      header.append(heading);
+      if (add) header.append(add);
       modal.querySelector('h2 + p')?.remove();
       const list = modal.querySelector('ul');
       list.previousElementSibling?.matches('p') &&
@@ -301,7 +302,12 @@ async function openTeam() {
       section.innerHTML =
         '<h3><span class="team-section-icon">' +
         teamIcon('people') +
-        '</span>Integrantes</h3><p class="team-selection-help">Gerencie os integrantes usando os bot\u00f5es ao lado de cada pessoa.</p>';
+        '</span>' +
+        (leader ? 'Integrantes' : 'Integrantes e fun\u00e7\u00f5es') +
+        '</h3>' +
+        (leader
+          ? '<p class="team-selection-help">Gerencie os integrantes usando os bot\u00f5es ao lado de cada pessoa.</p>'
+          : '');
       list.before(section);
       list.className = 'team-member-list';
       list.innerHTML = members
@@ -326,7 +332,7 @@ async function openTeam() {
                 'L\u00edder</span>'
               : '') +
             '</div></div>' +
-            (!isLeader
+            (leader && !isLeader
               ? '<div class="team-member-actions"><button type="button" class="btn" data-row-transfer="' +
                 member.id +
                 '">' +
@@ -342,25 +348,30 @@ async function openTeam() {
         })
         .join('');
       section.append(list);
-      modal.querySelector('[data-transfer]').remove();
-      modal.querySelector('[data-remove]').remove();
-      const settings = document.createElement('section');
-      settings.className = 'team-settings-section';
-      settings.innerHTML =
-        '<h3><span class="team-section-icon">' +
-        teamIcon('settings') +
-        '</span>Configura\u00e7\u00f5es da equipe</h3><p>Atualize a senha usada para entrar na equipe.</p>';
-      section.after(settings);
-      const passwordButton = modal.querySelector('[data-password]');
-      passwordButton.innerHTML = teamIcon('key') + 'Alterar senha da equipe';
-      settings.append(passwordButton);
+      modal.querySelector('[data-transfer]')?.remove();
+      modal.querySelector('[data-remove]')?.remove();
+      if (leader) {
+        const settings = document.createElement('section');
+        settings.className = 'team-settings-section';
+        settings.innerHTML =
+          '<h3><span class="team-section-icon">' +
+          teamIcon('settings') +
+          '</span>Configura\u00e7\u00f5es da equipe</h3><p>Atualize a senha usada para entrar na equipe.</p>';
+        section.after(settings);
+        const passwordButton = modal.querySelector('[data-password]');
+        passwordButton.innerHTML = teamIcon('key') + 'Alterar senha da equipe';
+        settings.append(passwordButton);
+      }
       const footer = document.createElement('div');
       footer.className = 'team-leader-footer';
       const close = modal.querySelector('[data-close]');
       close.before(footer);
       const leave = modal.querySelector('[data-leave]');
-      leave.innerHTML = teamIcon('exit') + 'Deixar equipe';
-      footer.append(close, leave);
+      footer.append(close);
+      if (leave) {
+        leave.innerHTML = teamIcon('exit') + 'Deixar equipe';
+        footer.append(leave);
+      }
     }
     bind(modal, '[data-add]', () => addMembers(team));
     for (const button of modal.querySelectorAll('[data-row-transfer]')) {
